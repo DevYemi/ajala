@@ -12,7 +12,7 @@ export default defineConfig({
   build: {
     lib: {
       entry: "src/index.ts", // Entry point to your package
-      name: "walkthrough-js",
+      name: "walkthrough",
       fileName: "walkthrough",
       formats: ["es", "cjs"], // Output ES and CommonJS formats
     },
