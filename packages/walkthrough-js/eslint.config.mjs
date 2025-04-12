@@ -15,7 +15,7 @@ export default tseslint.config(
         "warn",
         {
           selector: ["variable", "classProperty", "typeProperty", "parameter"],
-          format: ["snake_case"],
+          format: ["snake_case", "camelCase"],
           leadingUnderscore: "allow",
           trailingUnderscore: "allow",
         },

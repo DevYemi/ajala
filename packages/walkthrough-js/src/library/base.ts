@@ -12,43 +12,64 @@ import {
   flattenStepsToMediaQueryDefaults,
 } from "@/utils/mediaQuerySteps";
 import UI from "@/library/ui";
+import "@/style.css";
+import Navigation from "./navigation";
 
 class Walkthrough {
   options: TWalkthroughOptions;
+  is_active: boolean;
   original_steps: Array<TWalkthroughSteps>;
   flatten_steps: Array<TSteps>;
-  executed_steps: Array<TSteps>;
+  executed_steps: Set<TSteps>;
   #step_media_query: {
     active_size: number;
     fallback_sizes: Set<number>;
     instances: Array<MediaQueryList>;
     queries: Partial<TMediaQuery<Array<TParsedResponsiveStep>>>;
   };
-  active_step_index: number | undefined;
-  active_step: TWalkthroughSteps | undefined;
+  active_step_index: number;
+  active_step: TSteps | undefined;
   #ui: UI;
+  navigation: Navigation;
 
-  constructor(options: TWalkthroughOptions) {
-    this.options = options;
-    this.original_steps = options.steps;
-    this.executed_steps = [];
+  constructor(
+    steps: Array<TWalkthroughSteps>,
+    { run_immediately = true, ...options }: TWalkthroughOptions = {
+      run_immediately: true,
+    },
+  ) {
+    this.options = { run_immediately, ...options };
+    this.is_active = Boolean(this.options.run_immediately);
+    this.original_steps = steps;
+    this.executed_steps = new Set();
     this.#step_media_query = {
       active_size: 0,
       fallback_sizes: new Set(),
       instances: [],
-      queries: parseResponsiveSteps(options.steps),
+      queries: parseResponsiveSteps(steps),
     };
     this.flatten_steps = flattenStepsToMediaQueryDefaults(
-      options.steps,
+      steps,
       this.#step_media_query.queries,
     );
+    this.active_step_index = 0;
+    this.active_step = this.flatten_steps[this.active_step_index];
     this.#ui = new UI(this);
+    this.navigation = new Navigation({
+      walkthrough: this,
+      ui: this.#ui,
+    });
+    this.#ui.navigation = this.navigation;
   }
 
   init() {
     this.#setUpStepsMediaQueries();
     this.#ui.init();
-    this.#start();
+    this.navigation.init();
+
+    if (this.is_active && this.options.run_immediately) {
+      this.run();
+    }
   }
 
   #setUpStepsMediaQueries() {
@@ -119,12 +140,18 @@ class Walkthrough {
     }
   }
 
-  #start() {}
+  run() {
+    this.is_active = true;
+    this.#ui.run();
+    this.navigation.run();
+  }
 
   cleanup() {
     this.#step_media_query.instances.forEach((mq) => {
       mq.onchange = null;
     });
+    this.#ui.cleanUp();
+    this.navigation.cleanUp();
   }
 }
 
