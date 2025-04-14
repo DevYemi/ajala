@@ -6,6 +6,7 @@ class UI {
   tooltip_element: HTMLElement;
   wrapper_element: HTMLElement;
   tooltip_container_element: HTMLElement;
+  arrow_element: HTMLElement;
   overlay_element: HTMLElement;
   next_btn: HTMLButtonElement | null;
   prev_btn: HTMLButtonElement | null;
@@ -22,6 +23,7 @@ class UI {
       this.walkthrough.options.custom_tooltip || document.createElement("div");
     this.tooltip_container_element = document.createElement("div");
     this.overlay_element = document.createElement("div");
+    this.arrow_element = document.createElement("div");
     this.next_btn = null;
     this.prev_btn = null;
     this.close_btn = null;
@@ -29,8 +31,29 @@ class UI {
 
   init() {
     if (!this.walkthrough.options.custom_tooltip) {
-      this.#setUpDefaultCard();
+      this.#setUpDefaultTooltip();
     }
+
+    if (
+      !this.walkthrough.options.custom_arrow &&
+      !this.walkthrough.options.default_arrow_options?.hide
+    ) {
+      this.#setupDefaultArrow();
+    }
+
+    const arrow_size = this.walkthrough.options.default_arrow_options?.size
+      ? `${this.walkthrough.options.default_arrow_options?.size}px`
+      : "48px";
+    this.arrow_element.style.position = "absolute";
+    this.arrow_element.style.width = arrow_size;
+    this.arrow_element.style.height = arrow_size;
+    this.arrow_element.style.top = "0px";
+    this.arrow_element.style.left = "0px";
+    this.arrow_element.style.fill =
+      this.walkthrough.options.default_arrow_options?.color || "#ffffff";
+    this.arrow_element.style.zIndex = "2";
+    this.arrow_element.style.pointerEvents = "none";
+    this.tooltip_container_element.appendChild(this.arrow_element);
 
     this.tooltip_container_element.style.position = "absolute";
     this.tooltip_container_element.style.zIndex = "10";
@@ -67,7 +90,7 @@ class UI {
     }
   }
 
-  #setUpDefaultCard() {
+  #setUpDefaultTooltip() {
     this.is_default_card_element = true;
     const default_options = this.walkthrough.options.default_tooltip_options;
 
@@ -150,6 +173,16 @@ class UI {
     this.next_btn?.addEventListener("click", this.navigation.onNext);
     this.prev_btn?.addEventListener("click", this.navigation.onPrev);
     this.close_btn?.addEventListener("click", this.navigation.onClose);
+  }
+
+  #setupDefaultArrow() {
+    const size = this.walkthrough.options.default_arrow_options?.size
+      ? `${this.walkthrough.options.default_arrow_options?.size}px`
+      : "48px";
+
+    this.arrow_element.innerHTML = `
+    <svg xmlns="http://www.w3.org/2000/svg" height="${size}" viewBox="0 -960 960 960" width="${size}" fill="inherit"><path d="M321.54-394.5q-10.19 0-16.53-6.96-6.34-6.95-6.34-15.91 0-2.48 6.96-15.91l150.5-150.5q5.48-5.48 11.32-7.72 5.83-2.24 12.55-2.24 6.72 0 12.55 2.24 5.84 2.24 11.32 7.72l150.5 150.5q3.48 3.48 5.22 7.45 1.74 3.98 1.74 8.46 0 8.96-6.34 15.91-6.34 6.96-16.53 6.96H321.54Z"/></svg>
+    `;
   }
 
   getTargetElement(target_string?: string) {

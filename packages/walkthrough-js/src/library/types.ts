@@ -16,7 +16,7 @@ export interface TSteps {
   data?: unknown;
   order?: number;
   skip?: boolean;
-  gutter?: number;
+  tooltip_gutter?: number;
   tooltip_placement?: TTooltipPlacement;
 }
 
@@ -42,8 +42,9 @@ export type TWalkthroughSteps = {
 
 export interface TWalkthroughOptions {
   run_immediately?: boolean;
-  custom_tooltip?: HTMLElement;
-  gutter?: number;
+  custom_tooltip?: HTMLElement | null;
+  custom_arrow?: SVGSVGElement | null;
+  tooltip_gutter?: number;
   tooltip_placement?: TTooltipPlacement;
   default_tooltip_options?: Partial<{
     class_name: string;
@@ -55,6 +56,12 @@ export interface TWalkthroughOptions {
     hide_next_btn: boolean;
     hide_title: boolean;
     hide_content: boolean;
+  }>;
+  default_arrow_options?: Partial<{
+    class_name: string;
+    hide: boolean;
+    size: number;
+    color: string;
   }>;
   overlay_options?: Partial<{
     class_name: string;
@@ -72,6 +79,7 @@ export interface TTravelDistanceData {
   y_offset: number;
   x_offset: number;
   active_index: number;
-  card_rect: null | DOMRect;
+  tooltip_rect: null | DOMRect;
   target_rect: null | DOMRect;
+  placement: TTooltipPlacement;
 }

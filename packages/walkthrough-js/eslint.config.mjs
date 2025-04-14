@@ -11,6 +11,7 @@ export default tseslint.config(
       "no-unused-private-class-members": "warn",
       "@typescript-eslint/no-explicit-any": "off",
       "@typescript-eslint/no-unused-vars": "warn",
+      "@typescript-eslint/no-this-alias": "off",
       "@typescript-eslint/naming-convention": [
         "warn",
         {
