@@ -7,7 +7,8 @@ class UI {
   wrapper_element: HTMLElement;
   tooltip_container_element: HTMLElement;
   arrow_element: HTMLElement;
-  overlay_element: HTMLElement;
+  overlay_element: SVGElement;
+  overlay_cutout_el: SVGRectElement;
   next_btn: HTMLButtonElement | null;
   prev_btn: HTMLButtonElement | null;
   close_btn: HTMLButtonElement | null;
@@ -22,7 +23,14 @@ class UI {
     this.tooltip_element =
       this.walkthrough.options.custom_tooltip || document.createElement("div");
     this.tooltip_container_element = document.createElement("div");
-    this.overlay_element = document.createElement("div");
+    this.overlay_element = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "svg",
+    );
+    this.overlay_cutout_el = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "rect",
+    );
     this.arrow_element = document.createElement("div");
     this.next_btn = null;
     this.prev_btn = null;
@@ -55,38 +63,55 @@ class UI {
     this.arrow_element.style.pointerEvents = "none";
     this.tooltip_container_element.appendChild(this.arrow_element);
 
-    this.tooltip_container_element.style.position = "absolute";
-    this.tooltip_container_element.style.zIndex = "10";
+    this.tooltip_container_element.style.position = "fixed";
+    this.tooltip_container_element.style.top = "0px";
+    this.tooltip_container_element.style.left = "0px";
+    this.tooltip_container_element.style.zIndex = "20";
     this.tooltip_container_element.style.width = "fit-content";
     this.tooltip_container_element.style.height = "fit-content";
+    this.tooltip_container_element.style.pointerEvents = "auto";
     this.tooltip_container_element.classList.add("walkthrough_card_container");
     this.tooltip_container_element.appendChild(this.tooltip_element);
     this.tooltip_container_element.style.transform =
       "translate(-1024px, -1024px)";
 
-    this.overlay_element.style.position = "absolute";
-    this.overlay_element.style.zIndex = "2";
-    this.overlay_element.style.width = "100%";
-    this.overlay_element.style.height = "100%";
+    this.overlay_element.style.position = "fixed";
+    this.overlay_element.style.zIndex = "10";
     this.overlay_element.style.top = "0px";
     this.overlay_element.style.left = "0px";
-    this.overlay_element.style.backgroundColor = "#000000ba";
+    this.overlay_element.style.width = "100vw";
+    this.overlay_element.style.height = "100vh";
+    this.overlay_element.style.pointerEvents = "auto";
     this.overlay_element.classList.add("walkthrough_overlay");
 
     this.wrapper_element.style.position = "fixed";
     this.wrapper_element.style.top = "0px";
     this.wrapper_element.style.left = "0px";
-    this.wrapper_element.style.zIndex = "9999";
-    this.wrapper_element.style.width = "100%";
-    this.wrapper_element.style.height = `${document.body.scrollHeight}px`;
+    this.wrapper_element.style.zIndex = "9999999";
     this.wrapper_element.classList.add("walkthrough");
     this.wrapper_element.append(this.tooltip_container_element);
+
+    const styleElement = document.createElement("style");
+    styleElement.innerHTML = `
+    body.walkthrough_isOverlay.walkthrough_active  * {
+     pointer-events: none;
+     }
+     .walkthrough  * {
+     pointer-events: auto !important;
+     }
+     .walkthrough_target  * {
+     pointer-events: auto !important;
+     }
+     `;
+    document.head.appendChild(styleElement);
 
     if (
       typeof this.walkthrough.options.overlay_options?.hide === "undefined" ||
       !this.walkthrough.options.overlay_options?.hide
     ) {
+      this.#setupOverlay();
       this.wrapper_element.append(this.overlay_element);
+      document.body.classList.add("walkthrough_isOverlay");
     }
   }
 
@@ -185,6 +210,66 @@ class UI {
     `;
   }
 
+  #setupOverlay() {
+    const opacity =
+      this.walkthrough.options.overlay_options?.opacity?.toString() || " 0.7";
+
+    this.overlay_element.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+
+    // Create mask element
+    const mask_element = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "mask",
+    );
+    mask_element.setAttribute("id", "walkthrough_cutout_mask");
+
+    // Create white background for mask
+    const mask_background = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "rect",
+    );
+    mask_background.setAttribute("width", "100%");
+    mask_background.setAttribute("height", "100%");
+    mask_background.setAttribute("fill", "white");
+
+    // Create cutout rectangle
+    this.overlay_cutout_el.setAttribute("x", "0");
+    this.overlay_cutout_el.setAttribute("y", "0");
+    this.overlay_cutout_el.setAttribute("width", "0");
+    this.overlay_cutout_el.setAttribute("height", "0");
+    this.overlay_cutout_el.setAttribute("rx", "0");
+    this.overlay_cutout_el.setAttribute("ry", "0");
+    this.overlay_cutout_el.setAttribute("fill", "black");
+
+    // Add elements to mask
+    mask_element.appendChild(mask_background);
+    mask_element.appendChild(this.overlay_cutout_el);
+
+    // Create overlay rectangle that will use the mask
+    const overlay_rect = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "rect",
+    );
+    overlay_rect.setAttribute("width", "100%");
+    overlay_rect.setAttribute("height", "100%");
+    overlay_rect.setAttribute("fill", "black");
+    overlay_rect.setAttribute("opacity", opacity);
+    overlay_rect.setAttribute("mask", "url(#walkthrough_cutout_mask)");
+
+    // Assemble the SVG
+    this.overlay_element.appendChild(mask_element);
+    this.overlay_element.appendChild(overlay_rect);
+  }
+
+  resetOverlayCutoutSvgRect() {
+    this.overlay_cutout_el.setAttribute("x", "0");
+    this.overlay_cutout_el.setAttribute("y", "0");
+    this.overlay_cutout_el.setAttribute("width", "0");
+    this.overlay_cutout_el.setAttribute("height", "0");
+    this.overlay_cutout_el.setAttribute("rx", "0");
+    this.overlay_cutout_el.setAttribute("ry", "0");
+  }
+
   getTargetElement(target_string?: string) {
     const element = document.querySelector<HTMLElement>(target_string || "");
     if (!target_string) {
@@ -201,12 +286,14 @@ class UI {
     return element;
   }
 
-  updateDefaultCard() {
-    if (!this.is_default_card_element) return;
-  }
-
   run() {
     document.body.appendChild(this.wrapper_element);
+    document.body.classList.add("walkthrough_active");
+  }
+
+  end() {
+    this.wrapper_element.remove();
+    this.cleanUp();
   }
 
   cleanUp() {

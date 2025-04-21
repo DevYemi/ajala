@@ -18,6 +18,8 @@ export interface TSteps {
   skip?: boolean;
   tooltip_gutter?: number;
   tooltip_placement?: TTooltipPlacement;
+  spotlight_border_radius?: number;
+  spotlight_padding?: number;
 }
 
 export type TMediaQuery<T> = {
@@ -68,6 +70,10 @@ export interface TWalkthroughOptions {
     background_color: string;
     opacity: number;
     hide: boolean;
+  }>;
+  spotlight_options?: Partial<{
+    border_radius: number;
+    padding: number;
   }>;
 }
 
