@@ -92,7 +92,7 @@ walkthrough.addEventListener("onStart", (e: any) => {
   console.log(e);
 });
 walkthrough.addEventListener("onNext", (e: any) => {
-  console.log("This onNext1");
+  console.log("This onNext1", e);
 });
 
 walkthrough.addEventListener("onPrev", (e: any) => {

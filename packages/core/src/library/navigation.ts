@@ -3,7 +3,6 @@ import Placement from "./placement";
 import UI from "./ui";
 import Animations from "./animations";
 import { createDebounceFunc } from "@/utils/chunks";
-import { TTransaitionType } from "./types";
 
 class Navigation {
   walkthrough: Walkthrough;

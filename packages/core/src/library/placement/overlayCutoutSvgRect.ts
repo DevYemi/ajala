@@ -1,4 +1,3 @@
-import { TTooltipPlacement } from "../types";
 import UI from "../ui";
 import Walkthrough from "../base";
 import Placement from ".";
