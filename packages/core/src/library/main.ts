@@ -1,4 +1,5 @@
 import {
+  TWalkthroughEventTypes,
   TMediaQuery,
   TSteps,
   TWalkthroughOptions,
@@ -16,15 +17,7 @@ import "@/style.css";
 import Navigation from "./navigation";
 import EventEmitter from "./EventEmitter";
 
-type TCustomEventTypes =
-  | "onStart"
-  | "onNext"
-  | "onPrev"
-  | "onClose"
-  | "onTransitionComplete"
-  | "onFinish";
-
-class Walkthrough extends EventEmitter<TCustomEventTypes> {
+class Walkthrough extends EventEmitter<TWalkthroughEventTypes> {
   options: TWalkthroughOptions;
   is_active: boolean;
   original_steps: Array<TWalkthroughSteps>;

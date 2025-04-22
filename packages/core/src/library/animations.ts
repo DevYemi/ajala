@@ -1,7 +1,7 @@
 import { linearInterpolate } from "@/utils/chunks";
 import Walkthrough from "./main";
 import Placement from "./placement";
-import { TTransaitionType, TTravelDistanceData } from "./types";
+import { TTransitionType, TTravelDistanceData } from "./types";
 import UI from "./ui";
 
 type TTransitionFunc = (
@@ -12,9 +12,9 @@ class Animations {
   walkthrough: Walkthrough;
   ui: UI;
   placement: Placement;
-  transition_type: TTransaitionType;
+  transition_type: TTransitionType;
   is_animating: boolean = false;
-  transition: Record<TTransaitionType, TTransitionFunc>;
+  transition: Record<TTransitionType, TTransitionFunc>;
 
   constructor({
     walkthrough,

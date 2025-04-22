@@ -8,7 +8,7 @@ export type TTooltipPlacement =
   | `${"left" | "right"}_${TPlacementYAlign}`
   | "auto";
 
-export type TTransaitionType = "travel" | "popout";
+export type TTransitionType = "travel" | "popout";
 export interface TSteps {
   id: string;
   target: string;
@@ -50,7 +50,7 @@ export interface TWalkthroughOptions {
   tooltip_gutter?: number;
   tooltip_placement?: TTooltipPlacement;
   scroll_duration?: number;
-  transition_type?: TTransaitionType;
+  transition_type?: TTransitionType;
   default_tooltip_options?: Partial<{
     class_name: string;
     hide_dot_nav: boolean;
@@ -93,3 +93,11 @@ export interface TTravelDistanceData {
   taregt_el: HTMLElement | null;
   placement: TTooltipPlacement;
 }
+
+export type TWalkthroughEventTypes =
+  | "onStart"
+  | "onNext"
+  | "onPrev"
+  | "onClose"
+  | "onTransitionComplete"
+  | "onFinish";
