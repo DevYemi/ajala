@@ -92,7 +92,6 @@ class TooltipPlacement {
       }
 
       await this.animations.scrollToLocation(next_step_target);
-      console.log(window.scrollY);
       scrolled = true;
 
       target_rect = next_step_target.getBoundingClientRect();

@@ -64,7 +64,6 @@ const walkthrough = new Walkthrough(
       id: "9",
       title: "Step 9 Title",
       content: "step 9 content lorem ipson",
-
       tooltip_placement: "left_bottom",
     },
   ],
@@ -78,12 +77,11 @@ const walkthrough = new Walkthrough(
     },
     // custom_tooltip: document.querySelector<HTMLElement>(".custom_tooltip"),
     default_arrow_options: {
-      color: "red",
       size: 60,
     },
     overlay_options: {
-      opacity: 0.9,
-      color: "yellow",
+      opacity: 0.7,
+      color: "white",
     },
   },
 );
@@ -93,7 +91,7 @@ walkthrough.addEventListener("onStart", (e: any) => {
   console.log(e);
 });
 walkthrough.addEventListener("onNext", (e: any) => {
-  console.log("This onNext1", e);
+  console.log(e);
 });
 
 walkthrough.addEventListener("onPrev", (e: any) => {

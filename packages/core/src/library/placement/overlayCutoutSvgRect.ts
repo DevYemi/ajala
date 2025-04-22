@@ -1,13 +1,11 @@
 import UI from "../ui";
 import Walkthrough from "../main";
 import Placement from ".";
-import Animations from "../animations";
 
 class OverlayCutoutSvgRectPlacement {
   walkthrough: Walkthrough;
   placement: Placement;
   ui: UI;
-  animations: Animations;
   constructor({
     walkthrough,
     placement,
@@ -20,7 +18,6 @@ class OverlayCutoutSvgRectPlacement {
     this.walkthrough = walkthrough;
     this.placement = placement;
     this.ui = ui;
-    this.animations = new Animations({ walkthrough, ui, placement });
   }
 
   calculatePlacmentDelta({ active_index }: { active_index: number }) {

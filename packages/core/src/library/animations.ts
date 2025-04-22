@@ -159,10 +159,6 @@ class Animations {
     this.ui.arrow_element.style.transform = `translate(${x}px, ${y}px) rotate(${rotate}deg)`;
 
     taregt_el?.classList.add("walkthrough_target");
-
-    this.walkthrough.executed_steps.add(
-      this.walkthrough.flatten_steps[distance_option.active_index as number],
-    );
   }
 
   travelTransition(

@@ -21,7 +21,6 @@ class Walkthrough extends EventEmitter<TWalkthroughEventTypes> {
   is_active: boolean;
   original_steps: Array<TWalkthroughSteps>;
   flatten_steps: Array<TSteps>;
-  executed_steps: Set<TSteps>;
   #step_media_query: {
     active_size: number;
     fallback_sizes: Set<number>;
@@ -42,7 +41,6 @@ class Walkthrough extends EventEmitter<TWalkthroughEventTypes> {
     this.options = { start_immediately, ...options };
     this.is_active = Boolean(this.options.start_immediately);
     this.original_steps = steps;
-    this.executed_steps = new Set();
     this.#step_media_query = {
       active_size: 0,
       fallback_sizes: new Set(),
@@ -153,6 +151,26 @@ class Walkthrough extends EventEmitter<TWalkthroughEventTypes> {
       (item) => item.id === this.active_step?.id,
     );
     return Math.max(index, 0);
+  }
+
+  updateSteps(steps: Array<TWalkthroughSteps>, restart = true) {
+    this.original_steps = steps;
+    this.#step_media_query = {
+      active_size: 0,
+      fallback_sizes: new Set(),
+      instances: [],
+      queries: parseResponsiveSteps(steps),
+    };
+    this.flatten_steps = flattenStepsToMediaQueryDefaults(
+      steps,
+      this.#step_media_query.queries,
+    );
+    this.active_step = this.flatten_steps[0];
+
+    if (restart) {
+      this.cleanup();
+      this.start();
+    }
   }
 
   getActiveStep() {

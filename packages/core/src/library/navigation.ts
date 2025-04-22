@@ -36,6 +36,7 @@ class Navigation {
     const next_index = this.walkthrough.getActiveStepFlattenIndex() + 1;
 
     if (this.walkthrough.flatten_steps.length > next_index) {
+      this.#animations.is_animating = true;
       this.walkthrough.dispatchEvent({
         type: "onNext",
         data: null,
@@ -45,6 +46,7 @@ class Navigation {
       const distance_option =
         await this.#placement.tooltip.calculateTravelDistance(next_index);
       const onComplete = () => {
+        this.#animations.is_animating = false;
         this.walkthrough.active_step =
           this.walkthrough.flatten_steps[distance_option.active_index];
 
@@ -79,6 +81,7 @@ class Navigation {
     const prev_index = this.walkthrough.getActiveStepFlattenIndex() - 1;
 
     if (prev_index > -1) {
+      this.#animations.is_animating = true;
       this.walkthrough.dispatchEvent({
         type: "onPrev",
         data: this.walkthrough,
@@ -89,6 +92,7 @@ class Navigation {
         await this.#placement.tooltip.calculateTravelDistance(prev_index);
 
       const onComplete = () => {
+        this.#animations.is_animating = false;
         this.walkthrough.active_step =
           this.walkthrough.flatten_steps[distance_option.active_index];
 
@@ -112,11 +116,11 @@ class Navigation {
   }
 
   close() {
+    this.walkthrough.destroy();
     this.walkthrough.dispatchEvent({
       type: "onClose",
       data: null,
     });
-    this.walkthrough.destroy();
   }
 
   async refresh() {

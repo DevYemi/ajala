@@ -1,6 +1,6 @@
 import { defineConfig } from "vite";
 import { analyzer } from "vite-bundle-analyzer";
-import dts from "vite-plugin-dts"; // This is for generating TypeScript declaration files
+import dts from "vite-plugin-dts";
 
 export default defineConfig({
   resolve: {
@@ -23,6 +23,12 @@ export default defineConfig({
         globals: {
           vue: "Vue",
           react: "React",
+        },
+        assetFileNames: (assetInfo) => {
+          if (assetInfo.name === "style.css") {
+            return "walkthrough.css";
+          }
+          return "assets/[name]-[hash][extname]";
         },
       },
     },

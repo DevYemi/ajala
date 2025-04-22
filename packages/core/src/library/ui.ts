@@ -57,7 +57,7 @@ class UI {
     this.arrow_element.style.top = "0px";
     this.arrow_element.style.left = "0px";
     this.arrow_element.style.fill =
-      this.walkthrough.options.default_arrow_options?.color || "#ffffff";
+      this.walkthrough.options.default_arrow_options?.color || "#000000";
     this.arrow_element.style.zIndex = "2";
     this.arrow_element.style.pointerEvents = "none";
     this.arrow_element.classList.add("walkthrough_tooltip_arrow");
@@ -339,11 +339,15 @@ class UI {
   }
 
   start() {
+    this.wrapper_element.remove();
+    document.body.classList.remove("walkthrough_active");
+
     document.body.style.overflow = "hidden";
     document.body.appendChild(this.wrapper_element);
     document.body.classList.add("walkthrough_active");
     const tooltip_rect = this.tooltip_container_element.getBoundingClientRect();
     this.tooltip_container_element.style.transform = `translate(-${tooltip_rect.width}px, 0px)`;
+    this.resetOverlayCutoutSvgRect();
     this.update();
   }
 
