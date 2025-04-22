@@ -1,4 +1,4 @@
-import Walkthrough from "./base";
+import Walkthrough from "./main";
 import Placement from "./placement";
 import UI from "./ui";
 import Animations from "./animations";

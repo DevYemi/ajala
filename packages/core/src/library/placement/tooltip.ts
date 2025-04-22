@@ -5,7 +5,7 @@ import {
   TTravelDistanceData,
 } from "../types";
 import UI from "../ui";
-import Walkthrough from "../base";
+import Walkthrough from "../main";
 import Placement from ".";
 import Animations from "../animations";
 

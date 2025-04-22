@@ -1,4 +1,4 @@
-import Walkthrough from "./library/base";
+import Walkthrough from "./library/main";
 
 const walkthrough = new Walkthrough(
   [

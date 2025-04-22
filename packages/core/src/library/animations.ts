@@ -1,5 +1,5 @@
 import { linearInterpolate } from "@/utils/chunks";
-import Walkthrough from "./base";
+import Walkthrough from "./main";
 import Placement from "./placement";
 import { TTransaitionType, TTravelDistanceData } from "./types";
 import UI from "./ui";

@@ -1,5 +1,5 @@
 import UI from "../ui";
-import Walkthrough from "../base";
+import Walkthrough from "../main";
 import ArrowPlacement from "./arrow";
 import TooltipPlacement from "./tooltip";
 import { TPlacementAlign, TPlacementAxis, TTooltipPlacement } from "../types";

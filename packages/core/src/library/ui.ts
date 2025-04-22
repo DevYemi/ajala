@@ -1,4 +1,4 @@
-import Walkthrough from "./base";
+import Walkthrough from "./main";
 import Navigation from "./navigation";
 
 class UI {
