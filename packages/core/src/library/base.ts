@@ -16,7 +16,7 @@ import "@/style.css";
 import Navigation from "./navigation";
 import EventEmitter from "./EventEmitter";
 
-export type TCustomEventTypes =
+type TCustomEventTypes =
   | "onStart"
   | "onNext"
   | "onPrev"

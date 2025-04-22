@@ -28,6 +28,7 @@ export default defineConfig({
   },
   plugins: [
     dts({
+      rollupTypes: true,
       insertTypesEntry: true, // Optional: Automatically inserts 'types' field in package.json
       outDir: "dist/types", // Output directory for type declarations
     }),
