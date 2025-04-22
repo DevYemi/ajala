@@ -8,6 +8,7 @@ export type TTooltipPlacement =
   | `${"left" | "right"}_${TPlacementYAlign}`
   | "auto";
 
+export type TTransaitionType = "travel" | "popout";
 export interface TSteps {
   id: string;
   target: string;
@@ -43,11 +44,13 @@ export type TWalkthroughSteps = {
 };
 
 export interface TWalkthroughOptions {
-  run_immediately?: boolean;
+  start_immediately?: boolean;
   custom_tooltip?: HTMLElement | null;
   custom_arrow?: SVGSVGElement | null;
   tooltip_gutter?: number;
   tooltip_placement?: TTooltipPlacement;
+  scroll_duration?: number;
+  transition_type?: TTransaitionType;
   default_tooltip_options?: Partial<{
     class_name: string;
     hide_dot_nav: boolean;
@@ -67,7 +70,7 @@ export interface TWalkthroughOptions {
   }>;
   overlay_options?: Partial<{
     class_name: string;
-    background_color: string;
+    color: string;
     opacity: number;
     hide: boolean;
   }>;
@@ -87,5 +90,6 @@ export interface TTravelDistanceData {
   active_index: number;
   tooltip_rect: null | DOMRect;
   target_rect: null | DOMRect;
+  taregt_el: HTMLElement | null;
   placement: TTooltipPlacement;
 }

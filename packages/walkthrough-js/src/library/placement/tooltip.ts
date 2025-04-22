@@ -50,10 +50,10 @@ class TooltipPlacement {
         active_index: 0,
         tooltip_rect: null,
         target_rect: null,
+        taregt_el: next_step_target,
         placement: "auto",
       };
 
-    next_step_target.style.border = "5px solid green";
     const tooltip_container_el = this.ui.tooltip_container_element;
     let target_rect = next_step_target.getBoundingClientRect();
     let tooltip_rect = tooltip_container_el.getBoundingClientRect();
@@ -87,7 +87,12 @@ class TooltipPlacement {
       y_delta + tooltip_rect.height > window.innerHeight ||
       y_delta + tooltip_rect.height < 0
     ) {
+      if (this.animations.transition_type === "popout") {
+        this.ui.tooltip_container_element.style.visibility = "hidden";
+      }
+
       await this.animations.scrollToLocation(next_step_target);
+      console.log(window.scrollY);
       scrolled = true;
 
       target_rect = next_step_target.getBoundingClientRect();
@@ -114,6 +119,7 @@ class TooltipPlacement {
       x_offset,
       tooltip_rect,
       target_rect,
+      taregt_el: next_step_target,
       active_index: next_index,
       is_valid: true,
       scrolled: scrolled,
@@ -135,6 +141,7 @@ class TooltipPlacement {
       axis,
       align,
       axis_gutter,
+      spotlight,
       placement: metadata_placement,
     } = this.placement.getMetadata({ next_index });
 
@@ -142,6 +149,7 @@ class TooltipPlacement {
       axis: axis,
       target: target,
       axis_gutter,
+      spotlight_padding: spotlight.padding,
     });
     const y_alignment_delta = this.#calculateYAlignment({
       align: align,
@@ -162,6 +170,7 @@ class TooltipPlacement {
           this.#calculateAuto({
             target: target,
             axis_gutter,
+            spotlight_padding: spotlight.padding,
           });
 
         x_delta = auto_x_delta;
@@ -178,6 +187,7 @@ class TooltipPlacement {
           this.#calculateAuto({
             target: target,
             axis_gutter,
+            spotlight_padding: spotlight.padding,
           });
 
         x_delta = auto_x_delta;
@@ -189,6 +199,7 @@ class TooltipPlacement {
         this.#calculateAuto({
           target: target,
           axis_gutter,
+          spotlight_padding: spotlight.padding,
         });
 
       x_delta = auto_x_delta;
@@ -206,9 +217,11 @@ class TooltipPlacement {
   #calculateAuto({
     target,
     axis_gutter,
+    spotlight_padding,
   }: {
     target: HTMLElement;
     axis_gutter: number;
+    spotlight_padding: number;
   }) {
     const all_placement: TTooltipPlacement[] = [
       "bottom_center",
@@ -239,6 +252,7 @@ class TooltipPlacement {
         axis: axis,
         target: target,
         axis_gutter,
+        spotlight_padding: spotlight_padding,
       });
       const y_alignment_delta = this.#calculateYAlignment({
         align: align,
@@ -247,13 +261,6 @@ class TooltipPlacement {
       const x_alignment_delta = this.#calculateXAlignment({
         align: align,
         target: target,
-      });
-
-      console.log({
-        axis_delta,
-        y_alignment_delta,
-        x_alignment_delta,
-        auto_placement,
       });
 
       if (
@@ -293,10 +300,12 @@ class TooltipPlacement {
     axis,
     target,
     axis_gutter,
+    spotlight_padding,
   }: {
     axis?: TPlacementAxis;
     target: HTMLElement;
     axis_gutter: number;
+    spotlight_padding: number;
   }) {
     const target_rect = target.getBoundingClientRect();
     const card_rect = this.ui.tooltip_container_element.getBoundingClientRect();
@@ -306,7 +315,8 @@ class TooltipPlacement {
     };
 
     if (axis === "top") {
-      const top_position = target_rect.y - card_rect.height - axis_gutter;
+      const top_position =
+        target_rect.y - card_rect.height - axis_gutter - spotlight_padding;
       if (top_position >= 0 && target_rect.y <= window.innerHeight) {
         result.is_valid = true;
         result.axis = top_position;
@@ -317,7 +327,8 @@ class TooltipPlacement {
     }
 
     if (axis === "bottom") {
-      const bottom_position = target_rect.bottom + axis_gutter;
+      const bottom_position =
+        target_rect.bottom + axis_gutter + spotlight_padding;
       if (
         bottom_position + card_rect.height >= 0 &&
         bottom_position + card_rect.height <= window.innerHeight
@@ -331,7 +342,8 @@ class TooltipPlacement {
     }
 
     if (axis === "left") {
-      const left_position = target_rect.x - card_rect.width - axis_gutter;
+      const left_position =
+        target_rect.x - card_rect.width - axis_gutter - spotlight_padding;
       if (left_position >= 0 && target_rect.x <= window.innerWidth) {
         result.is_valid = true;
         result.axis = left_position;
@@ -341,7 +353,8 @@ class TooltipPlacement {
       }
     }
     if (axis === "right") {
-      const right_position = target_rect.right + axis_gutter;
+      const right_position =
+        target_rect.right + axis_gutter + spotlight_padding;
       if (
         right_position >= 0 &&
         right_position + card_rect.width <= window.innerWidth

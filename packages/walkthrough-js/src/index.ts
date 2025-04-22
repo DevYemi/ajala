@@ -16,6 +16,7 @@ const walkthrough = new Walkthrough(
       title: "Step 2 Title",
       content: "step 2 content lorem ipson",
       tooltip_placement: "left_top",
+      order: 1,
     },
     {
       target: ".step_3",
@@ -56,7 +57,6 @@ const walkthrough = new Walkthrough(
       id: "8",
       title: "Step 8 Title",
       content: "step 8 content lorem ipson",
-      order: 1,
     },
     {
       target: ".step_9",
@@ -68,13 +68,45 @@ const walkthrough = new Walkthrough(
     },
   ],
   {
+    // start_immediately: false,
     tooltip_placement: "auto",
+    transition_type: "travel",
+    spotlight_options: {
+      border_radius: 5,
+      padding: 5,
+    },
     // custom_tooltip: document.querySelector<HTMLElement>(".custom_tooltip"),
     default_arrow_options: {
       color: "red",
+      size: 60,
+    },
+    overlay_options: {
+      opacity: 0.9,
+      color: "yellow",
     },
   },
 );
 walkthrough.init();
 
-console.log("walkthrough", walkthrough);
+walkthrough.addEventListener("onStart", (e: any) => {
+  console.log(e);
+});
+walkthrough.addEventListener("onNext", (e: any) => {
+  console.log("This onNext1");
+});
+
+walkthrough.addEventListener("onPrev", (e: any) => {
+  console.log(e);
+});
+walkthrough.addEventListener("onTransitionComplete", (e: any) => {
+  console.log(e);
+});
+walkthrough.addEventListener("onClose", (e: any) => {
+  console.log(e);
+});
+walkthrough.addEventListener("onFinish", (e: any) => {
+  console.log(e);
+});
+// walkthrough.start();
+
+// console.log("walkthrough", walkthrough);

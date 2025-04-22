@@ -50,7 +50,7 @@ class ArrowPlacement {
       placement,
     });
 
-    const align_offset = 3;
+    const align_offset = 2;
 
     // handle Vertical Axis and Horizonal Alignment
     if (axis === "top" || axis === "bottom") {

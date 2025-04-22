@@ -42,10 +42,9 @@ class UI {
       this.#setUpDefaultTooltip();
     }
 
-    if (
-      !this.walkthrough.options.custom_arrow &&
-      !this.walkthrough.options.default_arrow_options?.hide
-    ) {
+    if (this.walkthrough.options.custom_arrow) {
+      this.arrow_element.appendChild(this.walkthrough.options.custom_arrow);
+    } else {
       this.#setupDefaultArrow();
     }
 
@@ -61,7 +60,11 @@ class UI {
       this.walkthrough.options.default_arrow_options?.color || "#ffffff";
     this.arrow_element.style.zIndex = "2";
     this.arrow_element.style.pointerEvents = "none";
-    this.tooltip_container_element.appendChild(this.arrow_element);
+    this.arrow_element.classList.add("walkthrough_tooltip_arrow");
+
+    if (!this.walkthrough.options.default_arrow_options?.hide) {
+      this.tooltip_container_element.appendChild(this.arrow_element);
+    }
 
     this.tooltip_container_element.style.position = "fixed";
     this.tooltip_container_element.style.top = "0px";
@@ -70,10 +73,11 @@ class UI {
     this.tooltip_container_element.style.width = "fit-content";
     this.tooltip_container_element.style.height = "fit-content";
     this.tooltip_container_element.style.pointerEvents = "auto";
-    this.tooltip_container_element.classList.add("walkthrough_card_container");
+    this.tooltip_container_element.classList.add(
+      "walkthrough_tooltip_container",
+    );
     this.tooltip_container_element.appendChild(this.tooltip_element);
-    this.tooltip_container_element.style.transform =
-      "translate(-1024px, -1024px)";
+    this.tooltip_container_element.style.transform = `translate(0px, 0px)`;
 
     this.overlay_element.style.position = "fixed";
     this.overlay_element.style.zIndex = "10";
@@ -81,7 +85,7 @@ class UI {
     this.overlay_element.style.left = "0px";
     this.overlay_element.style.width = "100vw";
     this.overlay_element.style.height = "100vh";
-    this.overlay_element.style.pointerEvents = "auto";
+    this.overlay_element.style.pointerEvents = "none";
     this.overlay_element.classList.add("walkthrough_overlay");
 
     this.wrapper_element.style.position = "fixed";
@@ -93,15 +97,21 @@ class UI {
 
     const styleElement = document.createElement("style");
     styleElement.innerHTML = `
-    body.walkthrough_isOverlay.walkthrough_active  * {
+    .walkthrough_isOverlay.walkthrough_active  * {
      pointer-events: none;
      }
-     .walkthrough  * {
+     .walkthrough_target, .walkthrough_target  * {
      pointer-events: auto !important;
      }
-     .walkthrough_target  * {
+     
+     .walkthrough_tooltip_container  * {
      pointer-events: auto !important;
      }
+
+     .walkthrough_tooltip_arrow, .walkthrough_tooltip_arrow  * {
+      pointer-events: none !important;
+     }
+    
      `;
     document.head.appendChild(styleElement);
 
@@ -195,9 +205,9 @@ class UI {
       this.next_btn?.remove();
     }
 
-    this.next_btn?.addEventListener("click", this.navigation.onNext);
-    this.prev_btn?.addEventListener("click", this.navigation.onPrev);
-    this.close_btn?.addEventListener("click", this.navigation.onClose);
+    this.next_btn?.addEventListener("click", this.navigation.next);
+    this.prev_btn?.addEventListener("click", this.navigation.prev);
+    this.close_btn?.addEventListener("click", this.navigation.close);
   }
 
   #setupDefaultArrow() {
@@ -213,6 +223,7 @@ class UI {
   #setupOverlay() {
     const opacity =
       this.walkthrough.options.overlay_options?.opacity?.toString() || " 0.7";
+    const color = this.walkthrough.options.overlay_options?.color || " black";
 
     this.overlay_element.setAttribute("xmlns", "http://www.w3.org/2000/svg");
 
@@ -252,9 +263,10 @@ class UI {
     );
     overlay_rect.setAttribute("width", "100%");
     overlay_rect.setAttribute("height", "100%");
-    overlay_rect.setAttribute("fill", "black");
+    overlay_rect.setAttribute("fill", color);
     overlay_rect.setAttribute("opacity", opacity);
     overlay_rect.setAttribute("mask", "url(#walkthrough_cutout_mask)");
+    overlay_rect.style.pointerEvents = "none";
 
     // Assemble the SVG
     this.overlay_element.appendChild(mask_element);
@@ -268,6 +280,14 @@ class UI {
     this.overlay_cutout_el.setAttribute("height", "0");
     this.overlay_cutout_el.setAttribute("rx", "0");
     this.overlay_cutout_el.setAttribute("ry", "0");
+
+    const target_el = this.getTargetElement(
+      this.walkthrough.flatten_steps[this.walkthrough.active_step_index].target,
+    );
+
+    if (target_el) {
+      target_el.classList.remove("walkthrough_target");
+    }
   }
 
   getTargetElement(target_string?: string) {
@@ -286,20 +306,24 @@ class UI {
     return element;
   }
 
-  run() {
+  start() {
+    document.body.style.overflow = "hidden";
     document.body.appendChild(this.wrapper_element);
     document.body.classList.add("walkthrough_active");
+    const tooltip_rect = this.tooltip_container_element.getBoundingClientRect();
+    this.tooltip_container_element.style.transform = `translate(-${tooltip_rect.width}px, 0px)`;
   }
 
-  end() {
-    this.wrapper_element.remove();
-    this.cleanUp();
+  destroy() {
+    document.body.style.overflow = "auto";
+    document.body.removeChild(this.wrapper_element);
+    document.body.classList.remove("walkthrough_active");
   }
 
   cleanUp() {
-    this.next_btn?.removeEventListener("click", this.navigation.onNext);
-    this.prev_btn?.removeEventListener("click", this.navigation.onPrev);
-    this.close_btn?.removeEventListener("click", this.navigation.onClose);
+    this.next_btn?.removeEventListener("click", this.navigation.next);
+    this.prev_btn?.removeEventListener("click", this.navigation.prev);
+    this.close_btn?.removeEventListener("click", this.navigation.close);
   }
 }
 

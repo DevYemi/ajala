@@ -2,6 +2,8 @@ import Walkthrough from "./base";
 import Placement from "./placement";
 import UI from "./ui";
 import Animations from "./animations";
+import { createDebounceFunc } from "@/utils/chunks";
+import { TTransaitionType } from "./types";
 
 class Navigation {
   walkthrough: Walkthrough;
@@ -19,61 +21,133 @@ class Navigation {
       placement: this.#placement,
     });
 
-    this.onNext = this.onNext.bind(this);
-    this.onPrev = this.onPrev.bind(this);
-    this.onClose = this.onClose.bind(this);
+    this.next = this.next.bind(this);
+    this.prev = this.prev.bind(this);
+    this.close = this.close.bind(this);
+
+    this.refresh = createDebounceFunc(this.refresh.bind(this), 200) as any;
   }
 
-  init() {}
+  init() {
+    window.addEventListener("resize", this.refresh);
+  }
 
-  async onNext() {
+  async next() {
+    if (this.#animations.is_animating) return;
     const next_index = this.walkthrough.active_step_index + 1;
 
     if (this.walkthrough.flatten_steps.length > next_index) {
+      this.walkthrough.dispatchEvent({
+        type: "onNext",
+        data: null,
+      });
       this.#ui.resetOverlayCutoutSvgRect();
+
       const distance_option =
         await this.#placement.tooltip.calculateTravelDistance(next_index);
       const onComplete = () => {
         this.walkthrough.active_step =
           this.walkthrough.flatten_steps[distance_option.active_index];
         this.walkthrough.active_step_index = next_index;
+
+        this.walkthrough.dispatchEvent({
+          type: "onTransitionComplete",
+          data: {
+            transitionType: "next",
+          },
+        });
       };
-      this.#animations.travelToLocation(distance_option, {
-        onComplete: onComplete,
-      });
+
+      this.#animations.transition[this.#animations.transition_type](
+        distance_option,
+        {
+          onComplete: onComplete,
+        },
+      );
     } else {
-      this.onClose();
+      this.walkthrough.dispatchEvent({
+        type: "onFinish",
+        data: null,
+      });
+
+      this.walkthrough.destroy();
     }
   }
 
-  async onPrev() {
+  async prev() {
+    if (this.#animations.is_animating) return;
     const prev_index = this.walkthrough.active_step_index - 1;
 
     if (prev_index > -1) {
+      this.walkthrough.dispatchEvent({
+        type: "onPrev",
+        data: this.walkthrough,
+      });
       this.#ui.resetOverlayCutoutSvgRect();
+
       const distance_option =
         await this.#placement.tooltip.calculateTravelDistance(prev_index);
-      const onPlay = () => {
+
+      const onComplete = () => {
         this.walkthrough.active_step =
           this.walkthrough.flatten_steps[distance_option.active_index];
         this.walkthrough.active_step_index = prev_index;
+
+        this.walkthrough.dispatchEvent({
+          type: "onTransitionComplete",
+          data: {
+            transitionType: "prev",
+          },
+        });
       };
-      this.#animations.travelToLocation(distance_option, { onPlay: onPlay });
+
+      this.#animations.transition[this.#animations.transition_type](
+        distance_option,
+        {
+          onComplete: onComplete,
+        },
+      );
     }
   }
 
-  onClose() {
-    console.log("onClose", this);
+  close() {
+    this.walkthrough.dispatchEvent({
+      type: "onClose",
+      data: null,
+    });
+    this.walkthrough.destroy();
   }
 
-  async run() {
-    // document.body.style.overflow = "hidden";
+  async refresh() {
+    this.#ui.resetOverlayCutoutSvgRect();
+    const distance_option =
+      await this.#placement.tooltip.calculateTravelDistance(
+        this.walkthrough.active_step_index,
+      );
+
+    this.#animations.transition[this.#animations.transition_type](
+      distance_option,
+    );
+  }
+
+  async start() {
+    this.walkthrough.dispatchEvent({
+      type: "onStart",
+      data: this.walkthrough,
+    });
+
     const distance_option =
       await this.#placement.tooltip.calculateTravelDistance(0);
-    this.#animations.travelToLocation(distance_option);
+
+    this.#animations.transition[this.#animations.transition_type](
+      distance_option,
+    );
   }
 
-  cleanUp() {}
+  cleanUp() {
+    window.removeEventListener("resize", this.refresh);
+    this.#placement.cleanUp();
+  }
 }
 
 export default Navigation;

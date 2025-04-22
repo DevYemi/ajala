@@ -1,13 +1,20 @@
 import { linearInterpolate } from "@/utils/chunks";
 import Walkthrough from "./base";
 import Placement from "./placement";
-import { TTravelDistanceData } from "./types";
+import { TTransaitionType, TTravelDistanceData } from "./types";
 import UI from "./ui";
 
+type TTransitionFunc = (
+  distance_option: TTravelDistanceData,
+  callbacks?: Partial<{ onComplete: () => void; onPlay: () => void }>,
+) => void;
 class Animations {
   walkthrough: Walkthrough;
   ui: UI;
   placement: Placement;
+  transition_type: TTransaitionType;
+  is_animating: boolean = false;
+  transition: Record<TTransaitionType, TTransitionFunc>;
 
   constructor({
     walkthrough,
@@ -21,6 +28,11 @@ class Animations {
     this.walkthrough = walkthrough;
     this.ui = ui;
     this.placement = placement;
+    this.transition_type = this.walkthrough.options.transition_type || "travel";
+    this.transition = {
+      travel: this.travelTransition.bind(this),
+      popout: this.popOutTransition.bind(this),
+    };
   }
 
   animate({
@@ -67,8 +79,10 @@ class Animations {
 
       if (rawProgress < 1) {
         animationFrameId = requestAnimationFrame(tick);
+        this.is_animating = true;
       } else {
         onComplete();
+        this.is_animating = false;
       }
     };
 
@@ -95,10 +109,12 @@ class Animations {
         document.documentElement.scrollHeight - window.innerHeight;
       scroll_delta = Math.min(Math.max(0, scroll_delta), max_scroll_height);
 
+      const scroll_duration = this.walkthrough.options.scroll_duration || 1000;
+
       this.animate({
         from: window.scrollY,
         to: scroll_delta,
-        duration: 1000,
+        duration: scroll_duration,
         onUpdate(scroll_time) {
           window.scrollTo(0, scroll_time);
         },
@@ -133,7 +149,23 @@ class Animations {
     });
   }
 
-  travelToLocation(
+  #transitionOnComplete(distance_option: TTravelDistanceData) {
+    const { active_index, placement, taregt_el } = distance_option!;
+    const { x, y, rotate } = this.placement.arrow.calculatePlacmentDelta({
+      active_index,
+      placement,
+    });
+    this.ui.arrow_element.style.visibility = "visible";
+    this.ui.arrow_element.style.transform = `translate(${x}px, ${y}px) rotate(${rotate}deg)`;
+
+    taregt_el?.classList.add("walkthrough_target");
+
+    this.walkthrough.executed_steps.add(
+      this.walkthrough.flatten_steps[distance_option.active_index as number],
+    );
+  }
+
+  travelTransition(
     distance_option: TTravelDistanceData,
     {
       onComplete,
@@ -143,7 +175,6 @@ class Animations {
       onPlay?: () => void;
     } = {},
   ) {
-    const outer_this = this;
     const tooltip_container_el = this.ui.tooltip_container_element;
     if (distance_option.is_valid) {
       const {
@@ -153,7 +184,6 @@ class Animations {
         y_offset,
         tooltip_rect,
         active_index,
-        placement,
       } = distance_option!;
 
       this.animate({
@@ -169,19 +199,46 @@ class Animations {
           tooltip_container_el.style.transform = `translate(${x_smoothen}px, ${y_smoothen}px)`;
         },
         onComplete: () => {
-          const { x, y, rotate } =
-            outer_this.placement.arrow.calculatePlacmentDelta({
-              active_index,
-              placement,
-            });
-          outer_this.ui.arrow_element.style.visibility = "visible";
-          outer_this.ui.arrow_element.style.transform = `translate(${x}px, ${y}px) rotate(${rotate}deg)`;
+          this.#transitionOnComplete(distance_option);
 
-          outer_this.walkthrough.executed_steps.add(
-            this.walkthrough.flatten_steps[
-              distance_option.active_index as number
-            ],
-          );
+          if (onComplete) {
+            onComplete();
+          }
+        },
+        onPlay: () => {
+          this.ui.tooltip_container_element.style.visibility = "visible";
+          this.spotlightTarget(active_index);
+          if (onPlay) {
+            onPlay();
+          }
+        },
+      });
+    }
+  }
+  popOutTransition(
+    distance_option: TTravelDistanceData,
+    {
+      onComplete,
+      onPlay,
+    }: {
+      onComplete?: () => void;
+      onPlay?: () => void;
+    } = {},
+  ) {
+    const tooltip_container_el = this.ui.tooltip_container_element;
+    if (distance_option.is_valid) {
+      const { x_delta, y_delta, active_index } = distance_option!;
+
+      this.animate({
+        from: 0,
+        to: 1,
+        duration: 1000,
+        onUpdate(time) {
+          tooltip_container_el.style.visibility = "visible";
+          tooltip_container_el.style.transform = `translate(${x_delta}px, ${y_delta}px) scale(${time})`;
+        },
+        onComplete: () => {
+          this.#transitionOnComplete(distance_option);
 
           if (onComplete) {
             onComplete();

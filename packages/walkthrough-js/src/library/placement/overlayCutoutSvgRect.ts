@@ -43,22 +43,21 @@ class OverlayCutoutSvgRectPlacement {
       next_index: active_index,
     });
 
+    // Clamp cutout value to remain in the viewport
     delta.x = Math.max(0, target_rect.x - spotlight.padding);
     delta.y = Math.max(0, target_rect.y - spotlight.padding);
     delta.width = Math.min(
       window.innerWidth,
-      target_rect.width + spotlight.padding,
+      target_rect.width + spotlight.padding * 2,
     );
     delta.height = Math.min(
       window.innerWidth,
-      target_rect.height + spotlight.padding,
+      target_rect.height + spotlight.padding * 2,
     );
     delta.border_radius = spotlight.border_radius;
 
     return delta;
   }
-
-  cleanUp() {}
 }
 
 export default OverlayCutoutSvgRectPlacement;

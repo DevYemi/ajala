@@ -14,8 +14,17 @@ import {
 import UI from "@/library/ui";
 import "@/style.css";
 import Navigation from "./navigation";
+import EventEmitter from "./EventEmitter";
 
-class Walkthrough {
+export type TCustomEventTypes =
+  | "onStart"
+  | "onNext"
+  | "onPrev"
+  | "onClose"
+  | "onTransitionComplete"
+  | "onFinish";
+
+class Walkthrough extends EventEmitter<TCustomEventTypes> {
   options: TWalkthroughOptions;
   is_active: boolean;
   original_steps: Array<TWalkthroughSteps>;
@@ -34,12 +43,13 @@ class Walkthrough {
 
   constructor(
     steps: Array<TWalkthroughSteps>,
-    { run_immediately = true, ...options }: TWalkthroughOptions = {
-      run_immediately: true,
+    { start_immediately = true, ...options }: TWalkthroughOptions = {
+      start_immediately: true,
     },
   ) {
-    this.options = { run_immediately, ...options };
-    this.is_active = Boolean(this.options.run_immediately);
+    super();
+    this.options = { start_immediately, ...options };
+    this.is_active = Boolean(this.options.start_immediately);
     this.original_steps = steps;
     this.executed_steps = new Set();
     this.#step_media_query = {
@@ -60,6 +70,8 @@ class Walkthrough {
       ui: this.#ui,
     });
     this.#ui.navigation = this.navigation;
+
+    this.destroy = this.destroy.bind(this);
   }
 
   init() {
@@ -67,8 +79,8 @@ class Walkthrough {
     this.#ui.init();
     this.navigation.init();
 
-    if (this.is_active && this.options.run_immediately) {
-      this.run();
+    if (this.is_active && this.options.start_immediately) {
+      this.start();
     }
   }
 
@@ -140,10 +152,15 @@ class Walkthrough {
     }
   }
 
-  run() {
+  start() {
     this.is_active = true;
-    this.#ui.run();
-    this.navigation.run();
+    this.#ui.start();
+    this.navigation.start();
+  }
+
+  destroy() {
+    this.is_active = false;
+    this.#ui.destroy();
   }
 
   cleanup() {
