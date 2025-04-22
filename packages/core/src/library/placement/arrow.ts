@@ -1,9 +1,9 @@
 import { linearInterpolate } from "@/utils/chunks";
 
-import { TTooltipPlacement } from "../types";
-import UI from "../ui";
-import Walkthrough from "../main";
-import Placement from ".";
+import { TTooltipPlacement } from "@/library/types";
+import UI from "@/library/ui";
+import Walkthrough from "@/library/main";
+import Placement from "@/library/placement";
 
 class ArrowPlacement {
   walkthrough: Walkthrough;

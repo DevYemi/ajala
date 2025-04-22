@@ -1,6 +1,6 @@
-import UI from "../ui";
-import Walkthrough from "../main";
-import Placement from ".";
+import UI from "@/library/ui";
+import Walkthrough from "@/library/main";
+import Placement from "@/library/placement";
 
 class OverlayCutoutSvgRectPlacement {
   walkthrough: Walkthrough;

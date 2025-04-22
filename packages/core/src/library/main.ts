@@ -13,8 +13,8 @@ import {
   flattenStepsToMediaQueryDefaults,
 } from "@/utils/mediaQuerySteps";
 import UI from "@/library/ui";
-import Navigation from "./navigation";
-import EventEmitter from "./EventEmitter";
+import Navigation from "@/library/navigation";
+import EventEmitter from "@/library/EventEmitter";
 
 class Walkthrough extends EventEmitter<TWalkthroughEventTypes> {
   options: TWalkthroughOptions;

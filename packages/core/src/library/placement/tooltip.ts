@@ -3,11 +3,11 @@ import {
   TPlacementAxis,
   TTooltipPlacement,
   TTravelDistanceData,
-} from "../types";
-import UI from "../ui";
-import Walkthrough from "../main";
-import Placement from ".";
-import Animations from "../animations";
+} from "@/library/types";
+import UI from "@/library/ui";
+import Walkthrough from "@/library/main";
+import Placement from "@/library/placement";
+import Animations from "@/library/animations";
 
 class TooltipPlacement {
   walkthrough: Walkthrough;

@@ -3,9 +3,21 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "main": "dist/walkthrough.cjs",
-  "module": "dist/walkthrough.js",
-  "types": "dist/types/index.d.ts",
+  "main": "./dist/walkthrough.cjs",
+  "module": "./dist/walkthrough.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/walkthrough.cjs",
+      "import": "./dist/walkthrough.js"
+    },
+    "./dist/walkthrough.css": {
+      "require": "./dist/walkthrough.css",
+      "import": "./dist/walkthrough.css",
+      "default": "./dist/walkthrough.css"
+    }
+  },
   "files": [
     "dist"
   ],
@@ -19,6 +31,7 @@
   "devDependencies": {
     "@eslint/js": "^9.11.0",
     "@types/eslint__js": "^8.42.3",
+    "@types/node": "^22.14.1",
     "eslint": "^9.11.0",
     "eslint-config-prettier": "^9.1.0",
     "globals": "^15.9.0",

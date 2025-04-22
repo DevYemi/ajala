@@ -1,7 +1,7 @@
-import Walkthrough from "./main";
-import Placement from "./placement";
-import UI from "./ui";
-import Animations from "./animations";
+import Walkthrough from "@/library/main";
+import Placement from "@/library/placement";
+import UI from "@/library/ui";
+import Animations from "@/library/animations";
 import { createDebounceFunc } from "@/utils/chunks";
 
 class Navigation {

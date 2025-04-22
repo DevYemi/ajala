@@ -1,6 +1,7 @@
 import { defineConfig } from "vite";
-import { analyzer } from "vite-bundle-analyzer";
+// import { analyzer } from "vite-bundle-analyzer";
 import dts from "vite-plugin-dts";
+import { resolve } from "path";
 
 export default defineConfig({
   resolve: {
@@ -10,9 +11,8 @@ export default defineConfig({
     },
   },
   build: {
-    cssMinify: true,
     lib: {
-      entry: "src/index.ts", // Entry point to your package
+      entry: resolve(__dirname, "src/index.ts"), // Entry point to your package
       name: "walkthrough",
       fileName: "walkthrough",
       formats: ["es", "cjs"], // Output ES and CommonJS formats
@@ -36,9 +36,8 @@ export default defineConfig({
   plugins: [
     dts({
       rollupTypes: true,
-      insertTypesEntry: true, // Optional: Automatically inserts 'types' field in package.json
-      outDir: "dist/types", // Output directory for type declarations
+      include: ["src"],
     }),
-    analyzer(),
+    // analyzer({ openAnalyzer: false }),
   ],
 });

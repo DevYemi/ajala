@@ -1,5 +1,5 @@
-import Walkthrough from "./main";
-import Navigation from "./navigation";
+import Walkthrough from "@/library/main";
+import Navigation from "@/library/navigation";
 
 class UI {
   walkthrough: Walkthrough;
