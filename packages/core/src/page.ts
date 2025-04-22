@@ -1,3 +1,4 @@
+import "@/style.css";
 import Walkthrough from "./library/main";
 
 const walkthrough = new Walkthrough(

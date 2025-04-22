@@ -13,7 +13,6 @@ import {
   flattenStepsToMediaQueryDefaults,
 } from "@/utils/mediaQuerySteps";
 import UI from "@/library/ui";
-import "@/style.css";
 import Navigation from "./navigation";
 import EventEmitter from "./EventEmitter";
 
@@ -29,7 +28,6 @@ class Walkthrough extends EventEmitter<TWalkthroughEventTypes> {
     instances: Array<MediaQueryList>;
     queries: Partial<TMediaQuery<Array<TParsedResponsiveStep>>>;
   };
-  active_step_index: number;
   active_step: TSteps | undefined;
   #ui: UI;
   navigation: Navigation;
@@ -55,8 +53,7 @@ class Walkthrough extends EventEmitter<TWalkthroughEventTypes> {
       steps,
       this.#step_media_query.queries,
     );
-    this.active_step_index = 0;
-    this.active_step = this.flatten_steps[this.active_step_index];
+    this.active_step = this.flatten_steps[0];
     this.#ui = new UI(this);
     this.navigation = new Navigation({
       walkthrough: this,
@@ -143,6 +140,23 @@ class Walkthrough extends EventEmitter<TWalkthroughEventTypes> {
       };
       this.#step_media_query.instances.push(match_media);
     }
+  }
+
+  getActiveStepFlattenIndex() {
+    const index = this.flatten_steps.findIndex(
+      (item) => item.id === this.active_step?.id,
+    );
+    return Math.max(index, 0);
+  }
+  getActiveStepOriginalIndex() {
+    const index = this.original_steps.findIndex(
+      (item) => item.id === this.active_step?.id,
+    );
+    return Math.max(index, 0);
+  }
+
+  getActiveStep() {
+    return this.active_step;
   }
 
   start() {

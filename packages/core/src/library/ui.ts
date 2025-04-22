@@ -139,7 +139,6 @@ class UI {
     this.tooltip_element.innerHTML = ` 
           <div class="walkthrough_header">
             <div class="walkthrough_dot_navs">
-              <div class="walkthrough_dot_nav walkthrough_dot_nav-active"></div>
               ${dot_navs_element}
             </div>
             <button class="walkthrough_close_btn">
@@ -179,14 +178,8 @@ class UI {
     if (default_options?.class_name) {
       this.tooltip_element.classList.add(default_options.class_name);
     }
-    if (default_options?.hide_header) {
-      this.tooltip_element.querySelector(".walkthrough_header")?.remove();
-    }
     if (default_options?.hide_dot_nav) {
       this.tooltip_element.querySelector(".walkthrough_dot_navs")?.remove();
-    }
-    if (default_options?.hide_footer) {
-      this.tooltip_element.querySelector(".walkthrough_footer")?.remove();
     }
 
     if (default_options?.hide_title) {
@@ -197,12 +190,6 @@ class UI {
     }
     if (default_options?.hide_close_btn) {
       this.close_btn?.remove();
-    }
-    if (default_options?.hide_prev_btn) {
-      this.prev_btn?.remove();
-    }
-    if (default_options?.hide_next_btn) {
-      this.next_btn?.remove();
     }
 
     this.next_btn?.addEventListener("click", this.navigation.next);
@@ -273,6 +260,49 @@ class UI {
     this.overlay_element.appendChild(overlay_rect);
   }
 
+  update() {
+    if (!this.is_default_card_element) return;
+
+    const default_options = this.walkthrough.options.default_tooltip_options;
+
+    if (!default_options?.hide_dot_nav) {
+      const walkthrough_dot_navs = document.querySelectorAll<HTMLElement>(
+        ".walkthrough_dot_nav",
+      );
+      walkthrough_dot_navs.forEach((item) => {
+        item.classList.remove("walkthrough_dot_nav_active");
+      });
+      walkthrough_dot_navs[
+        this.walkthrough.getActiveStepFlattenIndex()
+      ].classList.add("walkthrough_dot_nav_active");
+    }
+
+    if (!default_options?.hide_title) {
+      const walkthrough_title =
+        document.querySelector<HTMLElement>(".walkthrough_title");
+      if (walkthrough_title) {
+        walkthrough_title.innerText = this.walkthrough.active_step?.title ?? "";
+      }
+    }
+    if (!default_options?.hide_content) {
+      const walkthrough_content = document.querySelector<HTMLElement>(
+        ".walkthrough_content",
+      );
+      if (walkthrough_content) {
+        walkthrough_content.innerText =
+          this.walkthrough.active_step?.content ?? "";
+      }
+    }
+
+    if (
+      this.walkthrough.flatten_steps.length - 1 ===
+        this.walkthrough.getActiveStepFlattenIndex() &&
+      this.next_btn
+    ) {
+      this.next_btn.innerText = "Finish";
+    }
+  }
+
   resetOverlayCutoutSvgRect() {
     this.overlay_cutout_el.setAttribute("x", "0");
     this.overlay_cutout_el.setAttribute("y", "0");
@@ -282,7 +312,9 @@ class UI {
     this.overlay_cutout_el.setAttribute("ry", "0");
 
     const target_el = this.getTargetElement(
-      this.walkthrough.flatten_steps[this.walkthrough.active_step_index].target,
+      this.walkthrough.flatten_steps[
+        this.walkthrough.getActiveStepFlattenIndex()
+      ].target,
     );
 
     if (target_el) {
@@ -312,6 +344,7 @@ class UI {
     document.body.classList.add("walkthrough_active");
     const tooltip_rect = this.tooltip_container_element.getBoundingClientRect();
     this.tooltip_container_element.style.transform = `translate(-${tooltip_rect.width}px, 0px)`;
+    this.update();
   }
 
   destroy() {

@@ -55,10 +55,6 @@ export interface TWalkthroughOptions {
     class_name: string;
     hide_dot_nav: boolean;
     hide_close_btn: boolean;
-    hide_header: boolean;
-    hide_footer: boolean;
-    hide_prev_btn: boolean;
-    hide_next_btn: boolean;
     hide_title: boolean;
     hide_content: boolean;
   }>;

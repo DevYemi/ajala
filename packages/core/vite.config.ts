@@ -1,5 +1,5 @@
 import { defineConfig } from "vite";
-
+import { analyzer } from "vite-bundle-analyzer";
 import dts from "vite-plugin-dts"; // This is for generating TypeScript declaration files
 
 export default defineConfig({
@@ -10,6 +10,7 @@ export default defineConfig({
     },
   },
   build: {
+    cssMinify: true,
     lib: {
       entry: "src/index.ts", // Entry point to your package
       name: "walkthrough",
@@ -32,5 +33,6 @@ export default defineConfig({
       insertTypesEntry: true, // Optional: Automatically inserts 'types' field in package.json
       outDir: "dist/types", // Output directory for type declarations
     }),
+    analyzer(),
   ],
 });

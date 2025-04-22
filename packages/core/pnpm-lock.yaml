@@ -35,6 +35,9 @@ importers:
       vite:
         specifier: ^5.4.1
         version: 5.4.7
+      vite-bundle-analyzer:
+        specifier: ^0.19.0
+        version: 0.19.0
       vite-plugin-dts:
         specifier: ^4.2.1
         version: 4.2.1(rollup@4.22.4)(typescript@5.6.2)(vite@5.4.7)
@@ -1046,6 +1049,10 @@ packages:
 
   uri-js@4.4.1:
     resolution: {integrity: sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==}
+
+  vite-bundle-analyzer@0.19.0:
+    resolution: {integrity: sha512-kMslGwnRlYpOCYzda+EUI2rRa5DYCdlbvbrVZO7WvwK1suV/uDFgiD1N5e+woHRsePPInt525wUBWYr1mu0oTQ==}
+    hasBin: true
 
   vite-plugin-dts@4.2.1:
     resolution: {integrity: sha512-/QlYvgUMiv8+ZTEerhNCYnYaZMM07cdlX6hQCR/w/g/nTh0tUXPoYwbT6SitizLJ9BybT1lnrcZgqheI6wromQ==}
@@ -2061,6 +2068,8 @@ snapshots:
   uri-js@4.4.1:
     dependencies:
       punycode: 2.3.1
+
+  vite-bundle-analyzer@0.19.0: {}
 
   vite-plugin-dts@4.2.1(rollup@4.22.4)(typescript@5.6.2)(vite@5.4.7):
     dependencies:
