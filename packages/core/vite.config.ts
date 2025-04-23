@@ -12,12 +12,7 @@ export default defineConfig({
       formats: ["es", "cjs"], // Output ES and CommonJS formats
     },
     rollupOptions: {
-      external: ["vue", "react"], // Any external dependencies you don’t want to bundle
       output: {
-        globals: {
-          vue: "Vue",
-          react: "React",
-        },
         assetFileNames: (assetInfo) => {
           if (assetInfo.name === "style.css") {
             return "walkthrough.css";
