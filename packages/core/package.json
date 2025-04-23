@@ -59,5 +59,6 @@
     "product guide",
     "product tutorial",
     "product demo"
-  ]
+  ],
+  "license": "MIT"
 }
