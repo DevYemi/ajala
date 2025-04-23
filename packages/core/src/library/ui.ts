@@ -13,11 +13,10 @@ class UI {
   prev_btn: HTMLButtonElement | null;
   close_btn: HTMLButtonElement | null;
   is_default_card_element: boolean;
-  navigation: Navigation;
+  navigation?: Navigation;
 
   constructor(walkthrough: Walkthrough) {
     this.walkthrough = walkthrough;
-    this.navigation = walkthrough.navigation;
     this.wrapper_element = document.createElement("div");
     this.is_default_card_element = false;
     this.tooltip_element =
@@ -192,9 +191,11 @@ class UI {
       this.close_btn?.remove();
     }
 
-    this.next_btn?.addEventListener("click", this.navigation.next);
-    this.prev_btn?.addEventListener("click", this.navigation.prev);
-    this.close_btn?.addEventListener("click", this.navigation.close);
+    if (this.navigation) {
+      this.next_btn?.addEventListener("click", this.navigation.next);
+      this.prev_btn?.addEventListener("click", this.navigation.prev);
+      this.close_btn?.addEventListener("click", this.navigation.close);
+    }
   }
 
   #setupDefaultArrow() {
@@ -358,9 +359,11 @@ class UI {
   }
 
   cleanUp() {
-    this.next_btn?.removeEventListener("click", this.navigation.next);
-    this.prev_btn?.removeEventListener("click", this.navigation.prev);
-    this.close_btn?.removeEventListener("click", this.navigation.close);
+    if (this.navigation) {
+      this.next_btn?.removeEventListener("click", this.navigation.next);
+      this.prev_btn?.removeEventListener("click", this.navigation.prev);
+      this.close_btn?.removeEventListener("click", this.navigation.close);
+    }
   }
 }
 

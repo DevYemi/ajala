@@ -31,6 +31,40 @@ class Navigation {
     window.addEventListener("resize", this.refresh);
   }
 
+  async goTo(index: number) {
+    if (this.#animations.is_animating) return;
+
+    if (index >= 0 && index <= this.walkthrough.flatten_steps.length) {
+      this.#animations.is_animating = true;
+      this.#ui.resetOverlayCutoutSvgRect();
+
+      const distance_option =
+        await this.#placement.tooltip.calculateTravelDistance(index);
+
+      const onComplete = () => {
+        this.#animations.is_animating = false;
+        this.walkthrough.active_step =
+          this.walkthrough.flatten_steps[distance_option.active_index];
+
+        this.#ui.update();
+
+        this.walkthrough.dispatchEvent({
+          type: "onTransitionComplete",
+          data: {
+            transitionType: "goTo",
+          },
+        });
+      };
+
+      this.#animations.transition[this.#animations.transition_type](
+        distance_option,
+        {
+          onComplete: onComplete,
+        },
+      );
+    }
+  }
+
   async next() {
     if (this.#animations.is_animating) return;
     const next_index = this.walkthrough.getActiveStepFlattenIndex() + 1;

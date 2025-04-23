@@ -28,7 +28,8 @@ class Animations {
     this.walkthrough = walkthrough;
     this.ui = ui;
     this.placement = placement;
-    this.transition_type = this.walkthrough.options.transition_type || "travel";
+    this.transition_type =
+      this.walkthrough.options?.transition_type || "travel";
     this.transition = {
       travel: this.travelTransition.bind(this),
       popout: this.popOutTransition.bind(this),
@@ -96,7 +97,15 @@ class Animations {
     };
   }
 
-  scrollToLocation(target: HTMLElement) {
+  #getTransitionDuration(active_index: number) {
+    return (
+      this.walkthrough.flatten_steps[active_index]?.transition_duration ??
+      this.walkthrough.options?.transition_duration ??
+      1000
+    );
+  }
+
+  scrollToLocation(target: HTMLElement, active_index: number) {
     return new Promise((resolve) => {
       const target_rect = target.getBoundingClientRect();
 
@@ -109,7 +118,10 @@ class Animations {
         document.documentElement.scrollHeight - window.innerHeight;
       scroll_delta = Math.min(Math.max(0, scroll_delta), max_scroll_height);
 
-      const scroll_duration = this.walkthrough.options.scroll_duration || 1000;
+      const scroll_duration =
+        this.walkthrough.flatten_steps[active_index]?.scroll_duration ??
+        this.walkthrough.options?.scroll_duration ??
+        1000;
 
       this.animate({
         from: window.scrollY,
@@ -185,7 +197,7 @@ class Animations {
       this.animate({
         from: 0,
         to: 1,
-        duration: 1000,
+        duration: this.#getTransitionDuration(active_index),
         onUpdate(time) {
           const x_position = tooltip_rect?.x ?? 0;
           const y_position = tooltip_rect?.y ?? 0;
@@ -228,7 +240,7 @@ class Animations {
       this.animate({
         from: 0,
         to: 1,
-        duration: 1000,
+        duration: this.#getTransitionDuration(active_index),
         onUpdate(time) {
           tooltip_container_el.style.visibility = "visible";
           tooltip_container_el.style.transform = `translate(${x_delta}px, ${y_delta}px) scale(${time})`;

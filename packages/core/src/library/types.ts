@@ -21,6 +21,8 @@ export interface TSteps {
   tooltip_placement?: TTooltipPlacement;
   spotlight_border_radius?: number;
   spotlight_padding?: number;
+  scroll_duration?: number;
+  transition_duration?: number;
 }
 
 export type TMediaQuery<T> = {
@@ -50,6 +52,7 @@ export interface TWalkthroughOptions {
   tooltip_gutter?: number;
   tooltip_placement?: TTooltipPlacement;
   scroll_duration?: number;
+  transition_duration?: number;
   transition_type?: TTransitionType;
   default_tooltip_options?: Partial<{
     class_name: string;

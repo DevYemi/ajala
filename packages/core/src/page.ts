@@ -71,6 +71,8 @@ const walkthrough = new Walkthrough(
     // start_immediately: false,
     tooltip_placement: "auto",
     transition_type: "travel",
+    transition_duration: 400,
+    scroll_duration: 400,
     spotlight_options: {
       border_radius: 5,
       padding: 5,
@@ -90,11 +92,7 @@ walkthrough.init();
 walkthrough.addEventListener("onStart", (e: any) => {
   console.log(e);
 });
-walkthrough.addEventListener("onNext", (e: any) => {
-  console.log(walkthrough.getActiveStep());
-  console.log(walkthrough.getActiveStepFlattenIndex());
-  console.log(walkthrough.getActiveStepOriginalIndex());
-});
+walkthrough.addEventListener("onNext", (e: any) => {});
 
 walkthrough.addEventListener("onPrev", (e: any) => {
   console.log(e);
@@ -103,24 +101,15 @@ walkthrough.addEventListener("onTransitionComplete", (e: any) => {
   console.log(e);
 });
 walkthrough.addEventListener("onClose", (e: any) => {
-  walkthrough.updateSteps([
-    {
-      target: ".step_8",
-      id: "8",
-      title: "Step 8 Title",
-      content: "step 8 content lorem ipson",
-    },
-    {
-      target: ".step_9",
-      id: "9",
-      title: "Step 9 Title",
-      content: "step 9 content lorem ipson",
-      tooltip_placement: "left_bottom",
-    },
-  ]);
+  walkthrough.goToStep("8");
 });
 walkthrough.addEventListener("onFinish", (e: any) => {
   console.log(e);
+});
+
+document.querySelector(".step_3")?.addEventListener("click", (e) => {
+  e.preventDefault();
+  walkthrough.goToStep("8");
 });
 
 // console.log("walkthrough", walkthrough);

@@ -30,7 +30,7 @@ class Walkthrough extends EventEmitter<TWalkthroughEventTypes> {
   };
   active_step: TSteps | undefined;
   #ui: UI;
-  navigation: Navigation;
+  #navigation: Navigation;
 
   constructor(
     steps: Array<TWalkthroughSteps>,
@@ -55,11 +55,11 @@ class Walkthrough extends EventEmitter<TWalkthroughEventTypes> {
     );
     this.active_step = this.flatten_steps[0];
     this.#ui = new UI(this);
-    this.navigation = new Navigation({
+    this.#navigation = new Navigation({
       walkthrough: this,
       ui: this.#ui,
     });
-    this.#ui.navigation = this.navigation;
+    this.#ui.navigation = this.#navigation;
 
     this.destroy = this.destroy.bind(this);
   }
@@ -70,11 +70,141 @@ class Walkthrough extends EventEmitter<TWalkthroughEventTypes> {
   init() {
     this.#setUpStepsMediaQueries();
     this.#ui.init();
-    this.navigation.init();
+    this.#navigation.init();
 
     if (this.is_active && this.options.start_immediately) {
       this.start();
     }
+  }
+
+  /**
+   * @desc Get flatten steps.
+   * Flatten steps are the steps after all media queries have been applied based on current screen size.
+   */
+  getFlattenSteps() {
+    return this.flatten_steps;
+  }
+
+  /**
+   * @desc Get original steps provided to walkthrough.
+   */
+  getOriginalSteps() {
+    return this.original_steps;
+  }
+
+  /**
+   * @desc Get index of the active step in the flatten array.
+   * Flatten array is the array of steps after all media queries have been applied based on current screen size.
+   */
+  getActiveStepFlattenIndex() {
+    const index = this.flatten_steps.findIndex(
+      (item) => item.id === this.active_step?.id,
+    );
+    return Math.max(index, 0);
+  }
+
+  /**
+   * @desc Get index of the active step in the original array.
+   * Original array is the array of steps initially provided .
+   */
+  getActiveStepOriginalIndex() {
+    const index = this.original_steps.findIndex(
+      (item) => item.id === this.active_step?.id,
+    );
+    return Math.max(index, 0);
+  }
+
+  /**
+   * @desc Updates the walkthrough steps.
+   * @param steps - The new steps to be set.
+   * @param restart - Whether to restart the walkthrough after updating the steps.
+   */
+  updateSteps(steps: Array<TWalkthroughSteps>, restart = true) {
+    const validated_steps = checkForStepsIdValidity(steps);
+    this.original_steps = validated_steps;
+    this.#step_media_query = {
+      active_size: 0,
+      fallback_sizes: new Set(),
+      instances: [],
+      queries: parseResponsiveSteps(validated_steps),
+    };
+    this.flatten_steps = flattenStepsToMediaQueryDefaults(
+      validated_steps,
+      this.#step_media_query.queries,
+    );
+    this.active_step = this.flatten_steps[0];
+
+    if (restart) {
+      this.#cleanup();
+      this.start();
+    }
+  }
+
+  /**
+   * @desc Get current active step.
+   * @returns The current active step.
+   */
+  getActiveStep() {
+    return this.active_step;
+  }
+
+  /**
+   * @desc starts the walkthrough.
+   * Can also be used to restart the walkthrough.
+   */
+  start() {
+    this.is_active = true;
+    this.#ui.start();
+    this.#navigation.start();
+  }
+
+  /**
+   * @desc Move to the next step in the walkthrough.
+   */
+  next() {
+    this.#navigation.next();
+  }
+
+  /**
+   * @desc Move to the previous step in the walkthrough.
+   */
+  prev() {
+    this.#navigation.prev();
+  }
+
+  /**
+   * @desc Manually goes to the step with the given id.
+   * @param id - The id of the step to go to.
+   */
+  goToStep(id: string) {
+    const index = this.flatten_steps.findIndex((item) => item.id === id);
+    if (index > -1) {
+      this.#navigation.goTo(index);
+    }
+  }
+
+  /**
+   * @desc Manually trigger a recalculation of the UI elements.
+   */
+  refresh() {
+    this.#navigation.refresh();
+  }
+
+  /**
+   * @desc This method manually stops the walkthrough and remove all the UI elements after cleanups.
+   */
+  destroy() {
+    this.is_active = false;
+    this.#cleanup();
+    this.#ui.destroy();
+  }
+
+  #cleanup() {
+    this.#step_media_query.instances.forEach((mq) => {
+      mq.onchange = null;
+    });
+    this.#ui.cleanUp();
+    this.#navigation.cleanUp();
   }
 
   #setUpStepsMediaQueries() {
@@ -143,103 +273,6 @@ class Walkthrough extends EventEmitter<TWalkthroughEventTypes> {
       };
       this.#step_media_query.instances.push(match_media);
     }
-  }
-
-  /**
-   * @desc This method returns the steps after all media queries have been applied depending on the current screen size.
-   */
-  getFlattenSteps() {
-    return this.flatten_steps;
-  }
-
-  /**
-   * @desc This method returns the original steps provided.
-   */
-  getOriginalSteps() {
-    return this.original_steps;
-  }
-
-  /**
-   * @desc This method returns the index of the active step in the flatten array.
-   * Flatten array is the array of steps after all media queries have been applied based on current screen size.
-   */
-  getActiveStepFlattenIndex() {
-    const index = this.flatten_steps.findIndex(
-      (item) => item.id === this.active_step?.id,
-    );
-    return Math.max(index, 0);
-  }
-
-  /**
-   * @desc This method returns the index of the active step in the original array.
-   * Original array is the array of steps initially provided .
-   */
-  getActiveStepOriginalIndex() {
-    const index = this.original_steps.findIndex(
-      (item) => item.id === this.active_step?.id,
-    );
-    return Math.max(index, 0);
-  }
-
-  /**
-   * @desc This method updates the walkthrough steps.
-   * @param steps - The new steps to be set.
-   * @param restart - Whether to restart the walkthrough after updating the steps.
-   */
-  updateSteps(steps: Array<TWalkthroughSteps>, restart = true) {
-    const validated_steps = checkForStepsIdValidity(steps);
-    this.original_steps = validated_steps;
-    this.#step_media_query = {
-      active_size: 0,
-      fallback_sizes: new Set(),
-      instances: [],
-      queries: parseResponsiveSteps(validated_steps),
-    };
-    this.flatten_steps = flattenStepsToMediaQueryDefaults(
-      validated_steps,
-      this.#step_media_query.queries,
-    );
-    this.active_step = this.flatten_steps[0];
-
-    if (restart) {
-      this.#cleanup();
-      this.start();
-    }
-  }
-
-  /**
-   * @desc This method returns the current active step.
-   * @returns The current active step.
-   */
-  getActiveStep() {
-    return this.active_step;
-  }
-
-  /**
-   * @desc This method manually starts the walkthrough.
-   * Can also be used to restart the walkthrough.
-   */
-  start() {
-    this.is_active = true;
-    this.#ui.start();
-    this.navigation.start();
-  }
-
-  /**
-   * @desc This method manually stops the walkthrough and remove all the UI elements after cleanups.
-   */
-  destroy() {
-    this.is_active = false;
-    this.#cleanup();
-    this.#ui.destroy();
-  }
-
-  #cleanup() {
-    this.#step_media_query.instances.forEach((mq) => {
-      mq.onchange = null;
-    });
-    this.#ui.cleanUp();
-    this.navigation.cleanUp();
   }
 }
 

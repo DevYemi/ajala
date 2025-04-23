@@ -91,7 +91,7 @@ class TooltipPlacement {
         this.ui.tooltip_container_element.style.visibility = "hidden";
       }
 
-      await this.animations.scrollToLocation(next_step_target);
+      await this.animations.scrollToLocation(next_step_target, next_index);
       scrolled = true;
 
       target_rect = next_step_target.getBoundingClientRect();
