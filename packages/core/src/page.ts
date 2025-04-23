@@ -13,7 +13,7 @@ const walkthrough = new Walkthrough(
     },
     {
       target: ".step_2",
-      id: "2",
+      id: "1",
       title: "Step 2 Title",
       content: "step 2 content lorem ipson",
       tooltip_placement: "left_top",
@@ -91,7 +91,9 @@ walkthrough.addEventListener("onStart", (e: any) => {
   console.log(e);
 });
 walkthrough.addEventListener("onNext", (e: any) => {
-  console.log(e);
+  console.log(walkthrough.getActiveStep());
+  console.log(walkthrough.getActiveStepFlattenIndex());
+  console.log(walkthrough.getActiveStepOriginalIndex());
 });
 
 walkthrough.addEventListener("onPrev", (e: any) => {
@@ -101,11 +103,24 @@ walkthrough.addEventListener("onTransitionComplete", (e: any) => {
   console.log(e);
 });
 walkthrough.addEventListener("onClose", (e: any) => {
-  console.log(e);
+  walkthrough.updateSteps([
+    {
+      target: ".step_8",
+      id: "8",
+      title: "Step 8 Title",
+      content: "step 8 content lorem ipson",
+    },
+    {
+      target: ".step_9",
+      id: "9",
+      title: "Step 9 Title",
+      content: "step 9 content lorem ipson",
+      tooltip_placement: "left_bottom",
+    },
+  ]);
 });
 walkthrough.addEventListener("onFinish", (e: any) => {
   console.log(e);
 });
-// walkthrough.start();
 
 // console.log("walkthrough", walkthrough);
