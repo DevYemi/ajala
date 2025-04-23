@@ -1,4 +1,4 @@
-import { TSteps } from "@/library/types";
+import { TSteps } from "../library/types";
 
 export default function sortStepsByOrder(steps: Array<TSteps>) {
   return steps.sort((a, b) => {

@@ -4,17 +4,17 @@ import {
   TSteps,
   TWalkthroughOptions,
   TWalkthroughSteps,
-} from "@/library/types";
+} from "./types";
 import {
   getMediaQuerySize,
   TParsedResponsiveStep,
   parseResponsiveSteps,
   mapResponsiveValueToSteps,
   flattenStepsToMediaQueryDefaults,
-} from "@/utils/mediaQuerySteps";
-import UI from "@/library/ui";
-import Navigation from "@/library/navigation";
-import EventEmitter from "@/library/EventEmitter";
+} from "../utils/mediaQuerySteps";
+import UI from "./ui";
+import Navigation from "./navigation";
+import EventEmitter from "./EventEmitter";
 
 class Walkthrough extends EventEmitter<TWalkthroughEventTypes> {
   options: TWalkthroughOptions;

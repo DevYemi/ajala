@@ -4,12 +4,6 @@ import dts from "vite-plugin-dts";
 import { resolve } from "path";
 
 export default defineConfig({
-  resolve: {
-    alias: {
-      "@": "/src",
-      "@/public": "/public",
-    },
-  },
   build: {
     lib: {
       entry: resolve(__dirname, "src/index.ts"), // Entry point to your package

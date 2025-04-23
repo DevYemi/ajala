@@ -1,8 +1,8 @@
-import { linearInterpolate } from "@/utils/chunks";
-import Walkthrough from "@/library/main";
-import Placement from "@/library/placement";
-import { TTransitionType, TTravelDistanceData } from "@/library/types";
-import UI from "@/library/ui";
+import { linearInterpolate } from "../utils/chunks";
+import Walkthrough from "./main";
+import Placement from "./placement";
+import { TTransitionType, TTravelDistanceData } from "./types";
+import UI from "./ui";
 
 type TTransitionFunc = (
   distance_option: TTravelDistanceData,

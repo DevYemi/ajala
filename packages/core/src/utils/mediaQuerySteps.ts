@@ -3,7 +3,7 @@ import {
   TWalkthroughSteps,
   TResponsiveStepsProperties,
   TSteps,
-} from "@/library/types";
+} from "../library/types";
 import sortStepsByOrder from "./sortStepsByOrder";
 
 export type TParsedResponsiveStep = {
