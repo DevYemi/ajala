@@ -170,11 +170,6 @@ class Navigation {
   }
 
   async start() {
-    this.walkthrough.dispatchEvent({
-      type: "onStart",
-      data: this.walkthrough,
-    });
-
     const distance_option =
       await this.#placement.tooltip.calculateTravelDistance(0);
 

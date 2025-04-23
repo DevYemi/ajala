@@ -156,12 +156,20 @@ class Walkthrough extends EventEmitter<TWalkthroughEventTypes> {
     this.is_active = true;
     this.#ui.start();
     this.#navigation.start();
+
+    setTimeout(() => {
+      this.dispatchEvent({
+        type: "onStart",
+        data: this,
+      });
+    }, 250);
   }
 
   /**
    * @desc Move to the next step in the walkthrough.
    */
   next() {
+    if (!this.is_active) return;
     this.#navigation.next();
   }
 
@@ -169,6 +177,7 @@ class Walkthrough extends EventEmitter<TWalkthroughEventTypes> {
    * @desc Move to the previous step in the walkthrough.
    */
   prev() {
+    if (!this.is_active) return;
     this.#navigation.prev();
   }
 
@@ -177,6 +186,7 @@ class Walkthrough extends EventEmitter<TWalkthroughEventTypes> {
    * @param id - The id of the step to go to.
    */
   goToStep(id: string) {
+    if (!this.is_active) return;
     const index = this.flatten_steps.findIndex((item) => item.id === id);
     if (index > -1) {
       this.#navigation.goTo(index);
@@ -187,6 +197,7 @@ class Walkthrough extends EventEmitter<TWalkthroughEventTypes> {
    * @desc Manually trigger a recalculation of the UI elements.
    */
   refresh() {
+    if (!this.is_active) return;
     this.#navigation.refresh();
   }
 

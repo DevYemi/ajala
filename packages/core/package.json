@@ -1,7 +1,7 @@
 {
-  "name": "walkthrough.js",
+  "name": "@walkthrough/core",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
   "main": "./dist/walkthrough.cjs",
   "module": "./dist/walkthrough.js",
@@ -25,6 +25,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
+    "prepublishOnly": "pnpm run build",
     "lint": "eslint 'src/**/*.{ts,tsx,js,jsx}' --quiet",
     "format": "prettier --write 'src/**/*.{ts,tsx,js,jsx,json,css,md}'"
   },

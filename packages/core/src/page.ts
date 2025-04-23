@@ -90,7 +90,7 @@ const walkthrough = new Walkthrough(
 walkthrough.init();
 
 walkthrough.addEventListener("onStart", (e: any) => {
-  console.log(e);
+  console.log("onStart", e);
 });
 walkthrough.addEventListener("onNext", (e: any) => {});
 
