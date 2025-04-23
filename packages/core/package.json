@@ -6,6 +6,8 @@
   "main": "./dist/walkthrough.cjs",
   "module": "./dist/walkthrough.js",
   "types": "./dist/index.d.ts",
+  "homepage": "https://github.com/DevYemi/walkthrough",
+  "repository": "https://github.com/DevYemi/walkthrough",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -43,7 +45,10 @@
     "vite-bundle-analyzer": "^0.19.0",
     "vite-plugin-dts": "^4.2.1"
   },
-  "author": "Adeyanju Adeyemi",
+  "author": "Adeyanju Adeyemi <adeyanjuadeyemi007@gmail.com>",
+  "bugs": {
+    "url": "https://github.com/DevYemi/walkthrough/issues"
+  },
   "keywords": [
     "walkthrough",
     "walkthrough.js",
