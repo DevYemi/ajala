@@ -5,28 +5,28 @@ import {
   TTravelDistanceData,
 } from "../types";
 import UI from "../ui";
-import Walkthrough from "../main";
+import { AjalaJourney } from "../main";
 import Placement from "../placement";
 import Animations from "../animations";
 
 class TooltipPlacement {
-  walkthrough: Walkthrough;
+  ajala: AjalaJourney;
   placement: Placement;
   ui: UI;
   animations: Animations;
   constructor({
-    walkthrough,
+    ajala,
     ui,
     placement,
   }: {
-    walkthrough: Walkthrough;
+    ajala: AjalaJourney;
     ui: UI;
     placement: Placement;
   }) {
-    this.walkthrough = walkthrough;
+    this.ajala = ajala;
     this.ui = ui;
     this.placement = placement;
-    this.animations = new Animations({ walkthrough, ui, placement });
+    this.animations = new Animations({ ajala, ui, placement });
   }
 
   async calculateTravelDistance(
@@ -36,7 +36,7 @@ class TooltipPlacement {
     this.ui.arrow_element.style.visibility = "hidden";
 
     const next_step_target = this.ui.getTargetElement(
-      this.walkthrough.flatten_steps[next_index].target,
+      this.ajala.flatten_steps[next_index].target,
     );
 
     if (!next_step_target)
@@ -59,8 +59,8 @@ class TooltipPlacement {
     let tooltip_rect = tooltip_container_el.getBoundingClientRect();
 
     const gutter =
-      this.walkthrough.flatten_steps[next_index].tooltip_gutter ??
-      this.walkthrough.options.tooltip_gutter ??
+      this.ajala.flatten_steps[next_index].tooltip_gutter ??
+      this.ajala.options.tooltip_gutter ??
       0;
 
     const getDimensionOffset = (value: number) => {

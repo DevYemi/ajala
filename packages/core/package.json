@@ -1,23 +1,23 @@
 {
-  "name": "walkthrough.js",
+  "name": "ajala.js",
   "private": false,
   "version": "0.1.0",
   "type": "module",
-  "main": "./dist/walkthrough.cjs",
-  "module": "./dist/walkthrough.js",
+  "main": "./dist/ajala.cjs",
+  "module": "./dist/ajala.js",
   "types": "./dist/index.d.ts",
-  "homepage": "https://github.com/DevYemi/walkthrough",
-  "repository": "https://github.com/DevYemi/walkthrough",
+  "homepage": "https://github.com/DevYemi/ajala",
+  "repository": "https://github.com/DevYemi/ajala",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "require": "./dist/walkthrough.cjs",
-      "import": "./dist/walkthrough.js"
+      "require": "./dist/ajala.cjs",
+      "import": "./dist/ajala.js"
     },
-    "./dist/walkthrough.css": {
-      "require": "./dist/walkthrough.css",
-      "import": "./dist/walkthrough.css",
-      "default": "./dist/walkthrough.css"
+    "./dist/ajala.css": {
+      "require": "./dist/ajala.css",
+      "import": "./dist/ajala.css",
+      "default": "./dist/ajala.css"
     }
   },
   "files": [
@@ -47,11 +47,12 @@
   },
   "author": "Adeyanju Adeyemi <adeyanjuadeyemi007@gmail.com>",
   "bugs": {
-    "url": "https://github.com/DevYemi/walkthrough/issues"
+    "url": "https://github.com/DevYemi/ajala/issues"
   },
   "keywords": [
     "walkthrough",
-    "walkthrough.js",
+    "ajala",
+    "ajala.js",
     "tour",
     "guide",
     "product tour",

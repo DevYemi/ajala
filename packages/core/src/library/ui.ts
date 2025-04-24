@@ -1,8 +1,8 @@
-import Walkthrough from "./main";
+import { AjalaJourney } from "./main";
 import Navigation from "./navigation";
 
 class UI {
-  walkthrough: Walkthrough;
+  ajala: AjalaJourney;
   tooltip_element: HTMLElement;
   wrapper_element: HTMLElement;
   tooltip_container_element: HTMLElement;
@@ -15,12 +15,12 @@ class UI {
   is_default_card_element: boolean;
   navigation?: Navigation;
 
-  constructor(walkthrough: Walkthrough) {
-    this.walkthrough = walkthrough;
+  constructor(ajala: AjalaJourney) {
+    this.ajala = ajala;
     this.wrapper_element = document.createElement("div");
     this.is_default_card_element = false;
     this.tooltip_element =
-      this.walkthrough.options.custom_tooltip || document.createElement("div");
+      this.ajala.options.custom_tooltip || document.createElement("div");
     this.tooltip_container_element = document.createElement("div");
     this.overlay_element = document.createElementNS(
       "http://www.w3.org/2000/svg",
@@ -37,18 +37,18 @@ class UI {
   }
 
   init() {
-    if (!this.walkthrough.options.custom_tooltip) {
+    if (!this.ajala.options.custom_tooltip) {
       this.#setUpDefaultTooltip();
     }
 
-    if (this.walkthrough.options.custom_arrow) {
-      this.arrow_element.appendChild(this.walkthrough.options.custom_arrow);
+    if (this.ajala.options.custom_arrow) {
+      this.arrow_element.appendChild(this.ajala.options.custom_arrow);
     } else {
       this.#setupDefaultArrow();
     }
 
-    const arrow_size = this.walkthrough.options.default_arrow_options?.size
-      ? `${this.walkthrough.options.default_arrow_options?.size}px`
+    const arrow_size = this.ajala.options.default_arrow_options?.size
+      ? `${this.ajala.options.default_arrow_options?.size}px`
       : "48px";
     this.arrow_element.style.position = "absolute";
     this.arrow_element.style.width = arrow_size;
@@ -56,12 +56,12 @@ class UI {
     this.arrow_element.style.top = "0px";
     this.arrow_element.style.left = "0px";
     this.arrow_element.style.fill =
-      this.walkthrough.options.default_arrow_options?.color || "#000000";
+      this.ajala.options.default_arrow_options?.color || "#000000";
     this.arrow_element.style.zIndex = "2";
     this.arrow_element.style.pointerEvents = "none";
-    this.arrow_element.classList.add("walkthrough_tooltip_arrow");
+    this.arrow_element.classList.add("ajala_tooltip_arrow");
 
-    if (!this.walkthrough.options.default_arrow_options?.hide) {
+    if (!this.ajala.options.default_arrow_options?.hide) {
       this.tooltip_container_element.appendChild(this.arrow_element);
     }
 
@@ -72,9 +72,7 @@ class UI {
     this.tooltip_container_element.style.width = "fit-content";
     this.tooltip_container_element.style.height = "fit-content";
     this.tooltip_container_element.style.pointerEvents = "auto";
-    this.tooltip_container_element.classList.add(
-      "walkthrough_tooltip_container",
-    );
+    this.tooltip_container_element.classList.add("ajala_tooltip_container");
     this.tooltip_container_element.appendChild(this.tooltip_element);
     this.tooltip_container_element.style.transform = `translate(0px, 0px)`;
 
@@ -85,29 +83,29 @@ class UI {
     this.overlay_element.style.width = "100vw";
     this.overlay_element.style.height = "100vh";
     this.overlay_element.style.pointerEvents = "none";
-    this.overlay_element.classList.add("walkthrough_overlay");
+    this.overlay_element.classList.add("ajala_overlay");
 
     this.wrapper_element.style.position = "fixed";
     this.wrapper_element.style.top = "0px";
     this.wrapper_element.style.left = "0px";
     this.wrapper_element.style.zIndex = "9999999";
-    this.wrapper_element.classList.add("walkthrough");
+    this.wrapper_element.classList.add("ajala");
     this.wrapper_element.append(this.tooltip_container_element);
 
     const styleElement = document.createElement("style");
     styleElement.innerHTML = `
-    .walkthrough_isOverlay.walkthrough_active  * {
+    .ajala_isOverlay.ajala_active  * {
      pointer-events: none;
      }
-     .walkthrough_target, .walkthrough_target  * {
+     .ajala_target, .ajala_target  * {
      pointer-events: auto !important;
      }
      
-     .walkthrough_tooltip_container  * {
+     .ajala_tooltip_container  * {
      pointer-events: auto !important;
      }
 
-     .walkthrough_tooltip_arrow, .walkthrough_tooltip_arrow  * {
+     .ajala_tooltip_arrow, .ajala_tooltip_arrow  * {
       pointer-events: none !important;
      }
     
@@ -115,32 +113,32 @@ class UI {
     document.head.appendChild(styleElement);
 
     if (
-      typeof this.walkthrough.options.overlay_options?.hide === "undefined" ||
-      !this.walkthrough.options.overlay_options?.hide
+      typeof this.ajala.options.overlay_options?.hide === "undefined" ||
+      !this.ajala.options.overlay_options?.hide
     ) {
       this.#setupOverlay();
       this.wrapper_element.append(this.overlay_element);
-      document.body.classList.add("walkthrough_isOverlay");
+      document.body.classList.add("ajala_isOverlay");
     }
   }
 
   #setUpDefaultTooltip() {
     this.is_default_card_element = true;
-    const default_options = this.walkthrough.options.default_tooltip_options;
+    const default_options = this.ajala.options.default_tooltip_options;
 
-    this.tooltip_element.classList.add("walkthrough_tooltip");
+    this.tooltip_element.classList.add("ajala_tooltip");
 
     let dot_navs_element = "";
-    for (let i = 0; i < this.walkthrough.original_steps.length; i++) {
-      dot_navs_element = `${dot_navs_element} <div class="walkthrough_dot_nav"></div>
+    for (let i = 0; i < this.ajala.original_steps.length; i++) {
+      dot_navs_element = `${dot_navs_element} <div class="ajala_dot_nav"></div>
       `;
     }
     this.tooltip_element.innerHTML = ` 
-          <div class="walkthrough_header">
-            <div class="walkthrough_dot_navs">
+          <div class="ajala_header">
+            <div class="ajala_dot_navs">
               ${dot_navs_element}
             </div>
-            <button class="walkthrough_close_btn">
+            <button class="ajala_close_btn">
               <svg
                 viewBox="0 0 24 24"
                 fill="none"
@@ -156,36 +154,33 @@ class UI {
               </svg>
             </button>
           </div>
-          <h3 class="walkthrough_title">${this.walkthrough.active_step?.title}</h3>
-          <p class="walkthrough_content">
-            ${this.walkthrough.active_step?.content}
+          <h3 class="ajala_title">${this.ajala.active_step?.title}</h3>
+          <p class="ajala_content">
+            ${this.ajala.active_step?.content}
           </p>
-          <div class="walkthrough_footer">
-            <button class="walkthrough_btn_prev">Prev</button>
-            <button class="walkthrough_btn_next">Next</button>
+          <div class="ajala_footer">
+            <button class="ajala_btn_prev">Prev</button>
+            <button class="ajala_btn_next">Next</button>
           </div>`;
 
-    this.next_btn = this.tooltip_element.querySelector<HTMLButtonElement>(
-      ".walkthrough_btn_next",
-    );
-    this.prev_btn = this.tooltip_element.querySelector<HTMLButtonElement>(
-      ".walkthrough_btn_prev",
-    );
-    this.close_btn = this.tooltip_element.querySelector<HTMLButtonElement>(
-      ".walkthrough_close_btn",
-    );
+    this.next_btn =
+      this.tooltip_element.querySelector<HTMLButtonElement>(".ajala_btn_next");
+    this.prev_btn =
+      this.tooltip_element.querySelector<HTMLButtonElement>(".ajala_btn_prev");
+    this.close_btn =
+      this.tooltip_element.querySelector<HTMLButtonElement>(".ajala_close_btn");
     if (default_options?.class_name) {
       this.tooltip_element.classList.add(default_options.class_name);
     }
     if (default_options?.hide_dot_nav) {
-      this.tooltip_element.querySelector(".walkthrough_dot_navs")?.remove();
+      this.tooltip_element.querySelector(".ajala_dot_navs")?.remove();
     }
 
     if (default_options?.hide_title) {
-      this.tooltip_element.querySelector(".walkthrough_title")?.remove();
+      this.tooltip_element.querySelector(".ajala_title")?.remove();
     }
     if (default_options?.hide_content) {
-      this.tooltip_element.querySelector(".walkthrough_content")?.remove();
+      this.tooltip_element.querySelector(".ajala_content")?.remove();
     }
     if (default_options?.hide_close_btn) {
       this.close_btn?.remove();
@@ -199,8 +194,8 @@ class UI {
   }
 
   #setupDefaultArrow() {
-    const size = this.walkthrough.options.default_arrow_options?.size
-      ? `${this.walkthrough.options.default_arrow_options?.size}px`
+    const size = this.ajala.options.default_arrow_options?.size
+      ? `${this.ajala.options.default_arrow_options?.size}px`
       : "48px";
 
     this.arrow_element.innerHTML = `
@@ -210,8 +205,8 @@ class UI {
 
   #setupOverlay() {
     const opacity =
-      this.walkthrough.options.overlay_options?.opacity?.toString() || " 0.7";
-    const color = this.walkthrough.options.overlay_options?.color || " black";
+      this.ajala.options.overlay_options?.opacity?.toString() || " 0.7";
+    const color = this.ajala.options.overlay_options?.color || " black";
 
     this.overlay_element.setAttribute("xmlns", "http://www.w3.org/2000/svg");
 
@@ -220,7 +215,7 @@ class UI {
       "http://www.w3.org/2000/svg",
       "mask",
     );
-    mask_element.setAttribute("id", "walkthrough_cutout_mask");
+    mask_element.setAttribute("id", "ajala_cutout_mask");
 
     // Create white background for mask
     const mask_background = document.createElementNS(
@@ -253,7 +248,7 @@ class UI {
     overlay_rect.setAttribute("height", "100%");
     overlay_rect.setAttribute("fill", color);
     overlay_rect.setAttribute("opacity", opacity);
-    overlay_rect.setAttribute("mask", "url(#walkthrough_cutout_mask)");
+    overlay_rect.setAttribute("mask", "url(#ajala_cutout_mask)");
     overlay_rect.style.pointerEvents = "none";
 
     // Assemble the SVG
@@ -264,40 +259,36 @@ class UI {
   update() {
     if (!this.is_default_card_element) return;
 
-    const default_options = this.walkthrough.options.default_tooltip_options;
+    const default_options = this.ajala.options.default_tooltip_options;
 
     if (!default_options?.hide_dot_nav) {
-      const walkthrough_dot_navs = document.querySelectorAll<HTMLElement>(
-        ".walkthrough_dot_nav",
-      );
-      walkthrough_dot_navs.forEach((item) => {
-        item.classList.remove("walkthrough_dot_nav_active");
+      const ajala_dot_navs =
+        document.querySelectorAll<HTMLElement>(".ajala_dot_nav");
+      ajala_dot_navs.forEach((item) => {
+        item.classList.remove("ajala_dot_nav_active");
       });
-      walkthrough_dot_navs[
-        this.walkthrough.getActiveStepFlattenIndex()
-      ].classList.add("walkthrough_dot_nav_active");
+      ajala_dot_navs[this.ajala.getActiveStepFlattenIndex()].classList.add(
+        "ajala_dot_nav_active",
+      );
     }
 
     if (!default_options?.hide_title) {
-      const walkthrough_title =
-        document.querySelector<HTMLElement>(".walkthrough_title");
-      if (walkthrough_title) {
-        walkthrough_title.innerText = this.walkthrough.active_step?.title ?? "";
+      const ajala_title = document.querySelector<HTMLElement>(".ajala_title");
+      if (ajala_title) {
+        ajala_title.innerText = this.ajala.active_step?.title ?? "";
       }
     }
     if (!default_options?.hide_content) {
-      const walkthrough_content = document.querySelector<HTMLElement>(
-        ".walkthrough_content",
-      );
-      if (walkthrough_content) {
-        walkthrough_content.innerText =
-          this.walkthrough.active_step?.content ?? "";
+      const ajala_content =
+        document.querySelector<HTMLElement>(".ajala_content");
+      if (ajala_content) {
+        ajala_content.innerText = this.ajala.active_step?.content ?? "";
       }
     }
 
     if (
-      this.walkthrough.flatten_steps.length - 1 ===
-        this.walkthrough.getActiveStepFlattenIndex() &&
+      this.ajala.flatten_steps.length - 1 ===
+        this.ajala.getActiveStepFlattenIndex() &&
       this.next_btn
     ) {
       this.next_btn.innerText = "Finish";
@@ -313,13 +304,11 @@ class UI {
     this.overlay_cutout_el.setAttribute("ry", "0");
 
     const target_el = this.getTargetElement(
-      this.walkthrough.flatten_steps[
-        this.walkthrough.getActiveStepFlattenIndex()
-      ].target,
+      this.ajala.flatten_steps[this.ajala.getActiveStepFlattenIndex()].target,
     );
 
     if (target_el) {
-      target_el.classList.remove("walkthrough_target");
+      target_el.classList.remove("ajala_target");
     }
   }
 
@@ -327,12 +316,12 @@ class UI {
     const element = document.querySelector<HTMLElement>(target_string || "");
     if (!target_string) {
       console.warn(
-        `Please provide a selectors for walkthrough step with id ${this.walkthrough.active_step?.id}`,
+        `Please provide a selectors for ajala step with id ${this.ajala.active_step?.id}`,
       );
     }
     if (!element && target_string) {
       console.warn(
-        `walkthrough coundn't find element with selector ${target_string}`,
+        `ajala coundn't find element with selector ${target_string}`,
       );
     }
 
@@ -341,11 +330,11 @@ class UI {
 
   start() {
     this.wrapper_element.remove();
-    document.body.classList.remove("walkthrough_active");
+    document.body.classList.remove("ajala_active");
 
     document.body.style.overflow = "hidden";
     document.body.appendChild(this.wrapper_element);
-    document.body.classList.add("walkthrough_active");
+    document.body.classList.add("ajala_active");
     const tooltip_rect = this.tooltip_container_element.getBoundingClientRect();
     this.tooltip_container_element.style.transform = `translate(-${tooltip_rect.width}px, 0px)`;
     this.resetOverlayCutoutSvgRect();
@@ -355,7 +344,7 @@ class UI {
   destroy() {
     document.body.style.overflow = "auto";
     document.body.removeChild(this.wrapper_element);
-    document.body.classList.remove("walkthrough_active");
+    document.body.classList.remove("ajala_active");
   }
 
   cleanUp() {

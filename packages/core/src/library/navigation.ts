@@ -1,21 +1,21 @@
-import Walkthrough from "./main";
+import { AjalaJourney } from "./main";
 import Placement from "./placement";
 import UI from "./ui";
 import Animations from "./animations";
 import { createDebounceFunc } from "../utils/chunks";
 
 class Navigation {
-  walkthrough: Walkthrough;
+  ajala: AjalaJourney;
   #ui: UI;
   #placement: Placement;
   #animations: Animations;
 
-  constructor({ walkthrough, ui }: { walkthrough: Walkthrough; ui: UI }) {
-    this.walkthrough = walkthrough;
+  constructor({ ajala, ui }: { ajala: AjalaJourney; ui: UI }) {
+    this.ajala = ajala;
     this.#ui = ui;
-    this.#placement = new Placement({ walkthrough, ui });
+    this.#placement = new Placement({ ajala, ui });
     this.#animations = new Animations({
-      walkthrough,
+      ajala,
       ui,
       placement: this.#placement,
     });
@@ -34,7 +34,7 @@ class Navigation {
   async goTo(index: number) {
     if (this.#animations.is_animating) return;
 
-    if (index >= 0 && index <= this.walkthrough.flatten_steps.length) {
+    if (index >= 0 && index <= this.ajala.flatten_steps.length) {
       this.#animations.is_animating = true;
       this.#ui.resetOverlayCutoutSvgRect();
 
@@ -43,12 +43,12 @@ class Navigation {
 
       const onComplete = () => {
         this.#animations.is_animating = false;
-        this.walkthrough.active_step =
-          this.walkthrough.flatten_steps[distance_option.active_index];
+        this.ajala.active_step =
+          this.ajala.flatten_steps[distance_option.active_index];
 
         this.#ui.update();
 
-        this.walkthrough.dispatchEvent({
+        this.ajala.dispatchEvent({
           type: "onTransitionComplete",
           data: {
             transitionType: "goTo",
@@ -67,11 +67,11 @@ class Navigation {
 
   async next() {
     if (this.#animations.is_animating) return;
-    const next_index = this.walkthrough.getActiveStepFlattenIndex() + 1;
+    const next_index = this.ajala.getActiveStepFlattenIndex() + 1;
 
-    if (this.walkthrough.flatten_steps.length > next_index) {
+    if (this.ajala.flatten_steps.length > next_index) {
       this.#animations.is_animating = true;
-      this.walkthrough.dispatchEvent({
+      this.ajala.dispatchEvent({
         type: "onNext",
         data: null,
       });
@@ -81,12 +81,12 @@ class Navigation {
         await this.#placement.tooltip.calculateTravelDistance(next_index);
       const onComplete = () => {
         this.#animations.is_animating = false;
-        this.walkthrough.active_step =
-          this.walkthrough.flatten_steps[distance_option.active_index];
+        this.ajala.active_step =
+          this.ajala.flatten_steps[distance_option.active_index];
 
         this.#ui.update();
 
-        this.walkthrough.dispatchEvent({
+        this.ajala.dispatchEvent({
           type: "onTransitionComplete",
           data: {
             transitionType: "next",
@@ -101,24 +101,24 @@ class Navigation {
         },
       );
     } else {
-      this.walkthrough.dispatchEvent({
+      this.ajala.dispatchEvent({
         type: "onFinish",
         data: null,
       });
 
-      this.walkthrough.destroy();
+      this.ajala.destroy();
     }
   }
 
   async prev() {
     if (this.#animations.is_animating) return;
-    const prev_index = this.walkthrough.getActiveStepFlattenIndex() - 1;
+    const prev_index = this.ajala.getActiveStepFlattenIndex() - 1;
 
     if (prev_index > -1) {
       this.#animations.is_animating = true;
-      this.walkthrough.dispatchEvent({
+      this.ajala.dispatchEvent({
         type: "onPrev",
-        data: this.walkthrough,
+        data: this.ajala,
       });
       this.#ui.resetOverlayCutoutSvgRect();
 
@@ -127,12 +127,12 @@ class Navigation {
 
       const onComplete = () => {
         this.#animations.is_animating = false;
-        this.walkthrough.active_step =
-          this.walkthrough.flatten_steps[distance_option.active_index];
+        this.ajala.active_step =
+          this.ajala.flatten_steps[distance_option.active_index];
 
         this.#ui.update();
 
-        this.walkthrough.dispatchEvent({
+        this.ajala.dispatchEvent({
           type: "onTransitionComplete",
           data: {
             transitionType: "prev",
@@ -150,8 +150,8 @@ class Navigation {
   }
 
   close() {
-    this.walkthrough.destroy();
-    this.walkthrough.dispatchEvent({
+    this.ajala.destroy();
+    this.ajala.dispatchEvent({
       type: "onClose",
       data: null,
     });
@@ -161,7 +161,7 @@ class Navigation {
     this.#ui.resetOverlayCutoutSvgRect();
     const distance_option =
       await this.#placement.tooltip.calculateTravelDistance(
-        this.walkthrough.getActiveStepFlattenIndex(),
+        this.ajala.getActiveStepFlattenIndex(),
       );
 
     this.#animations.transition[this.#animations.transition_type](

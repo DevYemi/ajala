@@ -1,21 +1,21 @@
 import UI from "../ui";
-import Walkthrough from "../main";
+import { AjalaJourney } from "../main";
 import Placement from "../placement";
 
 class OverlayCutoutSvgRectPlacement {
-  walkthrough: Walkthrough;
+  ajala: AjalaJourney;
   placement: Placement;
   ui: UI;
   constructor({
-    walkthrough,
+    ajala,
     placement,
     ui,
   }: {
-    walkthrough: Walkthrough;
+    ajala: AjalaJourney;
     ui: UI;
     placement: Placement;
   }) {
-    this.walkthrough = walkthrough;
+    this.ajala = ajala;
     this.placement = placement;
     this.ui = ui;
   }
@@ -29,7 +29,7 @@ class OverlayCutoutSvgRectPlacement {
       border_radius: 0,
     };
     const target_el = this.ui.getTargetElement(
-      this.walkthrough.flatten_steps[active_index].target,
+      this.ajala.flatten_steps[active_index].target,
     );
 
     if (!target_el) return delta;

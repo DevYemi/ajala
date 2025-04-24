@@ -1,4 +1,4 @@
-import { TWalkthroughSteps } from "../library/types";
+import { TAjalaSteps } from "../library/types";
 
 export const linearInterpolate = (a: number, b: number, t: number) => {
   t = Math.max(0, Math.min(1, t));
@@ -22,7 +22,7 @@ export function createDebounceFunc(cb: Function, delay: number) {
   };
 }
 
-export function checkForStepsIdValidity(steps: Array<TWalkthroughSteps>) {
+export function checkForStepsIdValidity(steps: Array<TAjalaSteps>) {
   const store = new Set<string>();
   const new_steps = [];
   for (let i = 0; i < steps.length; i++) {
@@ -31,7 +31,7 @@ export function checkForStepsIdValidity(steps: Array<TWalkthroughSteps>) {
     if (step.id) {
       if (store.has(step.id)) {
         console.warn(
-          `Duplicate walkthrough step id found: ${step.id}. Please make sure all step ids are unique.`,
+          `Duplicate ajala step id found: ${step.id}. Please make sure all step ids are unique.`,
         );
         step.id = new_id;
       } else {
@@ -40,7 +40,7 @@ export function checkForStepsIdValidity(steps: Array<TWalkthroughSteps>) {
     } else {
       step.id = new_id;
       console.warn(
-        `Walkthrough step ${i} is missing an id. Please make sure all steps have unique ids.`,
+        `ajala step ${i} is missing an id. Please make sure all steps have unique ids.`,
       );
     }
     new_steps.push(step);

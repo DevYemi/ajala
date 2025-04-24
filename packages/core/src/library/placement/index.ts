@@ -1,5 +1,5 @@
 import UI from "../ui";
-import Walkthrough from "../main";
+import { AjalaJourney } from "../main";
 import ArrowPlacement from "./arrow";
 import TooltipPlacement from "./tooltip";
 import { TPlacementAlign, TPlacementAxis, TTooltipPlacement } from "../types";
@@ -11,20 +11,20 @@ import OverlayCutoutSvgRectPlacement from "./overlayCutoutSvgRect";
  */
 
 class Placement {
-  walkthrough: Walkthrough;
+  ajala: AjalaJourney;
   arrow: ArrowPlacement;
   tooltip: TooltipPlacement;
   overlay_cutout_svg_rect: OverlayCutoutSvgRectPlacement;
   ui: UI;
-  constructor({ walkthrough, ui }: { walkthrough: Walkthrough; ui: UI }) {
-    this.arrow = new ArrowPlacement({ walkthrough, ui, placement: this });
-    this.tooltip = new TooltipPlacement({ walkthrough, ui, placement: this });
+  constructor({ ajala, ui }: { ajala: AjalaJourney; ui: UI }) {
+    this.arrow = new ArrowPlacement({ ajala, ui, placement: this });
+    this.tooltip = new TooltipPlacement({ ajala, ui, placement: this });
     this.overlay_cutout_svg_rect = new OverlayCutoutSvgRectPlacement({
-      walkthrough,
+      ajala,
       ui,
       placement: this,
     });
-    this.walkthrough = walkthrough;
+    this.ajala = ajala;
     this.ui = ui;
   }
 
@@ -36,23 +36,23 @@ class Placement {
     placement?: TTooltipPlacement;
   }) {
     const axis_gutter =
-      this.walkthrough.flatten_steps[next_index].tooltip_gutter ||
-      this.walkthrough.options.tooltip_gutter ||
+      this.ajala.flatten_steps[next_index].tooltip_gutter ||
+      this.ajala.options.tooltip_gutter ||
       10;
     const placement_loc =
       placement ||
-      this.walkthrough.flatten_steps[next_index].tooltip_placement ||
-      this.walkthrough.options.tooltip_placement ||
+      this.ajala.flatten_steps[next_index].tooltip_placement ||
+      this.ajala.options.tooltip_placement ||
       "auto";
     const loc = placement_loc.split("_");
 
     const spotlight_padding =
-      this.walkthrough.flatten_steps[next_index].spotlight_padding ||
-      this.walkthrough.options.spotlight_options?.padding ||
+      this.ajala.flatten_steps[next_index].spotlight_padding ||
+      this.ajala.options.spotlight_options?.padding ||
       0;
     const spotlight_border_radius =
-      this.walkthrough.flatten_steps[next_index].spotlight_border_radius ||
-      this.walkthrough.options.spotlight_options?.border_radius ||
+      this.ajala.flatten_steps[next_index].spotlight_border_radius ||
+      this.ajala.options.spotlight_options?.border_radius ||
       0;
 
     return {

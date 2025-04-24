@@ -1,7 +1,7 @@
 import "./style.css";
-import Walkthrough from "./library/main";
+import { AjalaJourney } from "./library/main";
 
-const walkthrough = new Walkthrough(
+const ajala = new AjalaJourney(
   [
     {
       target: ".step_1",
@@ -70,7 +70,7 @@ const walkthrough = new Walkthrough(
   {
     // start_immediately: false,
     tooltip_placement: "auto",
-    transition_type: "travel",
+    transition_type: "traveller",
     transition_duration: 400,
     scroll_duration: 400,
     spotlight_options: {
@@ -87,29 +87,29 @@ const walkthrough = new Walkthrough(
     },
   },
 );
-walkthrough.init();
+ajala.init();
 
-walkthrough.addEventListener("onStart", (e: any) => {
+ajala.addEventListener("onStart", (e: any) => {
   console.log("onStart", e);
 });
-walkthrough.addEventListener("onNext", (e: any) => {});
+ajala.addEventListener("onNext", (e: any) => {});
 
-walkthrough.addEventListener("onPrev", (e: any) => {
+ajala.addEventListener("onPrev", (e: any) => {
   console.log(e);
 });
-walkthrough.addEventListener("onTransitionComplete", (e: any) => {
+ajala.addEventListener("onTransitionComplete", (e: any) => {
   console.log(e);
 });
-walkthrough.addEventListener("onClose", (e: any) => {
-  walkthrough.goToStep("8");
+ajala.addEventListener("onClose", (e: any) => {
+  ajala.goToStep("8");
 });
-walkthrough.addEventListener("onFinish", (e: any) => {
+ajala.addEventListener("onFinish", (e: any) => {
   console.log(e);
 });
 
 document.querySelector(".step_3")?.addEventListener("click", (e) => {
   e.preventDefault();
-  walkthrough.goToStep("8");
+  ajala.goToStep("8");
 });
 
-// console.log("walkthrough", walkthrough);
+// console.log("ajala", ajala);

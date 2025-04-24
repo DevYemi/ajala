@@ -1,9 +1,9 @@
 import {
-  TWalkthroughEventTypes,
+  TAjalaEventTypes,
   TMediaQuery,
   TSteps,
-  TWalkthroughOptions,
-  TWalkthroughSteps,
+  TAjalaOptions,
+  TAjalaSteps,
 } from "./types";
 import {
   getMediaQuerySize,
@@ -17,10 +17,10 @@ import Navigation from "./navigation";
 import EventEmitter from "./EventEmitter";
 import { checkForStepsIdValidity } from "../utils/chunks";
 
-class Walkthrough extends EventEmitter<TWalkthroughEventTypes> {
-  options: TWalkthroughOptions;
+export class AjalaJourney extends EventEmitter<TAjalaEventTypes> {
+  options: TAjalaOptions;
   is_active: boolean;
-  original_steps: Array<TWalkthroughSteps>;
+  original_steps: Array<TAjalaSteps>;
   flatten_steps: Array<TSteps>;
   #step_media_query: {
     active_size: number;
@@ -33,8 +33,8 @@ class Walkthrough extends EventEmitter<TWalkthroughEventTypes> {
   #navigation: Navigation;
 
   constructor(
-    steps: Array<TWalkthroughSteps>,
-    { start_immediately = true, ...options }: TWalkthroughOptions = {
+    steps: Array<TAjalaSteps>,
+    { start_immediately = true, ...options }: TAjalaOptions = {
       start_immediately: true,
     },
   ) {
@@ -56,7 +56,7 @@ class Walkthrough extends EventEmitter<TWalkthroughEventTypes> {
     this.active_step = this.flatten_steps[0];
     this.#ui = new UI(this);
     this.#navigation = new Navigation({
-      walkthrough: this,
+      ajala: this,
       ui: this.#ui,
     });
     this.#ui.navigation = this.#navigation;
@@ -65,7 +65,7 @@ class Walkthrough extends EventEmitter<TWalkthroughEventTypes> {
   }
 
   /**
-   * @desc This method initializes the walkthrough by setting up media queries and UI elements.
+   * @desc This method initializes the ajala by setting up media queries and UI elements.
    */
   init() {
     this.#setUpStepsMediaQueries();
@@ -86,7 +86,7 @@ class Walkthrough extends EventEmitter<TWalkthroughEventTypes> {
   }
 
   /**
-   * @desc Get original steps provided to walkthrough.
+   * @desc Get original steps provided to ajala.
    */
   getOriginalSteps() {
     return this.original_steps;
@@ -115,11 +115,11 @@ class Walkthrough extends EventEmitter<TWalkthroughEventTypes> {
   }
 
   /**
-   * @desc Updates the walkthrough steps.
+   * @desc Updates the ajala journey steps.
    * @param steps - The new steps to be set.
-   * @param restart - Whether to restart the walkthrough after updating the steps.
+   * @param restart - Whether to restart the ajala after updating the steps.
    */
-  updateSteps(steps: Array<TWalkthroughSteps>, restart = true) {
+  updateSteps(steps: Array<TAjalaSteps>, restart = true) {
     const validated_steps = checkForStepsIdValidity(steps);
     this.original_steps = validated_steps;
     this.#step_media_query = {
@@ -141,7 +141,7 @@ class Walkthrough extends EventEmitter<TWalkthroughEventTypes> {
   }
 
   /**
-   * @desc Get current active step.
+   * @desc Get current active step in ajala journey.
    * @returns The current active step.
    */
   getActiveStep() {
@@ -149,8 +149,8 @@ class Walkthrough extends EventEmitter<TWalkthroughEventTypes> {
   }
 
   /**
-   * @desc starts the walkthrough.
-   * Can also be used to restart the walkthrough.
+   * @desc starts ajala.
+   * Can also be used to restart the ajala journey.
    */
   start() {
     this.is_active = true;
@@ -166,7 +166,7 @@ class Walkthrough extends EventEmitter<TWalkthroughEventTypes> {
   }
 
   /**
-   * @desc Move to the next step in the walkthrough.
+   * @desc Move to the next step in ajala journey.
    */
   next() {
     if (!this.is_active) return;
@@ -174,7 +174,7 @@ class Walkthrough extends EventEmitter<TWalkthroughEventTypes> {
   }
 
   /**
-   * @desc Move to the previous step in the walkthrough.
+   * @desc Move to the previous step in the ajala journey.
    */
   prev() {
     if (!this.is_active) return;
@@ -202,7 +202,7 @@ class Walkthrough extends EventEmitter<TWalkthroughEventTypes> {
   }
 
   /**
-   * @desc This method manually stops the walkthrough and remove all the UI elements after cleanups.
+   * @desc This method manually stops the ajala and remove all the UI elements after cleanups.
    */
   destroy() {
     this.is_active = false;
@@ -286,5 +286,3 @@ class Walkthrough extends EventEmitter<TWalkthroughEventTypes> {
     }
   }
 }
-
-export default Walkthrough;

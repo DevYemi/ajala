@@ -8,7 +8,7 @@ export type TTooltipPlacement =
   | `${"left" | "right"}_${TPlacementYAlign}`
   | "auto";
 
-export type TTransitionType = "travel" | "popout";
+export type TTransitionType = "traveller" | "popout";
 export interface TSteps {
   id: string;
   target: string;
@@ -36,7 +36,7 @@ export type TMediaQuery<T> = {
  */
 export type TResponsiveStepsProperties = Omit<TSteps, "id" | "data">;
 
-export type TWalkthroughSteps = {
+export type TAjalaSteps = {
   [property in keyof TResponsiveStepsProperties]:
     | TResponsiveStepsProperties[property]
     | TMediaQuery<TResponsiveStepsProperties[property]>;
@@ -45,7 +45,7 @@ export type TWalkthroughSteps = {
   data?: unknown;
 };
 
-export interface TWalkthroughOptions {
+export interface TAjalaOptions {
   start_immediately?: boolean;
   custom_tooltip?: HTMLElement | null;
   custom_arrow?: SVGSVGElement | null;
@@ -93,7 +93,7 @@ export interface TTravelDistanceData {
   placement: TTooltipPlacement;
 }
 
-export type TWalkthroughEventTypes =
+export type TAjalaEventTypes =
   | "onStart"
   | "onNext"
   | "onPrev"

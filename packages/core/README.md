@@ -1,5 +1,5 @@
 <!-- @format -->
 
-# Walkthrough.js
+# ajala.js
 
 Docs update coming very soon (Core)

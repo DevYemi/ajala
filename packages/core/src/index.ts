@@ -1,9 +1,9 @@
 import "./style.css";
-export { default as Walkthrough } from "./library/main";
+export { AjalaJourney } from "./library/main";
 export type {
-  TWalkthroughOptions,
+  TAjalaOptions,
   TTooltipPlacement,
-  TWalkthroughSteps,
+  TAjalaSteps,
   TTransitionType,
-  TWalkthroughEventTypes,
+  TAjalaEventTypes,
 } from "./library/types";

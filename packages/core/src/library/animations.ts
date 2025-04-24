@@ -1,5 +1,5 @@
 import { linearInterpolate } from "../utils/chunks";
-import Walkthrough from "./main";
+import { AjalaJourney } from "./main";
 import Placement from "./placement";
 import { TTransitionType, TTravelDistanceData } from "./types";
 import UI from "./ui";
@@ -9,7 +9,7 @@ type TTransitionFunc = (
   callbacks?: Partial<{ onComplete: () => void; onPlay: () => void }>,
 ) => void;
 class Animations {
-  walkthrough: Walkthrough;
+  ajala: AjalaJourney;
   ui: UI;
   placement: Placement;
   transition_type: TTransitionType;
@@ -17,21 +17,20 @@ class Animations {
   transition: Record<TTransitionType, TTransitionFunc>;
 
   constructor({
-    walkthrough,
+    ajala,
     ui,
     placement,
   }: {
-    walkthrough: Walkthrough;
+    ajala: AjalaJourney;
     ui: UI;
     placement: Placement;
   }) {
-    this.walkthrough = walkthrough;
+    this.ajala = ajala;
     this.ui = ui;
     this.placement = placement;
-    this.transition_type =
-      this.walkthrough.options?.transition_type || "travel";
+    this.transition_type = this.ajala.options?.transition_type || "traveller";
     this.transition = {
-      travel: this.travelTransition.bind(this),
+      traveller: this.travelTransition.bind(this),
       popout: this.popOutTransition.bind(this),
     };
   }
@@ -99,8 +98,8 @@ class Animations {
 
   #getTransitionDuration(active_index: number) {
     return (
-      this.walkthrough.flatten_steps[active_index]?.transition_duration ??
-      this.walkthrough.options?.transition_duration ??
+      this.ajala.flatten_steps[active_index]?.transition_duration ??
+      this.ajala.options?.transition_duration ??
       1000
     );
   }
@@ -119,8 +118,8 @@ class Animations {
       scroll_delta = Math.min(Math.max(0, scroll_delta), max_scroll_height);
 
       const scroll_duration =
-        this.walkthrough.flatten_steps[active_index]?.scroll_duration ??
-        this.walkthrough.options?.scroll_duration ??
+        this.ajala.flatten_steps[active_index]?.scroll_duration ??
+        this.ajala.options?.scroll_duration ??
         1000;
 
       this.animate({
@@ -170,7 +169,7 @@ class Animations {
     this.ui.arrow_element.style.visibility = "visible";
     this.ui.arrow_element.style.transform = `translate(${x}px, ${y}px) rotate(${rotate}deg)`;
 
-    taregt_el?.classList.add("walkthrough_target");
+    taregt_el?.classList.add("ajala_target");
   }
 
   travelTransition(

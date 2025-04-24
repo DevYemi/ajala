@@ -1,6 +1,6 @@
 import {
   TMediaQuery,
-  TWalkthroughSteps,
+  TAjalaSteps,
   TResponsiveStepsProperties,
   TSteps,
 } from "../library/types";
@@ -24,7 +24,7 @@ export function getMediaQuerySize(query: string) {
   return 0;
 }
 
-export function parseResponsiveSteps(steps: Array<TWalkthroughSteps>) {
+export function parseResponsiveSteps(steps: Array<TAjalaSteps>) {
   const media_quries: Partial<TMediaQuery<Array<TParsedResponsiveStep>>> = {};
   const unresponsive_step_keys = ["id", "data"];
 
@@ -34,7 +34,7 @@ export function parseResponsiveSteps(steps: Array<TWalkthroughSteps>) {
       // Media quries are not allowed for unresponsive keys
       if (!unresponsive_step_keys.includes(step_key)) {
         const step_value = step[
-          step_key as keyof TWalkthroughSteps
+          step_key as keyof TAjalaSteps
         ] as TMediaQuery<any>;
 
         // Handle as a Media Query property
@@ -92,12 +92,12 @@ export function mapResponsiveValueToSteps<T>(
  * @description This helps flatten the steps by mapping all keys with a media query object to its active media query value
  */
 export function flattenStepsToMediaQueryDefaults(
-  steps: Array<TWalkthroughSteps>,
+  steps: Array<TAjalaSteps>,
   media_queries_steps: Partial<TMediaQuery<TParsedResponsiveStep[]>>,
 ) {
   let deep_cloned_steps = JSON.parse(
     JSON.stringify(steps),
-  ) as Array<TWalkthroughSteps>;
+  ) as Array<TAjalaSteps>;
 
   Object.values(media_queries_steps).forEach((query_values) => {
     if (query_values) {

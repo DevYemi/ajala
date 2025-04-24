@@ -7,15 +7,15 @@ export default defineConfig({
   build: {
     lib: {
       entry: resolve(__dirname, "src/index.ts"), // Entry point to your package
-      name: "walkthrough",
-      fileName: "walkthrough",
+      name: "ajala",
+      fileName: "ajala",
       formats: ["es", "cjs"], // Output ES and CommonJS formats
     },
     rollupOptions: {
       output: {
         assetFileNames: (assetInfo) => {
           if (assetInfo.name === "style.css") {
-            return "walkthrough.css";
+            return "ajala.css";
           }
           return "assets/[name]-[hash][extname]";
         },
