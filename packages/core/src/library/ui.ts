@@ -8,7 +8,7 @@ class UI {
   tooltip_container_element: HTMLElement;
   arrow_element: HTMLElement;
   overlay_element: SVGElement;
-  overlay_cutout_el: SVGRectElement;
+  overlay_path: SVGPathElement;
   next_btn: HTMLButtonElement | null;
   prev_btn: HTMLButtonElement | null;
   close_btn: HTMLButtonElement | null;
@@ -26,14 +26,22 @@ class UI {
       "http://www.w3.org/2000/svg",
       "svg",
     );
-    this.overlay_cutout_el = document.createElementNS(
+    this.overlay_path = document.createElementNS(
       "http://www.w3.org/2000/svg",
-      "rect",
+      "path",
     );
     this.arrow_element = document.createElement("div");
     this.next_btn = null;
     this.prev_btn = null;
     this.close_btn = null;
+
+    this.closeOnOverlayClickHandler =
+      this.closeOnOverlayClickHandler.bind(this);
+
+    this.overlay_path.addEventListener(
+      "click",
+      this.closeOnOverlayClickHandler,
+    );
   }
 
   init() {
@@ -75,15 +83,6 @@ class UI {
     this.tooltip_container_element.classList.add("ajala_tooltip_container");
     this.tooltip_container_element.appendChild(this.tooltip_element);
     this.tooltip_container_element.style.transform = `translate(0px, 0px)`;
-
-    this.overlay_element.style.position = "fixed";
-    this.overlay_element.style.zIndex = "10";
-    this.overlay_element.style.top = "0px";
-    this.overlay_element.style.left = "0px";
-    this.overlay_element.style.width = "100vw";
-    this.overlay_element.style.height = "100vh";
-    this.overlay_element.style.pointerEvents = "none";
-    this.overlay_element.classList.add("ajala_overlay");
 
     this.wrapper_element.style.position = "fixed";
     this.wrapper_element.style.top = "0px";
@@ -209,51 +208,30 @@ class UI {
     const color = this.ajala.options.overlay_options?.color || " black";
 
     this.overlay_element.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+    this.overlay_element.style.position = "fixed";
+    this.overlay_element.style.zIndex = "10";
+    this.overlay_element.style.top = "0px";
+    this.overlay_element.style.left = "0px";
+    this.overlay_element.style.width = "100vw";
+    this.overlay_element.style.height = "100vh";
+    this.overlay_element.style.pointerEvents = "none";
+    this.overlay_element.classList.add("ajala_overlay");
 
-    // Create mask element
-    const mask_element = document.createElementNS(
-      "http://www.w3.org/2000/svg",
-      "mask",
-    );
-    mask_element.setAttribute("id", "ajala_cutout_mask");
+    // Create path element
+    this.overlay_path.style.pointerEvents = "auto";
+    this.updateOverlayCutoutPathData({
+      x: 0,
+      y: 0,
+      width: 0,
+      height: 0,
+      border_radius: 0,
+    });
 
-    // Create white background for mask
-    const mask_background = document.createElementNS(
-      "http://www.w3.org/2000/svg",
-      "rect",
-    );
-    mask_background.setAttribute("width", "100%");
-    mask_background.setAttribute("height", "100%");
-    mask_background.setAttribute("fill", "white");
-
-    // Create cutout rectangle
-    this.overlay_cutout_el.setAttribute("x", "0");
-    this.overlay_cutout_el.setAttribute("y", "0");
-    this.overlay_cutout_el.setAttribute("width", "0");
-    this.overlay_cutout_el.setAttribute("height", "0");
-    this.overlay_cutout_el.setAttribute("rx", "0");
-    this.overlay_cutout_el.setAttribute("ry", "0");
-    this.overlay_cutout_el.setAttribute("fill", "black");
-
-    // Add elements to mask
-    mask_element.appendChild(mask_background);
-    mask_element.appendChild(this.overlay_cutout_el);
-
-    // Create overlay rectangle that will use the mask
-    const overlay_rect = document.createElementNS(
-      "http://www.w3.org/2000/svg",
-      "rect",
-    );
-    overlay_rect.setAttribute("width", "100%");
-    overlay_rect.setAttribute("height", "100%");
-    overlay_rect.setAttribute("fill", color);
-    overlay_rect.setAttribute("opacity", opacity);
-    overlay_rect.setAttribute("mask", "url(#ajala_cutout_mask)");
-    overlay_rect.style.pointerEvents = "none";
+    this.overlay_path.style.fill = color;
+    this.overlay_path.style.opacity = opacity;
 
     // Assemble the SVG
-    this.overlay_element.appendChild(mask_element);
-    this.overlay_element.appendChild(overlay_rect);
+    this.overlay_element.appendChild(this.overlay_path);
   }
 
   update() {
@@ -295,13 +273,50 @@ class UI {
     }
   }
 
+  updateOverlayCutoutPathData({
+    x,
+    y,
+    height,
+    width,
+    border_radius,
+  }: {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    border_radius: number;
+  }) {
+    // Create rounded rectangle path data
+    const roundedRectPath = `
+  M${x + border_radius},${y}
+  h${width - 2 * border_radius}
+  a${border_radius},${border_radius} 0 0 1 ${border_radius},${border_radius}
+  v${height - 2 * border_radius}
+  a${border_radius},${border_radius} 0 0 1 -${border_radius},${border_radius}
+  h-${width - 2 * border_radius}
+  a${border_radius},${border_radius} 0 0 1 -${border_radius},-${border_radius}
+  v-${height - 2 * border_radius}
+  a${border_radius},${border_radius} 0 0 1 ${border_radius},-${border_radius}
+  z
+`;
+
+    // Create the full path (overlay + cutout)
+    const pathData = `
+  M${window.innerWidth},0 L0,0 L0,${window.innerHeight} L${window.innerWidth},${window.innerHeight} L${window.innerWidth},0 Z
+  ${roundedRectPath}
+`;
+
+    this.overlay_path.setAttribute("d", pathData);
+  }
+
   resetOverlayCutoutSvgRect() {
-    this.overlay_cutout_el.setAttribute("x", "0");
-    this.overlay_cutout_el.setAttribute("y", "0");
-    this.overlay_cutout_el.setAttribute("width", "0");
-    this.overlay_cutout_el.setAttribute("height", "0");
-    this.overlay_cutout_el.setAttribute("rx", "0");
-    this.overlay_cutout_el.setAttribute("ry", "0");
+    this.updateOverlayCutoutPathData({
+      x: 0,
+      y: 0,
+      width: 0,
+      height: 0,
+      border_radius: 0,
+    });
 
     const target_el = this.getTargetElement(
       this.ajala.flatten_steps[this.ajala.getActiveStepFlattenIndex()].target,
@@ -341,6 +356,16 @@ class UI {
     this.update();
   }
 
+  closeOnOverlayClickHandler() {
+    const should_close =
+      this.ajala.active_step?.enable_overlay_close ??
+      this.ajala.options.enable_overlay_close;
+
+    if (should_close) {
+      this.ajala.destroy();
+    }
+  }
+
   destroy() {
     document.body.style.overflow = "auto";
     document.body.removeChild(this.wrapper_element);
@@ -353,6 +378,10 @@ class UI {
       this.prev_btn?.removeEventListener("click", this.navigation.prev);
       this.close_btn?.removeEventListener("click", this.navigation.close);
     }
+    this.overlay_path.removeEventListener(
+      "click",
+      this.closeOnOverlayClickHandler,
+    );
   }
 }
 

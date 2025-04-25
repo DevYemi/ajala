@@ -22,11 +22,6 @@ const ajala = new AjalaJourney(
         "(min-width: 450px)": 3,
         "(min-width: 600px)": 0,
       },
-      enable_target_interaction: {
-        default: false,
-        "(min-width: 450px)": false,
-        "(min-width: 600px)": true,
-      },
     },
     {
       target: ".step_3",
@@ -84,7 +79,8 @@ const ajala = new AjalaJourney(
     // start_immediately: false,
     tooltip_placement: "auto",
     transition_type: "traveller",
-    transition_duration: 400,
+    enable_target_interaction: true,
+    transition_duration: 500,
     scroll_duration: 400,
     spotlight_options: {
       border_radius: 5,

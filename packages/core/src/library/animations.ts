@@ -147,15 +147,22 @@ class Animations {
       to: 1,
       duration: 500,
       onUpdate: (time) => {
-        this.ui.overlay_cutout_el.setAttribute("width", `${width * time}`);
-        this.ui.overlay_cutout_el.setAttribute("height", `${height * time}`);
+        this.ui.updateOverlayCutoutPathData({
+          x,
+          y,
+          width: width * time,
+          height: height * time,
+          border_radius,
+        });
       },
       onPlay: () => {
-        this.ui.overlay_cutout_el.setAttribute("x", `${x}`);
-        this.ui.overlay_cutout_el.setAttribute("y", `${y}`);
-        this.ui.overlay_cutout_el.setAttribute("y", `${y}`);
-        this.ui.overlay_cutout_el.setAttribute("rx", `${border_radius}`);
-        this.ui.overlay_cutout_el.setAttribute("ry", `${border_radius}`);
+        this.ui.updateOverlayCutoutPathData({
+          x,
+          y,
+          width: 0,
+          height: 0,
+          border_radius,
+        });
       },
     });
   }

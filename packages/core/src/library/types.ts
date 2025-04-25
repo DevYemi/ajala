@@ -24,6 +24,7 @@ export interface TSteps {
   scroll_duration?: number;
   transition_duration?: number;
   enable_target_interaction?: boolean;
+  enable_overlay_close?: boolean;
 }
 
 export type TMediaQuery<T> = {
@@ -56,6 +57,7 @@ export interface TAjalaOptions {
   transition_duration?: number;
   transition_type?: TTransitionType;
   enable_target_interaction?: boolean;
+  enable_overlay_close?: boolean;
   default_tooltip_options?: Partial<{
     class_name: string;
     hide_dot_nav: boolean;
