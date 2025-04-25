@@ -97,7 +97,7 @@ class UI {
     .ajala_isOverlay.ajala_active  * {
      pointer-events: none;
      }
-     .ajala_target, .ajala_target  * {
+     .ajala_target_interactive, .ajala_target_interactive  * {
      pointer-events: auto !important;
      }
      
@@ -308,7 +308,7 @@ class UI {
     );
 
     if (target_el) {
-      target_el.classList.remove("ajala_target");
+      target_el.classList.remove("ajala_target_interactive");
     }
   }
 

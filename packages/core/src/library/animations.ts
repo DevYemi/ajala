@@ -169,7 +169,13 @@ class Animations {
     this.ui.arrow_element.style.visibility = "visible";
     this.ui.arrow_element.style.transform = `translate(${x}px, ${y}px) rotate(${rotate}deg)`;
 
-    taregt_el?.classList.add("ajala_target");
+    const enable_target_interaction =
+      this.ajala.flatten_steps[active_index].enable_target_interaction ??
+      this.ajala.options?.enable_target_interaction;
+
+    if (enable_target_interaction) {
+      taregt_el?.classList.add("ajala_target_interactive");
+    }
   }
 
   travelTransition(

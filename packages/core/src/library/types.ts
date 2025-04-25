@@ -23,10 +23,11 @@ export interface TSteps {
   spotlight_padding?: number;
   scroll_duration?: number;
   transition_duration?: number;
+  enable_target_interaction?: boolean;
 }
 
 export type TMediaQuery<T> = {
-  [index in `${number}px`]: T;
+  [index in string]: T;
 } & {
   default: T;
 };
@@ -54,6 +55,7 @@ export interface TAjalaOptions {
   scroll_duration?: number;
   transition_duration?: number;
   transition_type?: TTransitionType;
+  enable_target_interaction?: boolean;
   default_tooltip_options?: Partial<{
     class_name: string;
     hide_dot_nav: boolean;
