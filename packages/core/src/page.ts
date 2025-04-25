@@ -20,7 +20,7 @@ const ajala = new AjalaJourney(
       order: {
         default: 1,
         "(min-width: 450px)": 3,
-        "(min-width: 600px)": 2,
+        "(min-width: 600px)": 0,
       },
       enable_target_interaction: {
         default: false,
@@ -33,7 +33,11 @@ const ajala = new AjalaJourney(
       id: "3",
       title: "Step 3 Title",
       content: "step 3 content lorem ipson",
-      tooltip_placement: "right_bottom",
+      tooltip_placement: {
+        default: `top_right`,
+        "(min-width: 700px)": "top_center",
+        "(min-width: 500px)": "top_left",
+      },
     },
     {
       target: ".step_4",
