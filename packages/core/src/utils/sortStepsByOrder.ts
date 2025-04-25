@@ -13,7 +13,7 @@ export default function sortStepsByOrder(steps: Array<TSteps>) {
     } else if (item?.order > steps.length || item?.order < 0) {
       out_of_range_items.push(item);
     } else {
-      ordered_items.set(item?.order, item);
+      ordered_items.set(item.order, item);
     }
   }
 

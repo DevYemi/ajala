@@ -1,3 +1,4 @@
+import { createDebounceFunc } from "../utils/chunks";
 import { AjalaJourney } from "./main";
 import Navigation from "./navigation";
 
@@ -42,9 +43,13 @@ class UI {
       "click",
       this.closeOnOverlayClickHandler,
     );
+
+    this.refresh = createDebounceFunc(this.refresh.bind(this), 200) as any;
   }
 
   init() {
+    window.addEventListener("resize", this.refresh);
+
     if (!this.ajala.options.custom_tooltip) {
       this.#setUpDefaultTooltip();
     }
@@ -289,13 +294,13 @@ class UI {
     // Create rounded rectangle path data
     const roundedRectPath = `
   M${x + border_radius},${y}
-  h${width - 2 * border_radius}
+  h${Math.max(width - 2 * border_radius, 0)}
   a${border_radius},${border_radius} 0 0 1 ${border_radius},${border_radius}
-  v${height - 2 * border_radius}
+  v${Math.max(height - 2 * border_radius, 0)}
   a${border_radius},${border_radius} 0 0 1 -${border_radius},${border_radius}
-  h-${width - 2 * border_radius}
+  h-${Math.max(width - 2 * border_radius, 0)}
   a${border_radius},${border_radius} 0 0 1 -${border_radius},-${border_radius}
-  v-${height - 2 * border_radius}
+  v-${Math.max(height - 2 * border_radius, 0)}
   a${border_radius},${border_radius} 0 0 1 ${border_radius},-${border_radius}
   z
 `;
@@ -366,6 +371,24 @@ class UI {
     }
   }
 
+  async refresh() {
+    const recalaculate = () => {
+      this.resetOverlayCutoutSvgRect();
+
+      const active_id = this.ajala.getActiveStep()?.id;
+      if (active_id) {
+        this.ajala.goToStep(active_id);
+      }
+    };
+    recalaculate();
+
+    /**
+     * Incase the calculation is off or wrong due to refresh being called right before another resize happens.
+     * leave a 1 sec timeout to self correct this.
+     */
+    setTimeout(recalaculate, 1000);
+  }
+
   destroy() {
     document.body.style.overflow = "auto";
     document.body.removeChild(this.wrapper_element);
@@ -382,6 +405,7 @@ class UI {
       "click",
       this.closeOnOverlayClickHandler,
     );
+    window.removeEventListener("resize", this.refresh);
   }
 }
 

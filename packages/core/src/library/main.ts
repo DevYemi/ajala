@@ -48,6 +48,7 @@ export class AjalaJourney extends EventEmitter<TAjalaEventTypes> {
       validated_steps,
       this.#step_media_query.queries,
     );
+
     this.active_step = this.flatten_steps[0];
     this.#ui = new UI(this);
     this.#navigation = new Navigation({
@@ -64,6 +65,7 @@ export class AjalaJourney extends EventEmitter<TAjalaEventTypes> {
    */
   init() {
     this.#setUpStepsMediaQueries();
+    this.active_step = this.flatten_steps[0];
     this.#ui.init();
     this.#navigation.init();
 
@@ -191,7 +193,7 @@ export class AjalaJourney extends EventEmitter<TAjalaEventTypes> {
    */
   refresh() {
     if (!this.is_active) return;
-    this.#navigation.refresh();
+    this.#ui.refresh();
   }
 
   /**
@@ -253,7 +255,9 @@ export class AjalaJourney extends EventEmitter<TAjalaEventTypes> {
             }
           });
         }
-        console.log(this);
+
+        // Restart Ajala journey each time the screen size changes
+        this.goToStep(this.flatten_steps[0].id);
       };
       this.#step_media_query.instances.push(match_media);
     }
