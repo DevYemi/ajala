@@ -10,19 +10,9 @@ export type TParsedResponsiveStep = {
   id: string;
   key: keyof TResponsiveStepsProperties;
   value: any;
-  media_query_size: number;
+  media_query: number;
   default: any;
 };
-
-const query_regex = /^([0-9]+)+px$/;
-
-export function getMediaQuerySize(query: string) {
-  const match = query.match(query_regex);
-  if (match && match[1]) {
-    return Number(match[1]);
-  }
-  return 0;
-}
 
 export function parseResponsiveSteps(steps: Array<TAjalaSteps>) {
   const media_quries: Partial<TMediaQuery<Array<TParsedResponsiveStep>>> = {};
@@ -40,14 +30,13 @@ export function parseResponsiveSteps(steps: Array<TAjalaSteps>) {
         // Handle as a Media Query property
         if (step_value && typeof step_value === "object") {
           Object.keys(step_value as any).forEach((query_key: any) => {
-            if (!query_regex.test(query_key)) return;
-            const query_width = getMediaQuerySize(query_key);
+            if (query_key === "default") return;
 
             const media_query_obj: TParsedResponsiveStep = {
               id: step.id,
               key: step_key,
               value: step_value[query_key],
-              media_query_size: query_width,
+              media_query: query_key,
               default: step_value["default"],
             };
             if (media_quries[query_key]) {

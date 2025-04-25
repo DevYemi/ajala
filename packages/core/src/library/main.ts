@@ -6,7 +6,6 @@ import {
   TAjalaSteps,
 } from "./types";
 import {
-  getMediaQuerySize,
   TParsedResponsiveStep,
   parseResponsiveSteps,
   mapResponsiveValueToSteps,
@@ -23,8 +22,6 @@ export class AjalaJourney extends EventEmitter<TAjalaEventTypes> {
   original_steps: Array<TAjalaSteps>;
   flatten_steps: Array<TSteps>;
   #step_media_query: {
-    active_size: number;
-    fallback_sizes: Set<number>;
     instances: Array<MediaQueryList>;
     queries: Partial<TMediaQuery<Array<TParsedResponsiveStep>>>;
   };
@@ -44,8 +41,6 @@ export class AjalaJourney extends EventEmitter<TAjalaEventTypes> {
     this.is_active = Boolean(this.options.start_immediately);
     this.original_steps = validated_steps;
     this.#step_media_query = {
-      active_size: 0,
-      fallback_sizes: new Set(),
       instances: [],
       queries: parseResponsiveSteps(validated_steps),
     };
@@ -123,8 +118,6 @@ export class AjalaJourney extends EventEmitter<TAjalaEventTypes> {
     const validated_steps = checkForStepsIdValidity(steps);
     this.original_steps = validated_steps;
     this.#step_media_query = {
-      active_size: 0,
-      fallback_sizes: new Set(),
       instances: [],
       queries: parseResponsiveSteps(validated_steps),
     };
@@ -222,15 +215,9 @@ export class AjalaJourney extends EventEmitter<TAjalaEventTypes> {
     for (const [query_key, query_value] of Object.entries(
       this.#step_media_query.queries,
     )) {
-      const match_media = window.matchMedia(`(min-width: ${query_key})`);
-      const query_size = getMediaQuerySize(query_key);
-      this.#step_media_query.fallback_sizes.add(query_size);
+      const match_media = window.matchMedia(query_key);
 
-      if (
-        match_media.matches &&
-        query_size > this.#step_media_query.active_size
-      ) {
-        this.#step_media_query.active_size = query_size;
+      if (match_media.matches) {
         this.flatten_steps = mapResponsiveValueToSteps(
           this.flatten_steps,
           query_value!,
@@ -239,48 +226,34 @@ export class AjalaJourney extends EventEmitter<TAjalaEventTypes> {
       }
 
       match_media.onchange = (event) => {
-        if (event.matches && query_size > this.#step_media_query.active_size) {
-          this.#step_media_query.fallback_sizes.add(query_size);
-          this.#step_media_query.active_size = query_size;
+        const step_query = this.#step_media_query.queries[event.media];
+        if (event.matches && step_query) {
           this.flatten_steps = mapResponsiveValueToSteps(
             this.flatten_steps,
-            query_value!,
+            step_query,
             "value",
           );
         } else {
-          /**
-           * User screen is now smaller than `active_size`, now map all current steps with `active_size` value to their default value
-           */
-          const prev_query_value =
-            this.#step_media_query.queries[
-              `${this.#step_media_query.active_size}px`
-            ];
-          this.flatten_steps = mapResponsiveValueToSteps(
-            this.flatten_steps,
-            prev_query_value!,
-            "default",
-          );
-
-          /**
-           * Check if there are any `fallback_sizes`, pick the maximum size and map it's value to all steps.
-           */
-          if (this.#step_media_query.fallback_sizes.size > 1) {
-            this.#step_media_query.fallback_sizes.delete(query_size);
-            const next_active_size = Math.max(
-              ...Array.from(this.#step_media_query.fallback_sizes),
-            );
-            const next_query_value =
-              this.#step_media_query.queries[`${next_active_size}px`];
-            this.#step_media_query.active_size = next_active_size;
+          if (step_query) {
             this.flatten_steps = mapResponsiveValueToSteps(
               this.flatten_steps,
-              next_query_value!,
-              "value",
+              step_query,
+              "default",
             );
-          } else {
-            this.#step_media_query.active_size = 0;
           }
+
+          this.#step_media_query.instances.forEach((mq) => {
+            const query_step = this.#step_media_query.queries[mq.media];
+            if (mq.matches && query_step) {
+              this.flatten_steps = mapResponsiveValueToSteps(
+                this.flatten_steps,
+                query_step,
+                "value",
+              );
+            }
+          });
         }
+        console.log(this);
       };
       this.#step_media_query.instances.push(match_media);
     }

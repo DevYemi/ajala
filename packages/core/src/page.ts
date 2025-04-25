@@ -17,7 +17,16 @@ const ajala = new AjalaJourney(
       title: "Step 2 Title",
       content: "step 2 content lorem ipson",
       tooltip_placement: "left_top",
-      order: 1,
+      order: {
+        default: 1,
+        "(min-width: 450px)": 3,
+        "(min-width: 600px)": 2,
+      },
+      enable_target_interaction: {
+        default: false,
+        "(min-width: 450px)": false,
+        "(min-width: 600px)": true,
+      },
     },
     {
       target: ".step_3",
