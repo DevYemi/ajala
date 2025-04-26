@@ -136,31 +136,59 @@ An object with the following property
 #### Object Type Shape
 
 ```ts
+default_tooltip_options: Partial<{
+  class_name: string;
+  hide_dot_nav: boolean;
+  hide_close_btn: boolean;
+  hide_title: boolean;
+  hide_content: boolean;
+}>;
+default_arrow_options: Partial<{
+  class_name: string;
+  hide: boolean;
+  size: number;
+  color: string;
+}>;
+overlay_options: Partial<{
+  class_name: string;
+  color: string;
+  opacity: number;
+  hide: boolean;
+}>;
+spotlight_options: Partial<{
+  border_radius: number;
+  padding: number;
+}>;
+```
 
- default_tooltip_options?: Partial<{
-    class_name: string;
-    hide_dot_nav: boolean;
-    hide_close_btn: boolean;
-    hide_title: boolean;
-    hide_content: boolean;
-  }>;
-  default_arrow_options?: Partial<{
-    class_name: string;
-    hide: boolean;
-    size: number;
-    color: string;
-  }>;
-  overlay_options?: Partial<{
-    class_name: string;
-    color: string;
-    opacity: number;
-    hide: boolean;
-  }>;
-  spotlight_options?: Partial<{
-    border_radius: number;
-    padding: number;
-  }>;
+#### Example
 
+```ts
+import { AjalaJourney } from "ajala.js";
+
+const ajala_journey = new AjalaJourney(
+  [
+    {
+      target: ".step_1",
+      id: "1",
+    },
+  ],
+  {
+    start_immediately: false,
+    default_tooltip_options: {
+     class_name: ".myclassname",
+     hide_dot_nav: true
+    },
+    spotlight_options: {
+     border_radius: 10;
+     padding: 5;
+    },
+    overlay_options: {
+        color: "white",
+        opacity: 0.7
+    }
+  }
+);
 ```
 
 ## Ajala Methods
