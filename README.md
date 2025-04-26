@@ -211,7 +211,7 @@ Ajala exposed numerouse methods to help you control it's journey experience.
 | refresh                    | Used to to manually trigger a recalculation of the position of all UI element. Content loaded asynchronously could make ajala position become invalid, this method can come in handy in such situations. |
 | destroy                    | Used to manually close, stop or destroy ajala journey                                                                                                                                                    |
 | addEventListener           | Used to add and listen to diffrent events during ajala journey. Accept 2 arguments `TAjalaEventTypes` and the callback `function`                                                                        |
-| removeEventListener        | Used to remove the event listener that were added.                                                                                                                                                       |
+| removeEventListener        | Used to remove the event listener that were added. Accept 2 arguments `TAjalaEventTypes` and the callback `function`                                                                                     |
 
 ### Event Type Shape
 
