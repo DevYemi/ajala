@@ -67,50 +67,17 @@ const ajala = new AjalaJourney(
     },
   ],
   {
-    // start_immediately: false,
-    tooltip_placement: "auto",
-    enable_overlay_close: true,
-    transition_type: "traveller",
-    enable_target_interaction: true,
-    transition_duration: 500,
-    scroll_duration: 400,
     spotlight_options: {
       border_radius: 5,
       padding: 5,
-    },
-
-    default_arrow_options: {
-      size: 60,
-    },
-    overlay_options: {
-      opacity: 0.7,
-      color: "white",
     },
   },
 );
 ajala.init();
 
-// ajala.addEventListener("onStart", (e: any) => {
-//   console.log("onStart", e);
-// });
-// ajala.addEventListener("onNext", (e: any) => {});
-
-// ajala.addEventListener("onPrev", (e: any) => {
-//   console.log(e);
-// });
-// ajala.addEventListener("onTransitionComplete", (e: any) => {
-//   console.log(e);
-// });
-// ajala.addEventListener("onClose", (e: any) => {
-//   ajala.goToStep("8");
-// });
-// ajala.addEventListener("onFinish", (e: any) => {
-//   console.log(e);
-// });
-
 document.querySelector(".step_3")?.addEventListener("click", (e) => {
   e.preventDefault();
-  ajala.goToStep("8");
+  ajala.start();
 });
 
 // console.log("ajala", ajala);
