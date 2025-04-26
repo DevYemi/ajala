@@ -22,7 +22,7 @@
 
 ## Documentation
 
-For demos and documentation, visit [click here](https://driverjs.com)
+For demos and documentation, visit [click here](https://github.com/DevYemi/ajala)
 
 <br />
 
