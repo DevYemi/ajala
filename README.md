@@ -18,7 +18,13 @@
 
 <br />
 
+#### Actions speaks louder than words, click [here](https://stackblitz.com/edit/js-ftnhw8ce?file=index.html,style.css,index.js) for a quick demo
+
 ## Quick start
+
+```bash
+npm i ajala.js
+```
 
 ```ts
 import { AjalaJourney } from "ajala.js";
@@ -30,11 +36,11 @@ const ajala_journey = new AjalaJourney([
     id: "1",
   },
   {
-    target: {
-      default: ".step_2",
-      "(min-width: 700px)": ".step_3",
-      "(min-width: 1200px)": ".step_4",
-    },
+    target: "#step_2",
+    id: "2",
+  },
+  {
+    target: "[data-step-3]",
     id: "3",
   },
 ]);
