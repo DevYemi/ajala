@@ -56,8 +56,13 @@ class Navigation {
   }
 
   async next() {
+    console.log("this.animations", this.animations);
     if (this.animations!.is_animating) return;
     const next_index = this.ajala.getActiveStepFlattenIndex() + 1;
+    console.log(
+      "this.ajala.getActiveStepFlattenIndex()",
+      this.ajala.getActiveStepFlattenIndex(),
+    );
 
     if (this.ajala.flatten_steps.length > next_index) {
       this.animations!.is_animating = true;
@@ -150,6 +155,7 @@ class Navigation {
   }
 
   async start() {
+    this.animations!.is_animating = false;
     const distance_option =
       await this.placement!.tooltip.calculateTravelDistance(0);
 

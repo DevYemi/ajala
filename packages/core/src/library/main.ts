@@ -163,6 +163,7 @@ export class AjalaJourney extends EventEmitter<TAjalaEventTypes> {
    */
   start() {
     this.is_active = true;
+    this.active_step = this.flatten_steps[0];
     this.#ui.start();
     this.#navigation.start();
 

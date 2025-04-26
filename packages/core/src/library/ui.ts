@@ -192,12 +192,6 @@ class UI {
     if (default_options?.hide_close_btn) {
       this.close_btn?.remove();
     }
-
-    if (this.navigation) {
-      this.next_btn?.addEventListener("click", this.navigation.next);
-      this.prev_btn?.addEventListener("click", this.navigation.prev);
-      this.close_btn?.addEventListener("click", this.navigation.close);
-    }
   }
 
   #setupDefaultArrow() {
@@ -385,6 +379,12 @@ class UI {
     const tooltip_rect = this.tooltip_container_element.getBoundingClientRect();
     this.tooltip_container_element.style.transform = `translate(-${tooltip_rect.width}px, 0px)`;
     this.resetOverlayCutoutSvgRect();
+
+    if (this.navigation) {
+      this.next_btn?.addEventListener("click", this.navigation.next);
+      this.prev_btn?.addEventListener("click", this.navigation.prev);
+      this.close_btn?.addEventListener("click", this.navigation.close);
+    }
   }
 
   closeOnOverlayClickHandler() {
