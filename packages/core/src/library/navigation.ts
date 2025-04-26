@@ -41,6 +41,7 @@ class Navigation {
           type: "onTransitionComplete",
           data: {
             transitionType: "goTo",
+            self: this.ajala,
           },
         });
       };
@@ -62,7 +63,7 @@ class Navigation {
       this.animations!.is_animating = true;
       this.ajala.dispatchEvent({
         type: "onNext",
-        data: null,
+        data: this.ajala,
       });
       this.ui!.resetOverlayCutoutSvgRect();
 
@@ -79,6 +80,7 @@ class Navigation {
           type: "onTransitionComplete",
           data: {
             transitionType: "next",
+            self: this.ajala,
           },
         });
       };
@@ -92,7 +94,7 @@ class Navigation {
     } else {
       this.ajala.dispatchEvent({
         type: "onFinish",
-        data: null,
+        data: this.ajala,
       });
 
       this.ajala.destroy();
@@ -125,6 +127,7 @@ class Navigation {
           type: "onTransitionComplete",
           data: {
             transitionType: "prev",
+            self: this.ajala,
           },
         });
       };
@@ -142,7 +145,7 @@ class Navigation {
     this.ajala.destroy();
     this.ajala.dispatchEvent({
       type: "onClose",
-      data: null,
+      data: this.ajala,
     });
   }
 

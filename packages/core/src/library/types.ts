@@ -11,7 +11,7 @@ export type TTooltipPlacement =
 export type TTransitionType = "traveller" | "popout";
 export interface TSteps {
   id: string;
-  target: string;
+  target?: string;
   title?: string;
   content?: string;
   data?: unknown;
