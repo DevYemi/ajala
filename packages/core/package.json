@@ -1,7 +1,7 @@
 {
   "name": "ajala.js",
   "private": false,
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "module",
   "main": "./dist/ajala.cjs",
   "module": "./dist/ajala.js",
@@ -59,7 +59,9 @@
     "product walkthrough",
     "product guide",
     "product tutorial",
-    "product demo"
+    "product demo",
+    "user onboarding",
+    "tour guide"
   ],
   "license": "MIT"
 }
