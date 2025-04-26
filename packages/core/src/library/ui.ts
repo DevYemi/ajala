@@ -379,6 +379,9 @@ class UI {
     const tooltip_rect = this.tooltip_container_element.getBoundingClientRect();
     this.tooltip_container_element.style.transform = `translate(-${tooltip_rect.width}px, 0px)`;
     this.resetOverlayCutoutSvgRect();
+    if (this.next_btn) {
+      this.next_btn.innerText = "Next";
+    }
 
     if (this.navigation) {
       this.next_btn?.addEventListener("click", this.navigation.next);
