@@ -15,6 +15,8 @@ import UI from "./ui";
 import Navigation from "./navigation";
 import EventEmitter from "./EventEmitter";
 import { checkForStepsIdValidity } from "../utils/chunks";
+import Placement from "./placement";
+import Animations from "./animations";
 
 export class AjalaJourney extends EventEmitter<TAjalaEventTypes> {
   options: TAjalaOptions;
@@ -28,6 +30,8 @@ export class AjalaJourney extends EventEmitter<TAjalaEventTypes> {
   active_step: TSteps | undefined;
   #ui: UI;
   #navigation: Navigation;
+  #placement: Placement;
+  #animations: Animations;
 
   constructor(
     steps: Array<TAjalaSteps>,
@@ -55,7 +59,16 @@ export class AjalaJourney extends EventEmitter<TAjalaEventTypes> {
       ajala: this,
       ui: this.#ui,
     });
+    this.#placement = new Placement({ ajala: this, ui: this.#ui });
+    this.#animations = new Animations({
+      ajala: this,
+      ui: this.#ui,
+      placement: this.#placement,
+    });
     this.#ui.navigation = this.#navigation;
+    this.#ui.placement = this.#placement;
+    this.#navigation.placement = this.#placement;
+    this.#navigation.animations = this.#animations;
 
     this.destroy = this.destroy.bind(this);
   }
@@ -66,6 +79,7 @@ export class AjalaJourney extends EventEmitter<TAjalaEventTypes> {
   init() {
     this.#setUpStepsMediaQueries();
     this.active_step = this.flatten_steps[0];
+
     this.#ui.init();
     this.#navigation.init();
 

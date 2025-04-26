@@ -1,6 +1,8 @@
 import { createDebounceFunc } from "../utils/chunks";
 import { AjalaJourney } from "./main";
 import Navigation from "./navigation";
+import Placement from "./placement";
+import { TTravelDistanceData } from "./types";
 
 class UI {
   ajala: AjalaJourney;
@@ -15,6 +17,7 @@ class UI {
   close_btn: HTMLButtonElement | null;
   is_default_card_element: boolean;
   navigation?: Navigation;
+  placement?: Placement;
 
   constructor(ajala: AjalaJourney) {
     this.ajala = ajala;
@@ -239,42 +242,66 @@ class UI {
     this.overlay_element.appendChild(this.overlay_path);
   }
 
-  update() {
-    if (!this.is_default_card_element) return;
-
+  update(distance_option: TTravelDistanceData) {
+    const { active_index, placement, taregt_el } = distance_option;
     const default_options = this.ajala.options.default_tooltip_options;
 
-    if (!default_options?.hide_dot_nav) {
-      const ajala_dot_navs =
-        document.querySelectorAll<HTMLElement>(".ajala_dot_nav");
-      ajala_dot_navs.forEach((item) => {
-        item.classList.remove("ajala_dot_nav_active");
-      });
-      ajala_dot_navs[this.ajala.getActiveStepFlattenIndex()].classList.add(
-        "ajala_dot_nav_active",
-      );
-    }
-
-    if (!default_options?.hide_title) {
-      const ajala_title = document.querySelector<HTMLElement>(".ajala_title");
-      if (ajala_title) {
-        ajala_title.innerText = this.ajala.active_step?.title ?? "";
+    if (this.is_default_card_element) {
+      // Update default ui display
+      if (!default_options?.hide_dot_nav) {
+        const ajala_dot_navs =
+          document.querySelectorAll<HTMLElement>(".ajala_dot_nav");
+        ajala_dot_navs.forEach((item) => {
+          item.classList.remove("ajala_dot_nav_active");
+        });
+        ajala_dot_navs[this.ajala.getActiveStepFlattenIndex()].classList.add(
+          "ajala_dot_nav_active",
+        );
+      }
+      if (!default_options?.hide_title) {
+        const ajala_title = document.querySelector<HTMLElement>(".ajala_title");
+        if (ajala_title) {
+          ajala_title.innerText = this.ajala.active_step?.title ?? "";
+        }
+      }
+      if (!default_options?.hide_content) {
+        const ajala_content =
+          document.querySelector<HTMLElement>(".ajala_content");
+        if (ajala_content) {
+          ajala_content.innerText = this.ajala.active_step?.content ?? "";
+        }
       }
     }
-    if (!default_options?.hide_content) {
-      const ajala_content =
-        document.querySelector<HTMLElement>(".ajala_content");
-      if (ajala_content) {
-        ajala_content.innerText = this.ajala.active_step?.content ?? "";
-      }
+
+    // Update target interactivity
+    const enable_target_interaction =
+      this.ajala.active_step?.enable_target_interaction ??
+      this.ajala.options?.enable_target_interaction;
+
+    if (enable_target_interaction && taregt_el) {
+      taregt_el.classList.add("ajala_target_interactive");
     }
 
+    // Update Next btn label on last step
     if (
       this.ajala.flatten_steps.length - 1 ===
         this.ajala.getActiveStepFlattenIndex() &&
       this.next_btn
     ) {
       this.next_btn.innerText = "Finish";
+    }
+
+    // Update Arrow UI placement
+
+    if (taregt_el) {
+      const { x, y, rotate } = this.placement!.arrow.calculatePlacmentDelta({
+        active_index,
+        placement,
+      });
+      this.arrow_element.style.visibility = "visible";
+      this.arrow_element.style.transform = `translate(${x}px, ${y}px) rotate(${rotate}deg)`;
+    } else {
+      this.arrow_element.style.visibility = "hidden";
     }
   }
 
@@ -358,7 +385,6 @@ class UI {
     const tooltip_rect = this.tooltip_container_element.getBoundingClientRect();
     this.tooltip_container_element.style.transform = `translate(-${tooltip_rect.width}px, 0px)`;
     this.resetOverlayCutoutSvgRect();
-    this.update();
   }
 
   closeOnOverlayClickHandler() {

@@ -4,22 +4,13 @@ import { AjalaJourney } from "./library/main";
 const ajala = new AjalaJourney(
   [
     {
-      target: ".step_1",
-      id: "1",
-      title: "Step 1 Title",
-      content: "step 1 content lorem ipson",
-      tooltip_placement: "right_top",
-      data: { name: "yemi" },
-    },
-    {
       target: ".step_2",
       id: "1",
       title: "Step 2 Title",
       content: "step 2 content lorem ipson",
       tooltip_placement: "left_top",
       order: {
-        default: 1,
-        "(min-width: 450px)": 3,
+        default: 3,
         "(min-width: 600px)": 0,
       },
     },
@@ -35,7 +26,7 @@ const ajala = new AjalaJourney(
       },
     },
     {
-      target: ".step_4",
+      target: ".step_41",
       id: "4",
       title: "Step 4 Title",
       content: "step 4 content lorem ipson",
@@ -78,6 +69,7 @@ const ajala = new AjalaJourney(
   {
     // start_immediately: false,
     tooltip_placement: "auto",
+    enable_overlay_close: true,
     transition_type: "traveller",
     enable_target_interaction: true,
     transition_duration: 500,
@@ -86,7 +78,7 @@ const ajala = new AjalaJourney(
       border_radius: 5,
       padding: 5,
     },
-    // custom_tooltip: document.querySelector<HTMLElement>(".custom_tooltip"),
+
     default_arrow_options: {
       size: 60,
     },
@@ -98,23 +90,23 @@ const ajala = new AjalaJourney(
 );
 ajala.init();
 
-ajala.addEventListener("onStart", (e: any) => {
-  console.log("onStart", e);
-});
-ajala.addEventListener("onNext", (e: any) => {});
+// ajala.addEventListener("onStart", (e: any) => {
+//   console.log("onStart", e);
+// });
+// ajala.addEventListener("onNext", (e: any) => {});
 
-ajala.addEventListener("onPrev", (e: any) => {
-  console.log(e);
-});
-ajala.addEventListener("onTransitionComplete", (e: any) => {
-  console.log(e);
-});
-ajala.addEventListener("onClose", (e: any) => {
-  ajala.goToStep("8");
-});
-ajala.addEventListener("onFinish", (e: any) => {
-  console.log(e);
-});
+// ajala.addEventListener("onPrev", (e: any) => {
+//   console.log(e);
+// });
+// ajala.addEventListener("onTransitionComplete", (e: any) => {
+//   console.log(e);
+// });
+// ajala.addEventListener("onClose", (e: any) => {
+//   ajala.goToStep("8");
+// });
+// ajala.addEventListener("onFinish", (e: any) => {
+//   console.log(e);
+// });
 
 document.querySelector(".step_3")?.addEventListener("click", (e) => {
   e.preventDefault();

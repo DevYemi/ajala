@@ -5,19 +5,13 @@ import Animations from "./animations";
 
 class Navigation {
   ajala: AjalaJourney;
-  #ui: UI;
-  #placement: Placement;
-  #animations: Animations;
+  ui: UI;
+  placement?: Placement;
+  animations?: Animations;
 
   constructor({ ajala, ui }: { ajala: AjalaJourney; ui: UI }) {
     this.ajala = ajala;
-    this.#ui = ui;
-    this.#placement = new Placement({ ajala, ui });
-    this.#animations = new Animations({
-      ajala,
-      ui,
-      placement: this.#placement,
-    });
+    this.ui = ui;
 
     this.next = this.next.bind(this);
     this.prev = this.prev.bind(this);
@@ -27,21 +21,21 @@ class Navigation {
   init() {}
 
   async goTo(index: number) {
-    if (this.#animations.is_animating) return;
+    if (this.animations?.is_animating) return;
 
     if (index >= 0 && index <= this.ajala.flatten_steps.length) {
-      this.#animations.is_animating = true;
-      this.#ui.resetOverlayCutoutSvgRect();
+      this.animations!.is_animating = true;
+      this.ui.resetOverlayCutoutSvgRect();
 
       const distance_option =
-        await this.#placement.tooltip.calculateTravelDistance(index);
+        await this.placement!.tooltip.calculateTravelDistance(index);
 
       const onComplete = () => {
-        this.#animations.is_animating = false;
+        this.animations!.is_animating = false;
         this.ajala.active_step =
           this.ajala.flatten_steps[distance_option.active_index];
 
-        this.#ui.update();
+        this.ui.update(distance_option);
 
         this.ajala.dispatchEvent({
           type: "onTransitionComplete",
@@ -51,7 +45,7 @@ class Navigation {
         });
       };
 
-      this.#animations.transition[this.#animations.transition_type](
+      this.animations!.transition[this.animations!.transition_type](
         distance_option,
         {
           onComplete: onComplete,
@@ -61,25 +55,25 @@ class Navigation {
   }
 
   async next() {
-    if (this.#animations.is_animating) return;
+    if (this.animations!.is_animating) return;
     const next_index = this.ajala.getActiveStepFlattenIndex() + 1;
 
     if (this.ajala.flatten_steps.length > next_index) {
-      this.#animations.is_animating = true;
+      this.animations!.is_animating = true;
       this.ajala.dispatchEvent({
         type: "onNext",
         data: null,
       });
-      this.#ui.resetOverlayCutoutSvgRect();
+      this.ui!.resetOverlayCutoutSvgRect();
 
       const distance_option =
-        await this.#placement.tooltip.calculateTravelDistance(next_index);
+        await this.placement!.tooltip.calculateTravelDistance(next_index);
       const onComplete = () => {
-        this.#animations.is_animating = false;
+        this.animations!.is_animating = false;
         this.ajala.active_step =
           this.ajala.flatten_steps[distance_option.active_index];
 
-        this.#ui.update();
+        this.ui!.update(distance_option);
 
         this.ajala.dispatchEvent({
           type: "onTransitionComplete",
@@ -89,7 +83,7 @@ class Navigation {
         });
       };
 
-      this.#animations.transition[this.#animations.transition_type](
+      this.animations!.transition[this.animations!.transition_type](
         distance_option,
         {
           onComplete: onComplete,
@@ -106,26 +100,26 @@ class Navigation {
   }
 
   async prev() {
-    if (this.#animations.is_animating) return;
+    if (this.animations!.is_animating) return;
     const prev_index = this.ajala.getActiveStepFlattenIndex() - 1;
 
     if (prev_index > -1) {
-      this.#animations.is_animating = true;
+      this.animations!.is_animating = true;
       this.ajala.dispatchEvent({
         type: "onPrev",
         data: this.ajala,
       });
-      this.#ui.resetOverlayCutoutSvgRect();
+      this.ui!.resetOverlayCutoutSvgRect();
 
       const distance_option =
-        await this.#placement.tooltip.calculateTravelDistance(prev_index);
+        await this.placement!.tooltip.calculateTravelDistance(prev_index);
 
       const onComplete = () => {
-        this.#animations.is_animating = false;
+        this.animations!.is_animating = false;
         this.ajala.active_step =
           this.ajala.flatten_steps[distance_option.active_index];
 
-        this.#ui.update();
+        this.ui!.update(distance_option);
 
         this.ajala.dispatchEvent({
           type: "onTransitionComplete",
@@ -135,7 +129,7 @@ class Navigation {
         });
       };
 
-      this.#animations.transition[this.#animations.transition_type](
+      this.animations!.transition[this.animations!.transition_type](
         distance_option,
         {
           onComplete: onComplete,
@@ -154,15 +148,17 @@ class Navigation {
 
   async start() {
     const distance_option =
-      await this.#placement.tooltip.calculateTravelDistance(0);
+      await this.placement!.tooltip.calculateTravelDistance(0);
 
-    this.#animations.transition[this.#animations.transition_type](
+    this.animations!.transition[this.animations!.transition_type](
       distance_option,
     );
+
+    this.ui.update(distance_option);
   }
 
   cleanUp() {
-    this.#placement.cleanUp();
+    this.placement!.cleanUp();
   }
 }
 

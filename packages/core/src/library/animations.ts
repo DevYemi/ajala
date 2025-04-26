@@ -167,24 +167,6 @@ class Animations {
     });
   }
 
-  #transitionOnComplete(distance_option: TTravelDistanceData) {
-    const { active_index, placement, taregt_el } = distance_option!;
-    const { x, y, rotate } = this.placement.arrow.calculatePlacmentDelta({
-      active_index,
-      placement,
-    });
-    this.ui.arrow_element.style.visibility = "visible";
-    this.ui.arrow_element.style.transform = `translate(${x}px, ${y}px) rotate(${rotate}deg)`;
-
-    const enable_target_interaction =
-      this.ajala.flatten_steps[active_index].enable_target_interaction ??
-      this.ajala.options?.enable_target_interaction;
-
-    if (enable_target_interaction) {
-      taregt_el?.classList.add("ajala_target_interactive");
-    }
-  }
-
   travelTransition(
     distance_option: TTravelDistanceData,
     {
@@ -219,8 +201,6 @@ class Animations {
           tooltip_container_el.style.transform = `translate(${x_smoothen}px, ${y_smoothen}px)`;
         },
         onComplete: () => {
-          this.#transitionOnComplete(distance_option);
-
           if (onComplete) {
             onComplete();
           }
@@ -258,8 +238,6 @@ class Animations {
           tooltip_container_el.style.transform = `translate(${x_delta}px, ${y_delta}px) scale(${time})`;
         },
         onComplete: () => {
-          this.#transitionOnComplete(distance_option);
-
           if (onComplete) {
             onComplete();
           }

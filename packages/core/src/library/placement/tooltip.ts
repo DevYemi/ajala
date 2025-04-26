@@ -38,34 +38,39 @@ class TooltipPlacement {
     const next_step_target = this.ui.getTargetElement(
       this.ajala.flatten_steps[next_index].target,
     );
+    const tooltip_container_el = this.ui.tooltip_container_element;
+    let tooltip_rect = tooltip_container_el.getBoundingClientRect();
 
-    if (!next_step_target)
+    const getDimensionOffset = (value: number) => {
+      return value > 0 ? -value : Math.abs(value);
+    };
+
+    /**
+     * Place tooltip at the center of page if there is no target
+     */
+
+    if (!next_step_target) {
       return {
-        is_valid: false,
+        is_valid: true,
         scrolled: scrolled,
-        y_delta: 0,
-        x_delta: 0,
-        y_offset: 0,
-        x_offset: 0,
-        active_index: 0,
-        tooltip_rect: null,
+        y_delta: window.innerHeight / 2 - tooltip_rect.height / 2,
+        x_delta: window.innerWidth / 2 - tooltip_rect.width / 2,
+        y_offset: getDimensionOffset(tooltip_rect.y),
+        x_offset: getDimensionOffset(tooltip_rect.x),
+        active_index: next_index,
+        tooltip_rect: tooltip_rect,
         target_rect: null,
         taregt_el: next_step_target,
         placement: "auto",
       };
+    }
 
-    const tooltip_container_el = this.ui.tooltip_container_element;
     let target_rect = next_step_target.getBoundingClientRect();
-    let tooltip_rect = tooltip_container_el.getBoundingClientRect();
 
     const gutter =
       this.ajala.flatten_steps[next_index].tooltip_gutter ??
       this.ajala.options.tooltip_gutter ??
       0;
-
-    const getDimensionOffset = (value: number) => {
-      return value > 0 ? -value : Math.abs(value);
-    };
 
     let y_offset = getDimensionOffset(tooltip_rect.y);
     let x_offset = getDimensionOffset(tooltip_rect.x);
