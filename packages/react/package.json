@@ -23,7 +23,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "prepublishOnly": "pnpm changeset version && pnpm build"
+    "prepublishOnly": "pnpm build"
   },
   "dependencies": {
     "ajala.js": "workspace:*"

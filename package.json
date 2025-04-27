@@ -12,8 +12,5 @@
     "packages/*"
   ],
   "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "@changesets/cli": "^2.29.2"
-  }
+  "license": "ISC"
 }
