@@ -28,9 +28,11 @@ For demos and documentation, visit [click here](https://github.com/DevYemi/ajala
 
 ## So, why create another walkthrough library?
 
-Well alot of the other walkthrough library didn't allow me use a custom tooltip element, i also had a need for the walkthrough step state to change on different screen size for each step, i was able to achieve this with some tricks on those libabry but i believe this should come natively.
+Well alot of the other walkthrough library didn't allow me use a custom tooltip element, i also had a need for the walkthrough step state to change on different screen size for each step "Steps with media query", i was able to achieve this with some tricks on those libabry but i believe this should come natively.
 
 Lastly the transition experience between ajala steps is just alot more smoother.
+
+#### Actions speaks louder than words, click [here](https://stackblitz.com/edit/js-ftnhw8ce?file=index.html,style.css,index.js) for a quick demo
 
 <br>
 
