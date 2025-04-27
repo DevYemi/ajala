@@ -2,6 +2,7 @@
   "name": "react-ajala",
   "private": true,
   "version": "0.1.0",
+  "type": "module",
   "main": "./dist/react-ajala.cjs",
   "module": "./dist/react-ajala.js",
   "types": "./dist/index.d.ts",
