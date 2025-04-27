@@ -2,12 +2,27 @@
   "name": "react-ajala",
   "private": true,
   "version": "0.1.0",
-  "type": "module",
+  "main": "./dist/react-ajala.cjs",
+  "module": "./dist/react-ajala.js",
+  "types": "./dist/index.d.ts",
+  "homepage": "https://github.com/DevYemi/ajala",
+  "repository": "https://github.com/DevYemi/ajala",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/react-ajala.cjs",
+      "import": "./dist/react-ajala.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "prepublishOnly": "pnpm changeset version && pnpm build"
   },
   "dependencies": {
     "ajala.js": "workspace:*"
