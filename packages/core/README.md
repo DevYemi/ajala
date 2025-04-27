@@ -1,12 +1,14 @@
-<!-- @format -->
-
 # Àjàlá.js
 
 **Your soon to be favourite walkthrough partner.**
 
 <p align="center">
-  <b> A lightweight yet powerful vanilla JavaScript engine that guides user focus, providing a smooth transition experience across your webpage. </b></br>
-  <sub>No external dependencies, fully customizable, works in all major browsers, and easy to tweak for your needs. </sub><br>
+  <b> A lightweight yet powerful vanilla JavaScript engine that guides user focus, providing a smooth transition experience across your webpage. </b>
+  
+  </br>
+  <sub>No external dependencies, fully customizable, works in all major browsers, and easy to tweak for your needs. </sub>
+  
+  </br>
 </p>
 
 <br />
