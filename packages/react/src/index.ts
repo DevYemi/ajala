@@ -1,2 +1,2 @@
-export * from "./components/hook";
-export * from "./components/contextProvider"
+export * from "./components/useAjalaJourney";
+export * from "./components/AjalaJourneyProvider";
