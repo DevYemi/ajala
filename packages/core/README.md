@@ -1,7 +1,5 @@
 # Àjàlá.js
 
-**Your soon to be favourite walkthrough partner.**
-
 <p align="center">
   <b> A lightweight yet powerful vanilla JavaScript engine that guides user focus, providing a smooth transition experience across your webpage. </b>
   
