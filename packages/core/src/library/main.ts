@@ -79,6 +79,7 @@ export class AjalaJourney extends EventEmitter<TAjalaEventTypes> {
   init() {
     this.#setUpStepsMediaQueries();
     this.active_step = this.flatten_steps[0];
+    this.is_active = Boolean(this.options.start_immediately);
 
     this.#ui.init();
     this.#navigation.init();
