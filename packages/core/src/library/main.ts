@@ -46,12 +46,9 @@ export class AjalaJourney extends EventEmitter<TAjalaEventTypes> {
     this.original_steps = validated_steps;
     this.#step_media_query = {
       instances: [],
-      queries: parseResponsiveSteps(validated_steps),
+      queries: {},
     };
-    this.flatten_steps = flattenStepsToMediaQueryDefaults(
-      validated_steps,
-      this.#step_media_query.queries,
-    );
+    this.flatten_steps = [];
 
     this.active_step = this.flatten_steps[0];
     this.#ui = new UI(this);
@@ -69,6 +66,7 @@ export class AjalaJourney extends EventEmitter<TAjalaEventTypes> {
     this.#ui.placement = this.#placement;
     this.#navigation.placement = this.#placement;
     this.#navigation.animations = this.#animations;
+    this.#placement.animations = this.#animations;
 
     this.destroy = this.destroy.bind(this);
   }
@@ -77,6 +75,20 @@ export class AjalaJourney extends EventEmitter<TAjalaEventTypes> {
    * @desc This method initializes the ajala by setting up media queries and UI elements.
    */
   init() {
+    const validated_steps = checkForStepsIdValidity(this.original_steps);
+    this.is_active = Boolean(this.options.start_immediately);
+    this.original_steps = validated_steps;
+    this.#step_media_query = {
+      instances: [],
+      queries: parseResponsiveSteps(validated_steps),
+    };
+    this.flatten_steps = flattenStepsToMediaQueryDefaults(
+      validated_steps,
+      this.#step_media_query.queries,
+    );
+
+    this.active_step = this.flatten_steps[0];
+
     this.#setUpStepsMediaQueries();
     this.active_step = this.flatten_steps[0];
     this.is_active = Boolean(this.options.start_immediately);
@@ -145,8 +157,23 @@ export class AjalaJourney extends EventEmitter<TAjalaEventTypes> {
     this.active_step = this.flatten_steps[0];
 
     if (restart) {
-      this.#cleanup();
-      this.start();
+      this.restart();
+    }
+  }
+
+  /**
+   * @desc Updates the ajala journey options.
+   * @param options - The new options to be set.
+   * @param restart - Whether to restart the ajala after updating the steps.
+   */
+  updateOptions(options: Partial<TAjalaOptions>, restart = false) {
+    this.options = {
+      ...this.options,
+      ...options,
+    };
+
+    if (restart) {
+      this.restart();
     }
   }
 
@@ -160,7 +187,6 @@ export class AjalaJourney extends EventEmitter<TAjalaEventTypes> {
 
   /**
    * @desc starts ajala.
-   * Can also be used to restart the ajala journey.
    */
   start() {
     this.is_active = true;
@@ -168,12 +194,19 @@ export class AjalaJourney extends EventEmitter<TAjalaEventTypes> {
     this.#ui.start();
     this.#navigation.start();
 
-    setTimeout(() => {
-      this.dispatchEvent({
-        type: "onStart",
-        data: this,
-      });
-    }, 250);
+    this.dispatchEvent({
+      type: "onStart",
+      data: this,
+    });
+  }
+
+  /**
+   * @desc restarts ajala.
+   * In a way it is like a reset.
+   */
+  restart() {
+    this.destroy();
+    this.init();
   }
 
   /**
@@ -216,9 +249,9 @@ export class AjalaJourney extends EventEmitter<TAjalaEventTypes> {
    * @desc This method manually stops the ajala and remove all the UI elements after cleanups.
    */
   destroy() {
-    this.is_active = false;
     this.#cleanup();
     this.#ui.destroy();
+    this.is_active = false;
   }
 
   #cleanup() {

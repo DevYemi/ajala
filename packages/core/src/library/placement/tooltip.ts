@@ -7,13 +7,11 @@ import {
 import UI from "../ui";
 import { AjalaJourney } from "../main";
 import Placement from "../placement";
-import Animations from "../animations";
 
 class TooltipPlacement {
   ajala: AjalaJourney;
   placement: Placement;
   ui: UI;
-  animations: Animations;
   constructor({
     ajala,
     ui,
@@ -26,7 +24,6 @@ class TooltipPlacement {
     this.ajala = ajala;
     this.ui = ui;
     this.placement = placement;
-    this.animations = new Animations({ ajala, ui, placement });
   }
 
   async calculateTravelDistance(
@@ -92,11 +89,14 @@ class TooltipPlacement {
       y_delta + tooltip_rect.height > window.innerHeight ||
       y_delta + tooltip_rect.height < 0
     ) {
-      if (this.animations.transition_type === "popout") {
+      if (this.placement.animations?.transition_type === "popout") {
         this.ui.tooltip_container_element.style.visibility = "hidden";
       }
 
-      await this.animations.scrollToLocation(next_step_target, next_index);
+      await this.placement.animations?.scrollToLocation(
+        next_step_target,
+        next_index,
+      );
       scrolled = true;
 
       target_rect = next_step_target.getBoundingClientRect();

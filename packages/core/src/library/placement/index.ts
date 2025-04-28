@@ -4,6 +4,7 @@ import ArrowPlacement from "./arrow";
 import TooltipPlacement from "./tooltip";
 import { TPlacementAlign, TPlacementAxis, TTooltipPlacement } from "../types";
 import OverlayCutoutSvgRectPlacement from "./overlayCutoutSvgRect";
+import Animations from "../animations";
 
 /**
  * Please note that every placement starts from  0,0 coordinates (top left edge corner).
@@ -16,6 +17,7 @@ class Placement {
   tooltip: TooltipPlacement;
   overlay_cutout_svg_rect: OverlayCutoutSvgRectPlacement;
   ui: UI;
+  animations?: Animations;
   constructor({ ajala, ui }: { ajala: AjalaJourney; ui: UI }) {
     this.arrow = new ArrowPlacement({ ajala, ui, placement: this });
     this.tooltip = new TooltipPlacement({ ajala, ui, placement: this });

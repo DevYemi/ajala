@@ -6,4 +6,5 @@ export type {
   TAjalaSteps,
   TTransitionType,
   TAjalaEventTypes,
+  TSteps,
 } from "./library/types";

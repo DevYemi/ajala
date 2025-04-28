@@ -15,14 +15,14 @@ class UI {
   next_btn: HTMLButtonElement | null;
   prev_btn: HTMLButtonElement | null;
   close_btn: HTMLButtonElement | null;
-  is_default_card_element: boolean;
+  is_default_tooltip_element: boolean;
   navigation?: Navigation;
   placement?: Placement;
 
   constructor(ajala: AjalaJourney) {
     this.ajala = ajala;
     this.wrapper_element = document.createElement("div");
-    this.is_default_card_element = false;
+    this.is_default_tooltip_element = false;
     this.tooltip_element =
       this.ajala.options.custom_tooltip || document.createElement("div");
     this.tooltip_container_element = document.createElement("div");
@@ -42,16 +42,28 @@ class UI {
     this.closeOnOverlayClickHandler =
       this.closeOnOverlayClickHandler.bind(this);
 
+    this.refresh = createDebounceFunc(this.refresh.bind(this), 200) as any;
+  }
+
+  init() {
+    this.tooltip_element =
+      this.ajala.options.custom_tooltip || document.createElement("div");
+    this.tooltip_container_element = document.createElement("div");
+    this.next_btn = null;
+    this.prev_btn = null;
+    this.close_btn = null;
+
     this.overlay_path.addEventListener(
       "click",
       this.closeOnOverlayClickHandler,
     );
 
-    this.refresh = createDebounceFunc(this.refresh.bind(this), 200) as any;
-  }
-
-  init() {
     window.addEventListener("resize", this.refresh);
+
+    this.overlay_path.addEventListener(
+      "click",
+      this.closeOnOverlayClickHandler,
+    );
 
     if (!this.ajala.options.custom_tooltip) {
       this.#setUpDefaultTooltip();
@@ -85,8 +97,14 @@ class UI {
     this.tooltip_container_element.style.top = "0px";
     this.tooltip_container_element.style.left = "0px";
     this.tooltip_container_element.style.zIndex = "20";
-    this.tooltip_container_element.style.width = "fit-content";
-    this.tooltip_container_element.style.height = "fit-content";
+    this.tooltip_container_element.style.width = this.ajala.options
+      ?.tooltip_width
+      ? `${this.ajala.options?.tooltip_width}px`
+      : "250px";
+    this.tooltip_container_element.style.height = this.ajala.options
+      ?.tooltip_height
+      ? `${this.ajala.options?.tooltip_height}px`
+      : "180px";
     this.tooltip_container_element.style.pointerEvents = "auto";
     this.tooltip_container_element.classList.add("ajala_tooltip_container");
     this.tooltip_container_element.appendChild(this.tooltip_element);
@@ -130,7 +148,7 @@ class UI {
   }
 
   #setUpDefaultTooltip() {
-    this.is_default_card_element = true;
+    this.is_default_tooltip_element = true;
     const default_options = this.ajala.options.default_tooltip_options;
 
     this.tooltip_element.classList.add("ajala_tooltip");
@@ -240,7 +258,7 @@ class UI {
     const { active_index, placement, taregt_el } = distance_option;
     const default_options = this.ajala.options.default_tooltip_options;
 
-    if (this.is_default_card_element) {
+    if (this.is_default_tooltip_element) {
       // Update default ui display
       if (!default_options?.hide_dot_nav) {
         const ajala_dot_navs =
@@ -375,6 +393,17 @@ class UI {
 
     document.body.style.overflow = "hidden";
     document.body.appendChild(this.wrapper_element);
+
+    this.ajala.dispatchEvent({
+      type: "onDomInsert",
+      data: {
+        wrapper_element: this.wrapper_element,
+        tooltip_container_element: this.tooltip_container_element,
+        arrow_element: this.arrow_element,
+        self: this.ajala,
+      },
+    });
+
     document.body.classList.add("ajala_active");
     const tooltip_rect = this.tooltip_container_element.getBoundingClientRect();
     this.tooltip_container_element.style.transform = `translate(-${tooltip_rect.width}px, 0px)`;
@@ -402,8 +431,6 @@ class UI {
 
   async refresh() {
     const recalaculate = () => {
-      this.resetOverlayCutoutSvgRect();
-
       const active_id = this.ajala.getActiveStep()?.id;
       if (active_id) {
         this.ajala.goToStep(active_id);
@@ -420,8 +447,21 @@ class UI {
 
   destroy() {
     document.body.style.overflow = "auto";
-    document.body.removeChild(this.wrapper_element);
     document.body.classList.remove("ajala_active");
+
+    if (this.ajala.is_active) {
+      document.body.removeChild(this.wrapper_element);
+
+      this.ajala.dispatchEvent({
+        type: "onDomRemove",
+        data: {
+          wrapper_element: this.wrapper_element,
+          tooltip_container_element: this.tooltip_container_element,
+          arrow_element: this.arrow_element,
+          self: this.ajala,
+        },
+      });
+    }
   }
 
   cleanUp() {

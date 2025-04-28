@@ -18,7 +18,11 @@ class Navigation {
     this.close = this.close.bind(this);
   }
 
-  init() {}
+  init() {
+    this.next = this.next.bind(this);
+    this.prev = this.prev.bind(this);
+    this.close = this.close.bind(this);
+  }
 
   async goTo(index: number) {
     if (this.animations?.is_animating) return;
@@ -162,7 +166,9 @@ class Navigation {
   }
 
   cleanUp() {
-    this.placement!.cleanUp();
+    if (this.placement) {
+      this.placement.cleanUp();
+    }
   }
 }
 

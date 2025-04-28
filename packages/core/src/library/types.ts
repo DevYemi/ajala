@@ -53,6 +53,8 @@ export interface TAjalaOptions {
   custom_arrow?: SVGSVGElement | null;
   tooltip_gutter?: number;
   tooltip_placement?: TTooltipPlacement;
+  tooltip_width?: number;
+  tooltip_height?: number;
   scroll_duration?: number;
   transition_duration?: number;
   transition_type?: TTransitionType;
@@ -103,4 +105,6 @@ export type TAjalaEventTypes =
   | "onPrev"
   | "onClose"
   | "onTransitionComplete"
-  | "onFinish";
+  | "onFinish"
+  | "onDomInsert"
+  | "onDomRemove";

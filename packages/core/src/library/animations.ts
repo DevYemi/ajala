@@ -35,6 +35,14 @@ class Animations {
     };
   }
 
+  init() {
+    this.transition_type = this.ajala.options?.transition_type || "traveller";
+    this.transition = {
+      traveller: this.travelTransition.bind(this),
+      popout: this.popOutTransition.bind(this),
+    };
+  }
+
   animate({
     from = 0,
     to = 1,
