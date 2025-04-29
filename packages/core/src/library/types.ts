@@ -106,5 +106,7 @@ export type TAjalaEventTypes =
   | "onClose"
   | "onTransitionComplete"
   | "onFinish"
-  | "onDomInsert"
-  | "onDomRemove";
+  | "onBeforeDomInsert"
+  | "onAfterDomInsert"
+  | "onBeforeDomRemove"
+  | "onAfterDomRemove";

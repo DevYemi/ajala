@@ -392,10 +392,20 @@ class UI {
     document.body.classList.remove("ajala_active");
 
     document.body.style.overflow = "hidden";
+
+    this.ajala.dispatchEvent({
+      type: "onBeforeDomInsert",
+      data: {
+        wrapper_element: this.wrapper_element,
+        tooltip_container_element: this.tooltip_container_element,
+        arrow_element: this.arrow_element,
+        self: this.ajala,
+      },
+    });
     document.body.appendChild(this.wrapper_element);
 
     this.ajala.dispatchEvent({
-      type: "onDomInsert",
+      type: "onAfterDomInsert",
       data: {
         wrapper_element: this.wrapper_element,
         tooltip_container_element: this.tooltip_container_element,
@@ -450,10 +460,19 @@ class UI {
     document.body.classList.remove("ajala_active");
 
     if (this.ajala.is_active) {
+      this.ajala.dispatchEvent({
+        type: "onBeforeDomRemove",
+        data: {
+          wrapper_element: this.wrapper_element,
+          tooltip_container_element: this.tooltip_container_element,
+          arrow_element: this.arrow_element,
+          self: this.ajala,
+        },
+      });
       document.body.removeChild(this.wrapper_element);
 
       this.ajala.dispatchEvent({
-        type: "onDomRemove",
+        type: "onAfterDomRemove",
         data: {
           wrapper_element: this.wrapper_element,
           tooltip_container_element: this.tooltip_container_element,
