@@ -1,48 +1,110 @@
 "use client";
-import { AjalaJourney, TAjalaSteps, TAjalaOptions } from "ajala.js";
-import {
-  createContext,
-  ReactNode,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { AjalaJourney, TAjalaOptions, TSteps } from "ajala.js";
+import { createContext, useContext, useEffect, useState } from "react";
+import { createPortal } from "react-dom";
+import { TReactAjalaProviderProps } from "./types";
 
 const AjalaJourneyContext = createContext<AjalaJourney | null>(null);
-
-interface PropTypes extends TAjalaOptions {
-  steps: TAjalaSteps[];
-  children: ReactNode;
-  getInstance?: (value: AjalaJourney) => void;
-}
 
 function AjalaJourneyProvider({
   children,
   getInstance,
   steps,
-  ...options
-}: PropTypes) {
-  const [ajalaInstance, setAjalaInstance] = useState<AjalaJourney | null>(null);
+  CustomTooltip,
+  CustomArrow,
+  options,
+}: TReactAjalaProviderProps) {
+  const [ajalaInstance, setAjalaInstance] = useState<AjalaJourney | null>(
+    {} as any
+  );
+  const [activeStep, setActiveStep] = useState<TSteps>();
+  const [customTooltipContainer, setTooltipContainer] =
+    useState<HTMLElement | null>(null);
+  const [customArrowContainer, setArrowContainer] =
+    useState<HTMLElement | null>(null);
 
   useEffect(() => {
-    const ajala_instance = new AjalaJourney(steps, options);
+    /**
+     * Create a dummy tooltip and arrow and pass it to ajala if a CustomTooltip or CustomArrow component was passed.
+     * This is needed to prevent ajala from creating it's default so we can inject our custom react tooltip and arrow.
+     */
+    let dummy_custom_tooltip = null;
+    let dummy_custom_arrow = null;
+    const element = document.createElement("div");
+    if (CustomTooltip) {
+      dummy_custom_tooltip = element;
+    }
+    if (CustomArrow) {
+      dummy_custom_arrow = element;
+    }
+
+    const ajala_options: TAjalaOptions = {
+      ...options,
+      custom_tooltip: dummy_custom_tooltip as any,
+      custom_arrow: dummy_custom_arrow as any,
+    };
+    const ajala_instance = new AjalaJourney(steps, ajala_options);
+
+    /**
+     * Attach necessary Event listeners
+     */
+    const onStartHandler = () => {
+      setActiveStep(ajala_instance.getActiveStep());
+    };
+    const onTransitionCompleteHandler = () => {
+      setActiveStep(ajala_instance.getActiveStep());
+    };
+    const onAfterDomInsertHandler = (event: any) => {
+      setTooltipContainer(event?.data?.tooltip_container_element);
+      setArrowContainer(event?.data?.arrow_element);
+      element.remove();
+    };
+    ajala_instance.addEventListener(
+      "onAfterDomInsert",
+      onAfterDomInsertHandler
+    );
+    ajala_instance.addEventListener("onStart", onStartHandler);
+    ajala_instance.addEventListener(
+      "onTransitionComplete",
+      onTransitionCompleteHandler
+    );
 
     ajala_instance.init();
-
-    setAjalaInstance(ajala_instance);
 
     if (getInstance) {
       getInstance(ajala_instance);
     }
+    setAjalaInstance(ajala_instance);
 
     return () => {
+      // clean up
+      ajala_instance.removeEventListener("onStart", onStartHandler);
+      ajala_instance.removeEventListener(
+        "onAfterDomInsert",
+        onAfterDomInsertHandler
+      );
+      ajala_instance.removeEventListener(
+        "onTransitionComplete",
+        onTransitionCompleteHandler
+      );
+
       ajala_instance.destroy();
     };
-  }, [steps, options]);
+  }, []);
 
   return (
     <AjalaJourneyContext.Provider value={ajalaInstance}>
       {children}
+
+      {CustomTooltip &&
+        customTooltipContainer &&
+        createPortal(
+          <CustomTooltip active_step={activeStep} ajala={ajalaInstance} />,
+          customTooltipContainer
+        )}
+      {CustomArrow &&
+        customArrowContainer &&
+        createPortal(<CustomArrow />, customArrowContainer)}
     </AjalaJourneyContext.Provider>
   );
 }

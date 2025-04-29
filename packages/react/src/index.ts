@@ -1,2 +1,8 @@
-export * from "./components/useAjalaJourney";
-export * from "./components/AjalaJourneyProvider";
+export {
+  AjalaJourneyProvider,
+  useAjalaJourneyContext,
+} from "./components/AjalaJourneyProvider";
+export type {
+  TReactAjalaCustomTooltipProps,
+  TReactAjalaProviderProps,
+} from "./components/types";

@@ -26,8 +26,10 @@ export default defineConfig({
   plugins: [
     react(),
     dts({
+      tsconfigPath: "./tsconfig.build.json",
       rollupTypes: true,
-      include: ["src/index.ts"],
+      include: ["src"],
+      outDir: "dist",
     }),
     // analyzer({ openAnalyzer: false }),
   ],
