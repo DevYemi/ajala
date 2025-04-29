@@ -20,6 +20,10 @@
 
 <br />
 
+> **For React Devs**
+>
+> If you use react it's recommended you use `react-ajala` which is just a tiny wrapper around `ajala.js`, clikc **[here](https://www.npmjs.com/package/react-ajala)** to check it out.
+
 ## Documentation
 
 For demos and documentation, visit [click here](https://github.com/DevYemi/ajala)
