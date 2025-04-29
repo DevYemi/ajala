@@ -1,7 +1,7 @@
 {
   "name": "ajala.js",
   "private": false,
-  "version": "0.3.2",
+  "version": "0.3.3",
   "type": "module",
   "main": "./dist/ajala.cjs",
   "module": "./dist/ajala.js",
@@ -27,6 +27,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
+    "prepare": "cp ../../README.md ./README.md",
     "prepublishOnly": "pnpm run build",
     "lint": "eslint 'src/**/*.{ts,tsx,js,jsx}' --quiet",
     "format": "prettier --write 'src/**/*.{ts,tsx,js,jsx,json,css,md}'"
