@@ -20,7 +20,7 @@
 
 > #### Actions speaks louder than words, click [here](https://stackblitz.com/edit/js-ftnhw8ce?file=index.html,style.css,index.js) for a quick demo
 
-> #### For React devs please click [here](https://github.com/DevYemi/ajala/blob/main/packages/react/README.md) for the react documentation.
+> #### For React devs please click [here](https://github.com/DevYemi/ajala/blob/main/packages/react/README.md#react-àjàlájs) for the react documentation.
 
 ## Quick start
 
