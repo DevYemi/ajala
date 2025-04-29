@@ -2,7 +2,11 @@
 
 ### A lightweight React wrapper built around ajala.js
 
-<br>
+<br/>
+
+> **checkout ajala.js [here](https://www.npmjs.com/package/ajala.js)**
+
+<br/>
 
 ## Quick start
 
