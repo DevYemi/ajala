@@ -1,6 +1,6 @@
 {
   "name": "react-ajala",
-  "private": true,
+  "private": false,
   "version": "0.1.0",
   "type": "module",
   "main": "./dist/react-ajala.cjs",
@@ -26,7 +26,7 @@
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
-    "ajala.js": "workspace:*"
+    "ajala.js": "^0.3.1"
   },
   "peerDependencies": {
     "react": "^16.8.0 || ^17.0.0 || ^18.0.0",
