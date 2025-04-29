@@ -50,5 +50,29 @@
     "vite-bundle-analyzer": "^0.19.0",
     "vite-plugin-dts": "^4.2.1"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "author": "Adeyanju Adeyemi <adeyanjuadeyemi007@gmail.com>",
+  "bugs": {
+    "url": "https://github.com/DevYemi/ajala/issues"
+  },
+  "keywords": [
+    "walkthrough",
+    "ajala",
+    "ajala.js",
+    "react-ajala",
+    "react",
+    "react walkthrough",
+    "react tour",
+    "react guide",
+    "react user onboarding",
+    "tour",
+    "guide",
+    "product tour",
+    "product walkthrough",
+    "product guide",
+    "product tutorial",
+    "product demo",
+    "user onboarding",
+    "tour guide"
+  ]
 }
