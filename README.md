@@ -239,6 +239,24 @@ type TAjalaEventTypes =
 | onTransitionComplete | Callback func is triggered after ajala has finish a transition sequence from one step to another                                   | an object with `type` and `data` property |
 | onFinish             | Callback func is triggered when a ajala finishes his journey. User get's to the last step.                                         | an object with `type` and `data` property |
 
+### For CDN Users
+
+To use the latest version of ajala.js
+
+```js
+<script type="module">
+  import ajalaJs from 'https://cdn.jsdelivr.net/npm/ajala.js/+esm'
+</script>
+```
+
+To use a particular version
+
+```js
+<script type="module">
+  import ajalaJs from 'https://cdn.jsdelivr.net/npm/ajala.js@0.3.0/+esm'
+</script>
+```
+
 ## Contributions
 
 Feel free to submit pull requests, create issues or spread the word.
