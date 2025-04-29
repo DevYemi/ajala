@@ -1,7 +1,5 @@
 # Àjàlá.js
 
-**Your soon to be favourite walkthrough partner.**
-
 <p align="center">
   <b> A lightweight yet powerful vanilla JavaScript engine that guides user focus, providing a smooth transition experience across your webpage. </b></br>
   <sub>No external dependencies, fully customizable, mobile responsive, works in all major browsers, and easy to tweak for your needs. </sub><br>
@@ -18,9 +16,16 @@
 
 <br />
 
+**Your soon to be favourite walkthrough partner.**
+<br />
+
 > #### Actions speaks louder than words, click [here](https://stackblitz.com/edit/js-ftnhw8ce?file=index.html,style.css,index.js) for a quick demo
 
-> #### For React devs please click [here](https://github.com/DevYemi/ajala/blob/main/packages/react/README.md#react-àjàlájs) for the react documentation.
+> **For React Devs**
+>
+> If you use react it's recommended you use `react-ajala` which is just a tiny wrapper around `ajala.js`, clikc **[here](https://www.npmjs.com/package/react-ajala)** to check it out.
+>
+> You can also click [here](https://github.com/DevYemi/ajala/blob/main/packages/react/README.md#react-àjàlájs) for the react documentation.
 
 ## Quick start
 
