@@ -11,12 +11,12 @@
 
 <br />
 
-- **Simple**: is simple to use and has no external dependency at all
-- **Light-weight**: is just 7kb gzipped.
-- **Highly customizable**: you can pass your own custom tooltip element, custom arrow, customize each step state value at different screen size etc, all this with a powerful API.
-- **TypeScript**: Written in TypeScript
-- **Consistent behavior**: usable across all browsers
-- **MIT Licensed**: free for personal and commercial use
+- **Simple**: Easy to use with no external dependencies.
+- **Light-weight**: A small footprint of just 7KB when gzipped.
+- **Highly customizable**: Fully customizable tooltips with the ability to change the tooltip element, arrow design, and step state behavior at different screen sizes—all controlled via a powerful API.
+- **TypeScript**: Built with TypeScript for improved type safety and developer experience.
+- **Consistent behavior**: Works seamlessly across all major browsers.
+- **MIT Licensed**: Free to use for both personal and commercial projects
 
 <br />
 
