@@ -1,3 +1,5 @@
+<!-- @format -->
+
 # Àjàlá.js
 
 <p align="center">
@@ -7,12 +9,12 @@
 
 <br />
 
-- **Simple**: is simple to use and has no external dependency at all
-- **Light-weight**: is just 7kb gzipped.
-- **Highly customizable**: you can pass your own custom tooltip element, custom arrow, customize each step state value at different screen size etc, all this with a powerful API.
-- **TypeScript**: Written in TypeScript
-- **Consistent behavior**: usable across all browsers
-- **MIT Licensed**: free for personal and commercial use
+- **Simple**: Easy to use with no external dependencies.
+- **Light-weight**: A small footprint of just 7KB when gzipped.
+- **Highly customizable**: Fully customizable tooltips with the ability to change the tooltip element, arrow design, and step state behavior at different screen sizes—all controlled via a powerful API.
+- **TypeScript**: Built with TypeScript for improved type safety and developer experience.
+- **Consistent behavior**: Works seamlessly across all major browsers.
+- **MIT Licensed**: Free to use for both personal and commercial projects
 
 <br />
 
@@ -55,9 +57,13 @@ const ajala_journey = new AjalaJourney([
 ajala_journey.init();
 ```
 
-**Please note:** That you only need `import "ajala.js/dist/ajala.css";` when you are using ajala default tooltip, you don't need it if you provide your own custom tooltip
+**Please note:** You only need to import `import "ajala.js/dist/ajala.css";` if you are using the default tooltip provided by Ajala. If you choose to provide your own custom tooltip, you can skip this import.
 
-`AjalaJourney` class accept two arguments, an array of steps object which is compulsory and the journey options that's used to customize the jounery experience globally.
+The `AjalaJourney` class accept two arguments:
+
+1. **Steps Array:** This is a required array of step objects that define the individual steps in the walkthrough journey.
+
+2. **Journey Options:** These are used to globally customize the walkthrough journey experience, allowing you to adjust settings like appearance, behavior, and other configurations.
 
 ## Ajala Step Shape
 
