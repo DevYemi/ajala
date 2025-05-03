@@ -435,7 +435,7 @@ class UI {
       this.ajala.options.enable_overlay_close;
 
     if (should_close) {
-      this.ajala.destroy();
+      this.ajala.close();
     }
   }
 

@@ -252,6 +252,13 @@ export class AjalaJourney extends EventEmitter<TAjalaEventTypes> {
   }
 
   /**
+   * @desc Close ajala journey.
+   */
+  close() {
+    this.#navigation.close();
+  }
+
+  /**
    * @desc Manually goes to the step with the given id.
    * @param id - The id of the step to go to.
    */
