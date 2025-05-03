@@ -21,6 +21,7 @@ import Animations from "./animations";
 export class AjalaJourney extends EventEmitter<TAjalaEventTypes> {
   options: TAjalaOptions;
   is_active: boolean;
+  initialized: boolean;
   original_steps: Array<TAjalaSteps>;
   flatten_steps: Array<TSteps>;
   #step_media_query: {
@@ -49,7 +50,7 @@ export class AjalaJourney extends EventEmitter<TAjalaEventTypes> {
       queries: {},
     };
     this.flatten_steps = [];
-
+    this.initialized = true;
     this.active_step = this.flatten_steps[0];
     this.#ui = new UI(this);
     this.#navigation = new Navigation({
@@ -75,6 +76,7 @@ export class AjalaJourney extends EventEmitter<TAjalaEventTypes> {
    * @desc This method initializes the ajala by setting up media queries and UI elements.
    */
   init(start_immediately?: boolean) {
+    this.initialized = true;
     const validated_steps = checkForStepsIdValidity(this.original_steps);
     this.is_active = Boolean(this.options.start_immediately);
     this.original_steps = validated_steps;
