@@ -3,12 +3,10 @@ import "ajala.js/dist/ajala.css";
 import { AjalaJourneyProvider } from "./components/AjalaJourneyProvider";
 import DummyCustomTooltip from "./components/DummyCustomTooltip";
 import DummyCustomArrow from "./components/DummyCustomArrow";
-import { useEffect, useState } from "react";
-import { AjalaJourney } from "ajala.js";
+import { useState } from "react";
 
 function App() {
-  const [ajalaInstance, setAjalaInstance] = useState<AjalaJourney | null>(null);
-  const [option, setOption] = useState({
+  const [option] = useState({
     start_immediately: false,
     tooltip_gutter: 30,
     overlay_options: {
@@ -21,21 +19,8 @@ function App() {
     },
   });
 
-  const [startAjala, setStartAjala] = useState(false);
-
-  useEffect(() => {
-    if (startAjala && ajalaInstance?.initialized) {
-      ajalaInstance.restart();
-
-      setTimeout(() => {
-        setStartAjala(false);
-      }, 3000);
-    }
-  }, [startAjala]);
-
   return (
     <AjalaJourneyProvider
-      getInstance={setAjalaInstance as any}
       steps={[
         {
           target: ".step_2",
@@ -136,7 +121,6 @@ function App() {
                   className="btn-lg"
                   onClick={(e) => {
                     e.preventDefault();
-                    setStartAjala(true);
                   }}
                 >
                   Get started{" "}
