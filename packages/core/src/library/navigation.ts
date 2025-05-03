@@ -26,6 +26,10 @@ class Navigation {
 
   async goTo(index: number) {
     if (this.animations?.is_animating) return;
+    if (this.ajala.flatten_steps[index]?.skip) {
+      console.warn("You can't go to an ajala step that's meant to be skipped");
+      return;
+    }
 
     if (index >= 0 && index <= this.ajala.flatten_steps.length) {
       this.animations!.is_animating = true;
@@ -61,7 +65,8 @@ class Navigation {
 
   async next() {
     if (this.animations!.is_animating) return;
-    const next_index = this.ajala.getActiveStepFlattenIndex() + 1;
+    let next_index = this.ajala.getActiveStepFlattenIndex() + 1;
+    next_index = this.#getValidNavIndex(next_index, "next");
 
     if (this.ajala.flatten_steps.length > next_index) {
       this.animations!.is_animating = true;
@@ -107,7 +112,8 @@ class Navigation {
 
   async prev() {
     if (this.animations!.is_animating) return;
-    const prev_index = this.ajala.getActiveStepFlattenIndex() - 1;
+    let prev_index = this.ajala.getActiveStepFlattenIndex() - 1;
+    prev_index = this.#getValidNavIndex(prev_index, "prev");
 
     if (prev_index > -1) {
       this.animations!.is_animating = true;
@@ -145,6 +151,44 @@ class Navigation {
     }
   }
 
+  #getValidNavIndex(index: number, type: "next" | "prev") {
+    /**
+     * Check if index step is meant to be skipped.
+     * Loop through the steps till we find a step that's not skipped
+     */
+
+    const index_step = this.ajala.flatten_steps[index];
+    let valid_index = index;
+
+    if (type === "next" && index_step?.skip) {
+      valid_index = this.ajala.flatten_steps.length;
+      for (let i = index; i < this.ajala.flatten_steps.length; i++) {
+        const step = this.ajala.flatten_steps[i];
+
+        if (step?.skip) {
+          continue;
+        } else {
+          valid_index = i;
+          break;
+        }
+      }
+    } else if (type === "prev" && index_step?.skip) {
+      valid_index = -1;
+      for (let i = index; i > 0; i--) {
+        const step = this.ajala.flatten_steps[i];
+
+        if (step?.skip) {
+          continue;
+        } else {
+          valid_index = i;
+          break;
+        }
+      }
+    }
+
+    return valid_index;
+  }
+
   close() {
     this.ajala.destroy();
     this.ajala.dispatchEvent({
@@ -155,14 +199,25 @@ class Navigation {
 
   async start() {
     this.animations!.is_animating = false;
-    const distance_option =
-      await this.placement!.tooltip.calculateTravelDistance(0);
+    const valid_index = this.#getValidNavIndex(0, "next");
 
-    this.animations!.transition[this.animations!.transition_type](
-      distance_option,
-    );
+    if (this.ajala.flatten_steps.length > valid_index) {
+      const distance_option =
+        await this.placement!.tooltip.calculateTravelDistance(valid_index);
 
-    this.ui.update(distance_option);
+      this.animations!.transition[this.animations!.transition_type](
+        distance_option,
+      );
+
+      this.ui.update(distance_option);
+    } else {
+      this.ajala.dispatchEvent({
+        type: "onFinish",
+        data: this.ajala,
+      });
+
+      this.ajala.destroy();
+    }
   }
 
   cleanUp() {
