@@ -1,6 +1,6 @@
 "use client";
 import { AjalaJourney, TAjalaOptions, TSteps } from "ajala.js";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { TReactAjalaProviderProps } from "./types";
 
@@ -23,6 +23,7 @@ function AjalaJourneyProvider({
     useState<HTMLElement | null>(null);
   const [customArrowContainer, setArrowContainer] =
     useState<HTMLElement | null>(null);
+  const is_first_render = useRef(true);
 
   useEffect(() => {
     /**
@@ -75,6 +76,7 @@ function AjalaJourneyProvider({
     if (callbackFuncs?.onFinish) {
       ajala_instance.addEventListener("onFinish", callbackFuncs.onFinish);
     }
+
     if (callbackFuncs?.onClose) {
       ajala_instance.addEventListener("onClose", callbackFuncs.onClose);
     }
@@ -136,20 +138,23 @@ function AjalaJourneyProvider({
   }, []);
 
   useEffect(() => {
-    // Update ajala options when options prop changes
+    if (is_first_render.current) {
+      is_first_render.current = false;
+      return;
+    }
+    // Update ajala options and step when prop changes
     if (ajalaInstance?.initialized) {
       delete (options as TAjalaOptions)?.custom_tooltip;
       delete (options as TAjalaOptions)?.custom_arrow;
-      ajalaInstance.updateOptions(options, true);
-    }
-  }, [options]);
 
-  useEffect(() => {
-    // Update ajala steps when steps prop changes
-    if (ajalaInstance?.initialized) {
+      ajalaInstance.updateOptions(options, true);
       ajalaInstance.updateSteps(steps, true);
     }
-  }, [steps]);
+
+    return () => {
+      is_first_render.current = true;
+    };
+  }, [options, steps, ajalaInstance]);
 
   return (
     <AjalaJourneyContext.Provider value={ajalaInstance}>

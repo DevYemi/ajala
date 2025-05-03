@@ -4,39 +4,29 @@ import { AjalaJourneyProvider } from "./components/AjalaJourneyProvider";
 import DummyCustomTooltip from "./components/DummyCustomTooltip";
 import DummyCustomArrow from "./components/DummyCustomArrow";
 import { useEffect, useState } from "react";
+import { AjalaJourney } from "ajala.js";
 
 function App() {
-  const [options, setOptions] = useState({
-    start_immediately: true,
-    tooltip_gutter: 30,
-    overlay_options: {
-      color: "white",
-      opacity: 0.6,
-    },
-    spotlight_options: {
-      border_radius: 5,
-      padding: 5,
-    },
-  });
+  const [ajalaInstance, setAjalaInstance] = useState<AjalaJourney | null>(null);
+
+  const [startAjala, setStartAjala] = useState(false);
 
   useEffect(() => {
-    setTimeout(() => {
-      setOptions({
-        start_immediately: true,
-        tooltip_gutter: 30,
-        overlay_options: {
-          color: "red",
-          opacity: 0.6,
-        },
-        spotlight_options: {
-          border_radius: 5,
-          padding: 5,
-        },
-      });
-    }, 5000);
-  }, []);
+    if (startAjala && ajalaInstance?.initialized) {
+      ajalaInstance.restart();
+
+      setTimeout(() => {
+        setStartAjala(false);
+      }, 3000);
+    }
+  }, [startAjala]);
+
   return (
     <AjalaJourneyProvider
+      getInstance={setAjalaInstance as any}
+      onClose={() => {
+        console.log("Onclose was called");
+      }}
       steps={[
         {
           target: ".step_2",
@@ -101,9 +91,17 @@ function App() {
       ]}
       CustomTooltip={DummyCustomTooltip}
       CustomArrow={DummyCustomArrow}
-      options={options}
-      onStart={(e) => {
-        console.log("Adeyanju", e);
+      options={{
+        start_immediately: false,
+        tooltip_gutter: 30,
+        overlay_options: {
+          color: "red",
+          opacity: 0.6,
+        },
+        spotlight_options: {
+          border_radius: 5,
+          padding: 5,
+        },
       }}
     >
       <div className="outter-container">
@@ -132,7 +130,14 @@ function App() {
 
               <div className="get-started">
                 <input type="text" name="" id="" placeholder="Email address" />
-                <a href="" className="btn-lg">
+                <a
+                  href=""
+                  className="btn-lg"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setStartAjala(true);
+                  }}
+                >
                   Get started{" "}
                 </a>
               </div>
