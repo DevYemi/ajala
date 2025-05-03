@@ -147,8 +147,8 @@ function AjalaJourneyProvider({
       delete (options as TAjalaOptions)?.custom_tooltip;
       delete (options as TAjalaOptions)?.custom_arrow;
 
-      ajalaInstance.updateOptions(options, true);
-      ajalaInstance.updateSteps(steps, true);
+      ajalaInstance.updateOptions(options, options?.start_immediately);
+      ajalaInstance.updateSteps(steps, options?.start_immediately);
     }
 
     return () => {

@@ -8,6 +8,18 @@ import { AjalaJourney } from "ajala.js";
 
 function App() {
   const [ajalaInstance, setAjalaInstance] = useState<AjalaJourney | null>(null);
+  const [option, setOption] = useState({
+    start_immediately: false,
+    tooltip_gutter: 30,
+    overlay_options: {
+      color: "red",
+      opacity: 0.6,
+    },
+    spotlight_options: {
+      border_radius: 5,
+      padding: 5,
+    },
+  });
 
   const [startAjala, setStartAjala] = useState(false);
 
@@ -19,6 +31,22 @@ function App() {
         setStartAjala(false);
       }, 3000);
     }
+  }, [startAjala]);
+  useEffect(() => {
+    setTimeout(() => {
+      setOption({
+        start_immediately: false,
+        tooltip_gutter: 30,
+        overlay_options: {
+          color: "white",
+          opacity: 0.6,
+        },
+        spotlight_options: {
+          border_radius: 5,
+          padding: 5,
+        },
+      });
+    }, 3000);
   }, [startAjala]);
 
   return (
@@ -91,18 +119,7 @@ function App() {
       ]}
       CustomTooltip={DummyCustomTooltip}
       CustomArrow={DummyCustomArrow}
-      options={{
-        start_immediately: false,
-        tooltip_gutter: 30,
-        overlay_options: {
-          color: "red",
-          opacity: 0.6,
-        },
-        spotlight_options: {
-          border_radius: 5,
-          padding: 5,
-        },
-      }}
+      options={option}
     >
       <div className="outter-container">
         <header className="header">
