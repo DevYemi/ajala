@@ -13,6 +13,7 @@ function AjalaJourneyProvider({
   CustomTooltip,
   CustomArrow,
   options,
+  ...callbackFuncs
 }: TReactAjalaProviderProps) {
   const [ajalaInstance, setAjalaInstance] = useState<AjalaJourney | null>(
     {} as any
@@ -68,6 +69,27 @@ function AjalaJourneyProvider({
       "onTransitionComplete",
       onTransitionCompleteHandler
     );
+    if (callbackFuncs?.onStart) {
+      ajala_instance.addEventListener("onStart", callbackFuncs.onStart);
+    }
+    if (callbackFuncs?.onFinish) {
+      ajala_instance.addEventListener("onFinish", callbackFuncs.onFinish);
+    }
+    if (callbackFuncs?.onClose) {
+      ajala_instance.addEventListener("onClose", callbackFuncs.onClose);
+    }
+    if (callbackFuncs?.onNext) {
+      ajala_instance.addEventListener("onNext", callbackFuncs.onNext);
+    }
+    if (callbackFuncs?.onPrev) {
+      ajala_instance.addEventListener("onPrev", callbackFuncs.onPrev);
+    }
+    if (callbackFuncs?.onTransitionComplete) {
+      ajala_instance.addEventListener(
+        "onTransitionComplete",
+        callbackFuncs.onTransitionComplete
+      );
+    }
 
     ajala_instance.init();
 
@@ -87,10 +109,47 @@ function AjalaJourneyProvider({
         "onTransitionComplete",
         onTransitionCompleteHandler
       );
+      if (callbackFuncs?.onStart) {
+        ajala_instance.removeEventListener("onStart", callbackFuncs.onStart);
+      }
+      if (callbackFuncs?.onFinish) {
+        ajala_instance.removeEventListener("onFinish", callbackFuncs.onFinish);
+      }
+      if (callbackFuncs?.onClose) {
+        ajala_instance.removeEventListener("onClose", callbackFuncs.onClose);
+      }
+      if (callbackFuncs?.onNext) {
+        ajala_instance.removeEventListener("onNext", callbackFuncs.onNext);
+      }
+      if (callbackFuncs?.onPrev) {
+        ajala_instance.removeEventListener("onPrev", callbackFuncs.onPrev);
+      }
+      if (callbackFuncs?.onTransitionComplete) {
+        ajala_instance.removeEventListener(
+          "onTransitionComplete",
+          callbackFuncs.onTransitionComplete
+        );
+      }
 
       ajala_instance.destroy();
     };
   }, []);
+
+  useEffect(() => {
+    // Update ajala options when options prop changes
+    if (ajalaInstance?.initialized) {
+      delete (options as TAjalaOptions)?.custom_tooltip;
+      delete (options as TAjalaOptions)?.custom_arrow;
+      ajalaInstance.updateOptions(options, true);
+    }
+  }, [options]);
+
+  useEffect(() => {
+    // Update ajala steps when steps prop changes
+    if (ajalaInstance?.initialized) {
+      ajalaInstance.updateSteps(steps, true);
+    }
+  }, [steps]);
 
   return (
     <AjalaJourneyContext.Provider value={ajalaInstance}>

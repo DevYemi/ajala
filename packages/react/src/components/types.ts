@@ -1,4 +1,10 @@
-import { AjalaJourney, TAjalaOptions, TAjalaSteps, TSteps } from "ajala.js";
+import {
+  AjalaJourney,
+  TAjalaOptions,
+  TAjalaSteps,
+  TSteps,
+  TAjalaEventTypes,
+} from "ajala.js";
 import { ComponentType, ReactNode } from "react";
 
 export interface TReactAjalaCustomTooltipProps {
@@ -6,7 +12,18 @@ export interface TReactAjalaCustomTooltipProps {
   ajala: AjalaJourney | null;
 }
 
-export interface TReactAjalaProviderProps {
+type EventType = Extract<
+  TAjalaEventTypes,
+  | "onFinish"
+  | "onNext"
+  | "onPrev"
+  | "onClose"
+  | "onTransitionComplete"
+  | "onStart"
+>;
+type TReactAjalaEventTypes = Partial<Record<EventType, (value: any) => void>>;
+
+export interface TReactAjalaProviderProps extends TReactAjalaEventTypes {
   steps: TAjalaSteps[];
   options: Omit<TAjalaOptions, "custom_tooltip" | "custom_arrow">;
   children?: ReactNode;
