@@ -69,6 +69,9 @@ export class AjalaJourney extends EventEmitter<TAjalaEventTypes> {
     this.#navigation.animations = this.#animations;
     this.#placement.animations = this.#animations;
 
+    this.active_step =
+      this.flatten_steps[this.#navigation.getValidNavIndex(0, "next")];
+
     this.destroy = this.destroy.bind(this);
   }
 
@@ -89,10 +92,10 @@ export class AjalaJourney extends EventEmitter<TAjalaEventTypes> {
       this.#step_media_query.queries,
     );
 
-    this.active_step = this.flatten_steps[0];
-
     this.#setUpStepsMediaQueries();
-    this.active_step = this.flatten_steps[0];
+    this.active_step =
+      this.flatten_steps[this.#navigation.getValidNavIndex(0, "next")];
+
     this.is_active = Boolean(this.options.start_immediately);
 
     this.#ui.init();
@@ -216,7 +219,8 @@ export class AjalaJourney extends EventEmitter<TAjalaEventTypes> {
    */
   start() {
     this.is_active = true;
-    this.active_step = this.flatten_steps[0];
+    this.active_step =
+      this.flatten_steps[this.#navigation.getValidNavIndex(0, "next")];
     this.#ui.start();
     this.#navigation.start();
 

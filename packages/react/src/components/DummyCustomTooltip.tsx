@@ -7,14 +7,7 @@ function DummyCustomTooltip({
   return (
     <div style={{ backgroundColor: "red", width: "100%", height: "100%" }}>
       <h1>{active_step?.title || "Hello Adeyemi"}</h1>
-      <p
-        onClick={() => {
-          console.log("lollllll");
-        }}
-      >
-        {" "}
-        {active_step?.content || "How are you doing ?"}
-      </p>
+      <p onClick={() => {}}> {active_step?.content || "How are you doing ?"}</p>
 
       <button
         onClick={() => {

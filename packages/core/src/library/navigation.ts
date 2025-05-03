@@ -65,8 +65,9 @@ class Navigation {
 
   async next() {
     if (this.animations!.is_animating) return;
+
     let next_index = this.ajala.getActiveStepFlattenIndex() + 1;
-    next_index = this.#getValidNavIndex(next_index, "next");
+    next_index = this.getValidNavIndex(next_index, "next");
 
     if (this.ajala.flatten_steps.length > next_index) {
       this.animations!.is_animating = true;
@@ -113,7 +114,7 @@ class Navigation {
   async prev() {
     if (this.animations!.is_animating) return;
     let prev_index = this.ajala.getActiveStepFlattenIndex() - 1;
-    prev_index = this.#getValidNavIndex(prev_index, "prev");
+    prev_index = this.getValidNavIndex(prev_index, "prev");
 
     if (prev_index > -1) {
       this.animations!.is_animating = true;
@@ -151,7 +152,7 @@ class Navigation {
     }
   }
 
-  #getValidNavIndex(index: number, type: "next" | "prev") {
+  getValidNavIndex(index: number, type: "next" | "prev") {
     /**
      * Check if index step is meant to be skipped.
      * Loop through the steps till we find a step that's not skipped
@@ -199,17 +200,10 @@ class Navigation {
 
   async start() {
     this.animations!.is_animating = false;
-    const valid_index = this.#getValidNavIndex(0, "next");
+    const valid_index = this.getValidNavIndex(0, "next");
 
     if (this.ajala.flatten_steps.length > valid_index) {
-      const distance_option =
-        await this.placement!.tooltip.calculateTravelDistance(valid_index);
-
-      this.animations!.transition[this.animations!.transition_type](
-        distance_option,
-      );
-
-      this.ui.update(distance_option);
+      this.goTo(valid_index);
     } else {
       this.ajala.dispatchEvent({
         type: "onFinish",

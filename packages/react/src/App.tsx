@@ -32,29 +32,10 @@ function App() {
       }, 3000);
     }
   }, [startAjala]);
-  useEffect(() => {
-    setTimeout(() => {
-      setOption({
-        start_immediately: false,
-        tooltip_gutter: 30,
-        overlay_options: {
-          color: "white",
-          opacity: 0.6,
-        },
-        spotlight_options: {
-          border_radius: 5,
-          padding: 5,
-        },
-      });
-    }, 3000);
-  }, [startAjala]);
 
   return (
     <AjalaJourneyProvider
       getInstance={setAjalaInstance as any}
-      onClose={() => {
-        console.log("Onclose was called");
-      }}
       steps={[
         {
           target: ".step_2",
@@ -62,6 +43,7 @@ function App() {
           title: "Step 2 Title",
           content: "step 2 content lorem ipson",
           tooltip_placement: "left_top",
+          skip: true,
           enable_target_interaction: true,
         },
         {
@@ -69,6 +51,7 @@ function App() {
           id: "3",
           title: "Step 3 Title",
           content: "step 3 content loremjgj jgjgjgj hjhjh jhjgj ipson",
+          skip: true,
           tooltip_placement: {
             default: `top_right`,
             "(min-width: 700px)": "top_center",
@@ -79,6 +62,7 @@ function App() {
           target: ".step_41",
           id: "4",
           title: "Step 4 Title",
+          skip: true,
           content: "step 4 content",
           tooltip_placement: "bottom_right",
         },
