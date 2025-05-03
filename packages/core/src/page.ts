@@ -8,14 +8,16 @@ const ajala = new AjalaJourney(
       id: "1",
       title: "Step 2 Title",
       content: "step 2 content lorem ipson",
+      skip: true,
       tooltip_placement: "left_top",
-      order: {
-        default: 3,
-        "(min-width: 600px)": 0,
-      },
+      // order: {
+      //   default: 3,
+      //   "(min-width: 600px)": 0,
+      // },
     },
     {
       target: ".step_3",
+      skip: true,
       id: "3",
       title: "Step 3 Title",
       content: "step 3 content lorem ipson",
@@ -27,6 +29,7 @@ const ajala = new AjalaJourney(
     },
     {
       target: ".step_41",
+      skip: true,
       id: "4",
       title: "Step 4 Title",
       content: "step 4 content lorem ipson",
@@ -34,6 +37,7 @@ const ajala = new AjalaJourney(
     },
     {
       target: ".step_5",
+      skip: true,
       id: "5",
       title: "Step 5 Title",
       content: "step 5 content lorem ipson",
@@ -41,6 +45,7 @@ const ajala = new AjalaJourney(
     },
     {
       target: ".step_6",
+      skip: true,
       id: "6",
       title: "Step 6 Title",
       content: "step 6 content lorem ipson",
@@ -48,12 +53,14 @@ const ajala = new AjalaJourney(
     },
     {
       target: ".step_7",
+      skip: true,
       id: "7",
       title: "Step 7 Title",
       content: "step 7 content lorem ipson",
     },
     {
       target: ".step_8",
+      skip: true,
       id: "8",
       title: "Step 8 Title",
       content: "step 8 content lorem ipson",

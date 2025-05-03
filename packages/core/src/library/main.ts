@@ -74,7 +74,7 @@ export class AjalaJourney extends EventEmitter<TAjalaEventTypes> {
   /**
    * @desc This method initializes the ajala by setting up media queries and UI elements.
    */
-  init() {
+  init(start_immediately?: boolean) {
     const validated_steps = checkForStepsIdValidity(this.original_steps);
     this.is_active = Boolean(this.options.start_immediately);
     this.original_steps = validated_steps;
@@ -96,7 +96,7 @@ export class AjalaJourney extends EventEmitter<TAjalaEventTypes> {
     this.#ui.init();
     this.#navigation.init();
 
-    if (this.is_active && this.options.start_immediately) {
+    if (this.options.start_immediately || start_immediately) {
       this.start();
     }
   }
@@ -186,6 +186,30 @@ export class AjalaJourney extends EventEmitter<TAjalaEventTypes> {
   }
 
   /**
+   * @desc Check if the current active step is the last step in ajala journey.
+   * @returns Boolean
+   */
+  isLastStep() {
+    if (this.getActiveStepFlattenIndex() === this.flatten_steps.length - 1) {
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
+   * @desc Check if the current active step is the first step in ajala journey.
+   * @returns Boolean
+   */
+  isFirstStep() {
+    if (this.getActiveStepFlattenIndex() === 0) {
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
    * @desc starts ajala.
    */
   start() {
@@ -206,7 +230,7 @@ export class AjalaJourney extends EventEmitter<TAjalaEventTypes> {
    */
   restart() {
     this.destroy();
-    this.init();
+    this.init(true);
   }
 
   /**
