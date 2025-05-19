@@ -135,7 +135,8 @@ function AjalaJourneyProvider({
 
       ajala_instance.destroy();
     };
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [CustomArrow, CustomTooltip, options, getInstance]);
 
   useEffect(() => {
     if (is_first_render.current) {
