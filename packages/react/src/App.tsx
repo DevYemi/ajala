@@ -4,8 +4,10 @@ import { AjalaJourneyProvider } from "./components/AjalaJourneyProvider";
 import DummyCustomTooltip from "./components/DummyCustomTooltip";
 import DummyCustomArrow from "./components/DummyCustomArrow";
 import { useState } from "react";
+import { AjalaJourney } from "ajala.js";
 
 function App() {
+  const [ajalaInstance, setAjalaInstance] = useState<AjalaJourney | null>(null);
   const [option] = useState({
     start_immediately: false,
     tooltip_gutter: 30,
@@ -21,6 +23,7 @@ function App() {
 
   return (
     <AjalaJourneyProvider
+      getInstance={setAjalaInstance as unknown as any}
       steps={[
         {
           target: ".step_2",
@@ -28,7 +31,10 @@ function App() {
           title: "Step 2 Title",
           content: "step 2 content lorem ipson",
           tooltip_placement: "left_top",
-          skip: true,
+          skip: {
+            default: false,
+            "(min-width: 767px)": true,
+          },
           enable_target_interaction: true,
         },
         {
@@ -36,7 +42,6 @@ function App() {
           id: "3",
           title: "Step 3 Title",
           content: "step 3 content loremjgj jgjgjgj hjhjh jhjgj ipson",
-          skip: true,
           tooltip_placement: {
             default: `top_right`,
             "(min-width: 700px)": "top_center",
@@ -47,7 +52,6 @@ function App() {
           target: ".step_41",
           id: "4",
           title: "Step 4 Title",
-          skip: true,
           content: "step 4 content",
           tooltip_placement: "bottom_right",
         },
@@ -121,6 +125,7 @@ function App() {
                   className="btn-lg"
                   onClick={(e) => {
                     e.preventDefault();
+                    ajalaInstance?.restart();
                   }}
                 >
                   Get started{" "}

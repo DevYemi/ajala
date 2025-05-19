@@ -16,7 +16,7 @@ const ajala = new AjalaJourney(
     },
     {
       target: ".step_3",
-      skip: true,
+      skip: false,
       id: "3",
       title: "Step 3 Title",
       content: "step 3 content lorem ipson",
@@ -36,11 +36,16 @@ const ajala = new AjalaJourney(
     },
     {
       target: ".step_5",
-      skip: true,
+      skip: false,
       id: "5",
       title: "Step 5 Title",
       content: "step 5 content lorem ipson",
       tooltip_placement: "left_top",
+      order: {
+        default: 0,
+        // "(min-width: 700px)": 1,
+        "(min-width: 500px)": 1,
+      },
     },
     {
       target: ".step_6",
