@@ -38,22 +38,22 @@ class Placement {
     placement?: TTooltipPlacement;
   }) {
     const axis_gutter =
-      this.ajala.flatten_steps[next_index].tooltip_gutter ||
+      this.ajala.getFlattenSteps()[next_index].tooltip_gutter ||
       this.ajala.options.tooltip_gutter ||
       10;
     const placement_loc =
       placement ||
-      this.ajala.flatten_steps[next_index].tooltip_placement ||
+      this.ajala.getFlattenSteps()[next_index].tooltip_placement ||
       this.ajala.options.tooltip_placement ||
       "auto";
     const loc = placement_loc.split("_");
 
     const spotlight_padding =
-      this.ajala.flatten_steps[next_index].spotlight_padding ||
+      this.ajala.getFlattenSteps()[next_index].spotlight_padding ||
       this.ajala.options.spotlight_options?.padding ||
       0;
     const spotlight_border_radius =
-      this.ajala.flatten_steps[next_index].spotlight_border_radius ||
+      this.ajala.getFlattenSteps()[next_index].spotlight_border_radius ||
       this.ajala.options.spotlight_options?.border_radius ||
       0;
 

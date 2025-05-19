@@ -26,12 +26,12 @@ class Navigation {
 
   async goTo(index: number) {
     if (this.animations?.is_animating) return;
-    if (this.ajala.flatten_steps[index]?.skip) {
+    if (this.ajala.getFlattenSteps()[index]?.skip) {
       console.warn("You can't go to an ajala step that's meant to be skipped");
       return;
     }
 
-    if (index >= 0 && index <= this.ajala.flatten_steps.length) {
+    if (index >= 0 && index <= this.ajala.getFlattenSteps().length) {
       this.animations!.is_animating = true;
       this.ui.resetOverlayCutoutSvgRect();
 
@@ -41,7 +41,7 @@ class Navigation {
       const onComplete = () => {
         this.animations!.is_animating = false;
         this.ajala.active_step =
-          this.ajala.flatten_steps[distance_option.active_index];
+          this.ajala.getFlattenSteps()[distance_option.active_index];
 
         this.ui.update(distance_option);
 
@@ -69,7 +69,7 @@ class Navigation {
     let next_index = this.ajala.getActiveStepFlattenIndex() + 1;
     next_index = this.getValidNavIndex(next_index, "next");
 
-    if (this.ajala.flatten_steps.length > next_index) {
+    if (this.ajala.getFlattenSteps().length > next_index) {
       this.animations!.is_animating = true;
       this.ajala.dispatchEvent({
         type: "onNext",
@@ -82,7 +82,7 @@ class Navigation {
       const onComplete = () => {
         this.animations!.is_animating = false;
         this.ajala.active_step =
-          this.ajala.flatten_steps[distance_option.active_index];
+          this.ajala.getFlattenSteps()[distance_option.active_index];
 
         this.ui!.update(distance_option);
 
@@ -130,7 +130,7 @@ class Navigation {
       const onComplete = () => {
         this.animations!.is_animating = false;
         this.ajala.active_step =
-          this.ajala.flatten_steps[distance_option.active_index];
+          this.ajala.getFlattenSteps()[distance_option.active_index];
 
         this.ui!.update(distance_option);
 
@@ -158,13 +158,13 @@ class Navigation {
      * Loop through the steps till we find a step that's not skipped
      */
 
-    const index_step = this.ajala.flatten_steps[index];
+    const index_step = this.ajala.getFlattenSteps()[index];
     let valid_index = index;
 
     if (type === "next" && index_step?.skip) {
-      valid_index = this.ajala.flatten_steps.length;
-      for (let i = index; i < this.ajala.flatten_steps.length; i++) {
-        const step = this.ajala.flatten_steps[i];
+      valid_index = this.ajala.getFlattenSteps().length;
+      for (let i = index; i < this.ajala.getFlattenSteps().length; i++) {
+        const step = this.ajala.getFlattenSteps()[i];
 
         if (step?.skip) {
           continue;
@@ -176,7 +176,7 @@ class Navigation {
     } else if (type === "prev" && index_step?.skip) {
       valid_index = -1;
       for (let i = index; i > 0; i--) {
-        const step = this.ajala.flatten_steps[i];
+        const step = this.ajala.getFlattenSteps()[i];
 
         if (step?.skip) {
           continue;
@@ -202,7 +202,7 @@ class Navigation {
     this.animations!.is_animating = false;
     const valid_index = this.getValidNavIndex(0, "next");
 
-    if (this.ajala.flatten_steps.length > valid_index) {
+    if (this.ajala.getFlattenSteps().length > valid_index) {
       this.goTo(valid_index);
     } else {
       this.ajala.dispatchEvent({

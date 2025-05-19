@@ -36,7 +36,7 @@ class ArrowPlacement {
       rotate: 0,
     };
     const target_el = this.#ui.getTargetElement(
-      this.ajala.flatten_steps[active_index].target,
+      this.ajala.getFlattenSteps()[active_index].target,
     );
 
     if (!target_el) return delta;

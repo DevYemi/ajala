@@ -62,7 +62,7 @@ export function mapResponsiveValueToSteps<T>(
   queries: TParsedResponsiveStep[],
   type: keyof TParsedResponsiveStep,
 ) {
-  const deep_cloned_steps = JSON.parse(JSON.stringify(steps));
+  const deep_cloned_steps: Array<TSteps> = JSON.parse(JSON.stringify(steps));
   queries.forEach((query_value) => {
     const index = deep_cloned_steps.findIndex(
       (step: any) => step?.id === query_value.id,
@@ -98,5 +98,5 @@ export function flattenStepsToMediaQueryDefaults(
     }
   });
 
-  return sortStepsByOrder(deep_cloned_steps as Array<TSteps>);
+  return deep_cloned_steps as Array<TSteps>;
 }

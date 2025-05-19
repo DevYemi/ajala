@@ -8,12 +8,11 @@ const ajala = new AjalaJourney(
       id: "1",
       title: "Step 2 Title",
       content: "step 2 content lorem ipson",
-      skip: true,
+      skip: {
+        default: true,
+        "(min-width: 500px)": false,
+      },
       tooltip_placement: "left_top",
-      // order: {
-      //   default: 3,
-      //   "(min-width: 600px)": 0,
-      // },
     },
     {
       target: ".step_3",
@@ -87,4 +86,4 @@ document.querySelector(".step_3")?.addEventListener("click", (e) => {
   ajala.start();
 });
 
-// console.log("ajala", ajala);
+console.log("ajala", ajala);

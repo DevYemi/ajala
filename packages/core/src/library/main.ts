@@ -70,7 +70,7 @@ export class AjalaJourney extends EventEmitter<TAjalaEventTypes> {
     this.#placement.animations = this.#animations;
 
     this.active_step =
-      this.flatten_steps[this.#navigation.getValidNavIndex(0, "next")];
+      this.getFlattenSteps()[this.#navigation.getValidNavIndex(0, "next")];
 
     this.destroy = this.destroy.bind(this);
   }
@@ -94,7 +94,7 @@ export class AjalaJourney extends EventEmitter<TAjalaEventTypes> {
 
     this.#setUpStepsMediaQueries();
     this.active_step =
-      this.flatten_steps[this.#navigation.getValidNavIndex(0, "next")];
+      this.getFlattenSteps()[this.#navigation.getValidNavIndex(0, "next")];
 
     this.is_active = Boolean(this.options.start_immediately);
 
@@ -109,9 +109,16 @@ export class AjalaJourney extends EventEmitter<TAjalaEventTypes> {
   /**
    * @desc Get flatten steps.
    * Flatten steps are the steps after all media queries have been applied based on current screen size.
+   *
+   *  @param remove_skipped_steps - Whether to remove skipped steps from the flatten steps, defaults to true.
    */
-  getFlattenSteps() {
-    return this.flatten_steps;
+  getFlattenSteps(remove_skipped_steps: boolean = true) {
+    let steps = this.flatten_steps;
+    if (remove_skipped_steps) {
+      steps = steps.filter((step) => !step?.skip);
+    }
+
+    return steps;
   }
 
   /**
@@ -126,7 +133,7 @@ export class AjalaJourney extends EventEmitter<TAjalaEventTypes> {
    * Flatten array is the array of steps after all media queries have been applied based on current screen size.
    */
   getActiveStepFlattenIndex() {
-    const index = this.flatten_steps.findIndex(
+    const index = this.getFlattenSteps().findIndex(
       (item) => item.id === this.active_step?.id,
     );
     return Math.max(index, 0);
@@ -159,7 +166,7 @@ export class AjalaJourney extends EventEmitter<TAjalaEventTypes> {
       validated_steps,
       this.#step_media_query.queries,
     );
-    this.active_step = this.flatten_steps[0];
+    this.active_step = this.getFlattenSteps()[0];
 
     if (restart) {
       this.restart();
@@ -195,7 +202,10 @@ export class AjalaJourney extends EventEmitter<TAjalaEventTypes> {
    * @returns Boolean
    */
   isLastStep() {
-    if (this.getActiveStepFlattenIndex() === this.flatten_steps.length - 1) {
+    if (
+      this.getActiveStepFlattenIndex() ===
+      this.getFlattenSteps().length - 1
+    ) {
       return true;
     }
 
@@ -220,7 +230,7 @@ export class AjalaJourney extends EventEmitter<TAjalaEventTypes> {
   start() {
     this.is_active = true;
     this.active_step =
-      this.flatten_steps[this.#navigation.getValidNavIndex(0, "next")];
+      this.getFlattenSteps()[this.#navigation.getValidNavIndex(0, "next")];
     this.#ui.start();
     this.#navigation.start();
 
@@ -268,7 +278,7 @@ export class AjalaJourney extends EventEmitter<TAjalaEventTypes> {
    */
   goToStep(id: string) {
     if (!this.is_active) return;
-    const index = this.flatten_steps.findIndex((item) => item.id === id);
+    const index = this.getFlattenSteps().findIndex((item) => item.id === id);
     if (index > -1) {
       this.#navigation.goTo(index);
     }
@@ -342,8 +352,13 @@ export class AjalaJourney extends EventEmitter<TAjalaEventTypes> {
           });
         }
 
+        this.#ui.update();
+
         // Restart Ajala journey each time the screen size changes
-        this.goToStep(this.flatten_steps[0].id);
+        this.goToStep(
+          this.getFlattenSteps()[this.#navigation.getValidNavIndex(0, "next")]
+            .id,
+        );
       };
       this.#step_media_query.instances.push(match_media);
     }

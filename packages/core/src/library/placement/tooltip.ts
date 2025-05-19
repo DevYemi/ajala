@@ -33,7 +33,7 @@ class TooltipPlacement {
     this.ui.arrow_element.style.visibility = "hidden";
 
     const next_step_target = this.ui.getTargetElement(
-      this.ajala.flatten_steps[next_index].target,
+      this.ajala.getFlattenSteps()[next_index].target,
     );
     const tooltip_container_el = this.ui.tooltip_container_element;
     let tooltip_rect = tooltip_container_el.getBoundingClientRect();
@@ -65,7 +65,7 @@ class TooltipPlacement {
     let target_rect = next_step_target.getBoundingClientRect();
 
     const gutter =
-      this.ajala.flatten_steps[next_index].tooltip_gutter ??
+      this.ajala.getFlattenSteps()[next_index].tooltip_gutter ??
       this.ajala.options.tooltip_gutter ??
       0;
 

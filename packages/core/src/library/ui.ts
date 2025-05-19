@@ -154,7 +154,8 @@ class UI {
     this.tooltip_element.classList.add("ajala_tooltip");
 
     let dot_navs_element = "";
-    for (let i = 0; i < this.ajala.original_steps.length; i++) {
+    const flatten_length = this.ajala.getFlattenSteps().length;
+    for (let i = 0; i < flatten_length; i++) {
       dot_navs_element = `${dot_navs_element} <div class="ajala_dot_nav"></div>
       `;
     }
@@ -254,21 +255,27 @@ class UI {
     this.overlay_element.appendChild(this.overlay_path);
   }
 
-  update(distance_option: TTravelDistanceData) {
-    const { active_index, placement, taregt_el } = distance_option;
+  update(distance_option?: TTravelDistanceData) {
     const default_options = this.ajala.options.default_tooltip_options;
 
     if (this.is_default_tooltip_element) {
       // Update default ui display
       if (!default_options?.hide_dot_nav) {
-        const ajala_dot_navs =
-          document.querySelectorAll<HTMLElement>(".ajala_dot_nav");
-        ajala_dot_navs.forEach((item) => {
-          item.classList.remove("ajala_dot_nav_active");
+        const flatten_steps = this.ajala.getFlattenSteps();
+        const dot_navs_element = flatten_steps.map((_, i) => {
+          const el = document.createElement("div");
+          el.classList.add("ajala_dot_nav");
+          if (i === this.ajala.getActiveStepFlattenIndex()) {
+            el.classList.add("ajala_dot_nav_active");
+          }
+          return el;
         });
-        ajala_dot_navs[this.ajala.getActiveStepFlattenIndex()].classList.add(
-          "ajala_dot_nav_active",
-        );
+        const ajala_dot_navs =
+          this.wrapper_element.querySelector(".ajala_dot_navs");
+
+        if (ajala_dot_navs) {
+          ajala_dot_navs.replaceChildren(...dot_navs_element);
+        }
       }
       if (!default_options?.hide_title) {
         const ajala_title = document.querySelector<HTMLElement>(".ajala_title");
@@ -283,37 +290,45 @@ class UI {
           ajala_content.innerText = this.ajala.active_step?.content ?? "";
         }
       }
+
+      if (this.next_btn) {
+        this.next_btn.innerText = "Next";
+      }
     }
 
-    // Update target interactivity
-    const enable_target_interaction =
-      this.ajala.active_step?.enable_target_interaction ??
-      this.ajala.options?.enable_target_interaction;
+    if (distance_option) {
+      const { active_index, placement, taregt_el } = distance_option;
 
-    if (enable_target_interaction && taregt_el) {
-      taregt_el.classList.add("ajala_target_interactive");
-    }
+      // Update target interactivity
+      const enable_target_interaction =
+        this.ajala.active_step?.enable_target_interaction ??
+        this.ajala.options?.enable_target_interaction;
 
-    // Update Next btn label on last step
-    if (
-      this.ajala.flatten_steps.length - 1 ===
-        this.ajala.getActiveStepFlattenIndex() &&
-      this.next_btn
-    ) {
-      this.next_btn.innerText = "Finish";
-    }
+      if (enable_target_interaction && taregt_el) {
+        taregt_el.classList.add("ajala_target_interactive");
+      }
 
-    // Update Arrow UI placement
+      // Update Next btn label on last step
+      if (
+        this.ajala.getFlattenSteps().length - 1 ===
+          this.ajala.getActiveStepFlattenIndex() &&
+        this.next_btn
+      ) {
+        this.next_btn.innerText = "Finish";
+      }
 
-    if (taregt_el) {
-      const { x, y, rotate } = this.placement!.arrow.calculatePlacmentDelta({
-        active_index,
-        placement,
-      });
-      this.arrow_element.style.visibility = "visible";
-      this.arrow_element.style.transform = `translate(${x}px, ${y}px) rotate(${rotate}deg)`;
-    } else {
-      this.arrow_element.style.visibility = "hidden";
+      // Update Arrow UI placement
+
+      if (taregt_el) {
+        const { x, y, rotate } = this.placement!.arrow.calculatePlacmentDelta({
+          active_index,
+          placement,
+        });
+        this.arrow_element.style.visibility = "visible";
+        this.arrow_element.style.transform = `translate(${x}px, ${y}px) rotate(${rotate}deg)`;
+      } else {
+        this.arrow_element.style.visibility = "hidden";
+      }
     }
   }
 
@@ -363,7 +378,8 @@ class UI {
     });
 
     const target_el = this.getTargetElement(
-      this.ajala.flatten_steps[this.ajala.getActiveStepFlattenIndex()].target,
+      this.ajala.getFlattenSteps()[this.ajala.getActiveStepFlattenIndex()]
+        .target,
     );
 
     if (target_el) {

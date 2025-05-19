@@ -106,7 +106,7 @@ class Animations {
 
   #getTransitionDuration(active_index: number) {
     return (
-      this.ajala.flatten_steps[active_index]?.transition_duration ??
+      this.ajala.getFlattenSteps()[active_index]?.transition_duration ??
       this.ajala.options?.transition_duration ??
       1000
     );
@@ -126,7 +126,7 @@ class Animations {
       scroll_delta = Math.min(Math.max(0, scroll_delta), max_scroll_height);
 
       const scroll_duration =
-        this.ajala.flatten_steps[active_index]?.scroll_duration ??
+        this.ajala.getFlattenSteps()[active_index]?.scroll_duration ??
         this.ajala.options?.scroll_duration ??
         1000;
 
