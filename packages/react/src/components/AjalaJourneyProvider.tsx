@@ -23,7 +23,9 @@ function AjalaJourneyProvider({
     useState<HTMLElement | null>(null);
   const [customArrowContainer, setArrowContainer] =
     useState<HTMLElement | null>(null);
+
   const is_first_render = useRef(true);
+  const placeholder_element = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     /**
@@ -32,12 +34,12 @@ function AjalaJourneyProvider({
      */
     let dummy_custom_tooltip = null;
     let dummy_custom_arrow = null;
-    const element = document.createElement("div");
+    placeholder_element.current = document.createElement("div");
     if (CustomTooltip) {
-      dummy_custom_tooltip = element;
+      dummy_custom_tooltip = placeholder_element.current;
     }
     if (CustomArrow) {
-      dummy_custom_arrow = element;
+      dummy_custom_arrow = placeholder_element.current;
     }
 
     const ajala_options: TAjalaOptions = {
@@ -46,52 +48,6 @@ function AjalaJourneyProvider({
       custom_arrow: dummy_custom_arrow as any,
     };
     const ajala_instance = new AjalaJourney(steps, ajala_options);
-
-    /**
-     * Attach necessary Event listeners
-     */
-    const onStartHandler = () => {
-      setActiveStep(ajala_instance.getActiveStep());
-    };
-    const onTransitionCompleteHandler = () => {
-      setActiveStep(ajala_instance.getActiveStep());
-    };
-    const onAfterDomInsertHandler = (event: any) => {
-      setTooltipContainer(event?.data?.tooltip_container_element);
-      setArrowContainer(event?.data?.arrow_element);
-      element.remove();
-    };
-    ajala_instance.addEventListener(
-      "onAfterDomInsert",
-      onAfterDomInsertHandler
-    );
-    ajala_instance.addEventListener("onStart", onStartHandler);
-    ajala_instance.addEventListener(
-      "onTransitionComplete",
-      onTransitionCompleteHandler
-    );
-    if (callbackFuncs?.onStart) {
-      ajala_instance.addEventListener("onStart", callbackFuncs.onStart);
-    }
-    if (callbackFuncs?.onFinish) {
-      ajala_instance.addEventListener("onFinish", callbackFuncs.onFinish);
-    }
-
-    if (callbackFuncs?.onClose) {
-      ajala_instance.addEventListener("onClose", callbackFuncs.onClose);
-    }
-    if (callbackFuncs?.onNext) {
-      ajala_instance.addEventListener("onNext", callbackFuncs.onNext);
-    }
-    if (callbackFuncs?.onPrev) {
-      ajala_instance.addEventListener("onPrev", callbackFuncs.onPrev);
-    }
-    if (callbackFuncs?.onTransitionComplete) {
-      ajala_instance.addEventListener(
-        "onTransitionComplete",
-        callbackFuncs.onTransitionComplete
-      );
-    }
 
     ajala_instance.init();
 
@@ -102,41 +58,101 @@ function AjalaJourneyProvider({
 
     return () => {
       // clean up
-      ajala_instance.removeEventListener("onStart", onStartHandler);
-      ajala_instance.removeEventListener(
-        "onAfterDomInsert",
-        onAfterDomInsertHandler
-      );
-      ajala_instance.removeEventListener(
-        "onTransitionComplete",
-        onTransitionCompleteHandler
-      );
-      if (callbackFuncs?.onStart) {
-        ajala_instance.removeEventListener("onStart", callbackFuncs.onStart);
-      }
-      if (callbackFuncs?.onFinish) {
-        ajala_instance.removeEventListener("onFinish", callbackFuncs.onFinish);
-      }
-      if (callbackFuncs?.onClose) {
-        ajala_instance.removeEventListener("onClose", callbackFuncs.onClose);
-      }
-      if (callbackFuncs?.onNext) {
-        ajala_instance.removeEventListener("onNext", callbackFuncs.onNext);
-      }
-      if (callbackFuncs?.onPrev) {
-        ajala_instance.removeEventListener("onPrev", callbackFuncs.onPrev);
-      }
-      if (callbackFuncs?.onTransitionComplete) {
-        ajala_instance.removeEventListener(
-          "onTransitionComplete",
-          callbackFuncs.onTransitionComplete
-        );
-      }
-
       ajala_instance.destroy();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (!ajalaInstance?.initialized) return;
+
+    /**
+     * Attach necessary Event listeners
+     */
+    const onStartHandler = () => {
+      setActiveStep(ajalaInstance.getActiveStep());
+    };
+    const onTransitionCompleteHandler = () => {
+      setActiveStep(ajalaInstance.getActiveStep());
+    };
+    const onAfterDomInsertHandler = (event: any) => {
+      setTooltipContainer(event?.data?.tooltip_container_element);
+      setArrowContainer(event?.data?.arrow_element);
+      placeholder_element.current?.remove();
+    };
+    ajalaInstance.addEventListener("onAfterDomInsert", onAfterDomInsertHandler);
+    ajalaInstance.addEventListener("onStart", onStartHandler);
+    ajalaInstance.addEventListener(
+      "onTransitionComplete",
+      onTransitionCompleteHandler
+    );
+    if (callbackFuncs?.onStart) {
+      ajalaInstance.addEventListener("onStart", callbackFuncs.onStart);
+    }
+    if (callbackFuncs?.onFinish) {
+      ajalaInstance.addEventListener("onFinish", callbackFuncs.onFinish);
+    }
+
+    if (callbackFuncs?.onClose) {
+      ajalaInstance.addEventListener("onClose", callbackFuncs.onClose);
+    }
+    if (callbackFuncs?.onNext) {
+      ajalaInstance.addEventListener("onNext", callbackFuncs.onNext);
+    }
+    if (callbackFuncs?.onPrev) {
+      ajalaInstance.addEventListener("onPrev", callbackFuncs.onPrev);
+    }
+    if (callbackFuncs?.onTransitionComplete) {
+      ajalaInstance.addEventListener(
+        "onTransitionComplete",
+        callbackFuncs.onTransitionComplete
+      );
+    }
+
+    return () => {
+      // cleanup
+      if (!ajalaInstance?.initialized) return;
+
+      ajalaInstance.removeEventListener("onStart", onStartHandler);
+      ajalaInstance.removeEventListener(
+        "onAfterDomInsert",
+        onAfterDomInsertHandler
+      );
+      ajalaInstance.removeEventListener(
+        "onTransitionComplete",
+        onTransitionCompleteHandler
+      );
+      if (callbackFuncs?.onStart) {
+        ajalaInstance.removeEventListener("onStart", callbackFuncs.onStart);
+      }
+      if (callbackFuncs?.onFinish) {
+        ajalaInstance.removeEventListener("onFinish", callbackFuncs.onFinish);
+      }
+      if (callbackFuncs?.onClose) {
+        ajalaInstance.removeEventListener("onClose", callbackFuncs.onClose);
+      }
+      if (callbackFuncs?.onNext) {
+        ajalaInstance.removeEventListener("onNext", callbackFuncs.onNext);
+      }
+      if (callbackFuncs?.onPrev) {
+        ajalaInstance.removeEventListener("onPrev", callbackFuncs.onPrev);
+      }
+      if (callbackFuncs?.onTransitionComplete) {
+        ajalaInstance.removeEventListener(
+          "onTransitionComplete",
+          callbackFuncs.onTransitionComplete
+        );
+      }
+    };
+  }, [
+    ajalaInstance,
+    callbackFuncs?.onClose,
+    callbackFuncs?.onFinish,
+    callbackFuncs?.onNext,
+    callbackFuncs?.onPrev,
+    callbackFuncs?.onStart,
+    callbackFuncs?.onTransitionComplete,
+  ]);
 
   useEffect(() => {
     if (is_first_render.current) {
