@@ -24,7 +24,6 @@ function AjalaJourneyProvider({
   const [customArrowContainer, setArrowContainer] =
     useState<HTMLElement | null>(null);
 
-  const is_first_render = useRef(true);
   const placeholder_element = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
@@ -155,10 +154,6 @@ function AjalaJourneyProvider({
   ]);
 
   useEffect(() => {
-    if (is_first_render.current) {
-      is_first_render.current = false;
-      return;
-    }
     // Update ajala options and step when prop changes
     if (ajalaInstance?.initialized) {
       delete (options as TAjalaOptions)?.custom_tooltip;
@@ -166,11 +161,11 @@ function AjalaJourneyProvider({
 
       ajalaInstance.updateOptions(options, false);
       ajalaInstance.updateSteps(steps, false);
-    }
 
-    return () => {
-      is_first_render.current = true;
-    };
+      if (ajalaInstance.is_active) {
+        ajalaInstance.restart();
+      }
+    }
   }, [options, steps, ajalaInstance]);
 
   return (

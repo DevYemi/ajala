@@ -3,7 +3,7 @@ import "ajala.js/dist/ajala.css";
 import { AjalaJourneyProvider } from "./components/AjalaJourneyProvider";
 import DummyCustomTooltip from "./components/DummyCustomTooltip";
 import DummyCustomArrow from "./components/DummyCustomArrow";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AjalaJourney } from "ajala.js";
 
 function App() {
@@ -21,67 +21,76 @@ function App() {
     },
   });
 
-  return (
-    <AjalaJourneyProvider
-      getInstance={setAjalaInstance as unknown as any}
-      steps={[
-        {
-          target: ".step_2",
-          id: "1",
-          title: "Step 2 Title",
-          content: "step 2 content lorem ipson",
-          tooltip_placement: "left_top",
-          skip: {
-            default: false,
-            "(min-width: 767px)": true,
-          },
-          enable_target_interaction: true,
-        },
-        {
-          target: ".step_3",
-          id: "3",
-          title: "Step 3 Title",
-          content: "step 3 content loremjgj jgjgjgj hjhjh jhjgj ipson",
-          tooltip_placement: {
-            default: `top_right`,
-            "(min-width: 700px)": "top_center",
-            "(min-width: 500px)": "top_left",
-          },
-        },
-        {
-          target: ".step_41",
-          id: "4",
-          title: "Step 4 Title",
-          content: "step 4 content",
-          tooltip_placement: "bottom_right",
-        },
-        {
-          target: ".step_5",
-          id: "5",
-          title: "Step 5 Title",
-          content: "step 5 content lorem ipson",
-          tooltip_placement: "left_top",
-        },
-        {
-          target: ".step_6",
-          id: "6",
-          title: "Step 6 Title",
-          content:
-            "step 6 content jgdajdgaj sjdhsjdhgsjd kshksdhskdhsdk kjshjshdsjshs kjshjshd lorem ipson",
-          tooltip_placement: "left_bottom",
-        },
-        {
-          target: ".step_7",
-          id: "7",
-          title: "Step 7 Title",
-          content: "step 7 content lorem ipson",
-        },
-        {
-          target: ".step_8",
-          id: "8",
-          title: "Step 8 Title",
-          content: "step 8 content lorem ipson",
-        },
+  const [steps, setSteps] = useState(() => [
+    {
+      target: ".step_2",
+      id: "1",
+      title: "Step 2 Title",
+      content: "step 2 content lorem ipson",
+      tooltip_placement: "left_top",
+      skip: {
+        default: false,
+        "(min-width: 767px)": true,
+      },
+      enable_target_interaction: true,
+    },
+    {
+      target: ".step_3",
+      id: "3",
+      title: "Step 3 Title",
+      content: "step 3 content loremjgj jgjgjgj hjhjh jhjgj ipson",
+      tooltip_placement: {
+        default: `top_right`,
+        "(min-width: 700px)": "top_center",
+        "(min-width: 500px)": "top_left",
+      },
+    },
+    {
+      target: ".step_41",
+      id: "4",
+      title: "Step 4 Title",
+      content: "step 4 content",
+      tooltip_placement: "bottom_right",
+    },
+    {
+      target: ".step_5",
+      id: "5",
+      title: "Step 5 Title",
+      content: "step 5 content lorem ipson",
+      tooltip_placement: "left_top",
+    },
+    {
+      target: ".step_6",
+      id: "6",
+      title: "Step 6 Title",
+      content:
+        "step 6 content jgdajdgaj sjdhsjdhgsjd kshksdhskdhsdk kjshjshdsjshs kjshjshd lorem ipson",
+      tooltip_placement: "left_bottom",
+    },
+    {
+      target: ".step_7",
+      id: "7",
+      title: "Step 7 Title",
+      content: "step 7 content lorem ipson",
+    },
+    {
+      target: ".step_8",
+      id: "8",
+      title: "Step 8 Title",
+      content: "step 8 content lorem ipson",
+    },
+    {
+      target: ".step_9",
+      id: "9",
+      title: "Step 9 Title",
+      content: "step 9 content lorem ipson",
+      tooltip_placement: "left_bottom",
+    },
+  ]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setSteps([
         {
           target: ".step_9",
           id: "9",
@@ -89,7 +98,14 @@ function App() {
           content: "step 9 content lorem ipson",
           tooltip_placement: "left_bottom",
         },
-      ]}
+      ]);
+    }, 7000);
+  }, []);
+
+  return (
+    <AjalaJourneyProvider
+      getInstance={setAjalaInstance as unknown as any}
+      steps={steps as any}
       CustomTooltip={DummyCustomTooltip}
       CustomArrow={DummyCustomArrow}
       options={option}
