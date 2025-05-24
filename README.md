@@ -1,5 +1,3 @@
-<!-- @format -->
-
 # Àjàlá.js
 
 <p align="center">
@@ -57,13 +55,9 @@ const ajala_journey = new AjalaJourney([
 ajala_journey.init();
 ```
 
-**Please note:** You only need to import `import "ajala.js/dist/ajala.css";` if you are using the default tooltip provided by Ajala. If you choose to provide your own custom tooltip, you can skip this import.
+**Please note:** That you only need `import "ajala.js/dist/ajala.css";` when you are using ajala default tooltip, you don't need it if you provide your own custom tooltip
 
-The `AjalaJourney` class accept two arguments:
-
-1. **Steps Array:** This is a required array of step objects that define the individual steps in the walkthrough journey.
-
-2. **Journey Options:** These are used to globally customize the walkthrough journey experience, allowing you to adjust settings like appearance, behavior, and other configurations.
+`AjalaJourney` class accept two arguments, an array of steps object which is compulsory and the journey options that's used to customize the jounery experience globally.
 
 ## Ajala Step Shape
 
@@ -88,6 +82,8 @@ An array of the object with the following property.
 | enable_target_interaction | boolean                                                                                                                                                                              | By default highlighted spotlight target are not clickable                                                                                                                                                                                                                                                                                            |
 | enable_overlay_close      | boolean                                                                                                                                                                              | By default ajala doesn't close the journey when the overlay is clicked, passing `true` to this property make sure ajala journey finishes when the overlay is clicked.                                                                                                                                                                                |
 | tooltip_placement         | `top_left`, `top_center`, `top_right`, `bottom_left`, `bottom_center`, `bottom_right`, `left_top`, `left_bottom`, `left_center`, `right_top`, `right_bottom`, `right_center`, `auto` | This helps customize where the tooltip should be placed on the spotlight element. Default value is `auto` which means ajala calculate the best placement for the tooltip. Please note that if you pass a value aside `auto` and ajala discover that the tooltip will be out-of-user-view, ajala will fallback to `auto` for optimal user experience. |
+| onActive                  | function                                                                                                                                                                             | Callback function that's called when the step is active, active here means it's the step currently being highlighted                                                                                                                                                                                                                                 |
+| onInActive                | function                                                                                                                                                                             | Callback function that's called when the step is no longer active,                                                                                                                                                                                                                                                                                   |
 
 ## Responsive Ajala Step
 
