@@ -1,3 +1,5 @@
+import { AjalaJourney } from "./main";
+
 export type TPlacementAxis = "top" | "bottom" | "left" | "right";
 type TPlacementXAlign = "left" | "center" | "right";
 type TPlacementYAlign = "top" | "center" | "bottom";
@@ -9,12 +11,18 @@ export type TTooltipPlacement =
   | "auto";
 
 export type TTransitionType = "traveller" | "popout";
-export interface TSteps {
+
+export interface TUnresponsiveStepsProperties {
   id: string;
+  data?: unknown;
+  onActive?: (step: TAjalaSteps, self: AjalaJourney) => void;
+  onInActive?: (step: TAjalaSteps, self: AjalaJourney) => void;
+}
+
+export type TResponsiveStepsProperties = {
   target?: string;
   title?: string;
   content?: string;
-  data?: unknown;
   order?: number;
   skip?: boolean;
   tooltip_gutter?: number;
@@ -25,7 +33,8 @@ export interface TSteps {
   transition_duration?: number;
   enable_target_interaction?: boolean;
   enable_overlay_close?: boolean;
-}
+};
+export type TSteps = TUnresponsiveStepsProperties & TResponsiveStepsProperties;
 
 export type TMediaQuery<T> = {
   [index in string]: T;
@@ -33,19 +42,11 @@ export type TMediaQuery<T> = {
   default: T;
 };
 
-/**
- * Steps properties that can be overridden by media queries
- */
-export type TResponsiveStepsProperties = Omit<TSteps, "id" | "data">;
-
 export type TAjalaSteps = {
   [property in keyof TResponsiveStepsProperties]:
     | TResponsiveStepsProperties[property]
     | TMediaQuery<TResponsiveStepsProperties[property]>;
-} & {
-  id: string;
-  data?: unknown;
-};
+} & TUnresponsiveStepsProperties;
 
 export interface TAjalaOptions {
   start_immediately?: boolean;

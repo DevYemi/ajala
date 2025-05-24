@@ -35,6 +35,17 @@ class Navigation {
       this.animations!.is_animating = true;
       this.ui.resetOverlayCutoutSvgRect();
 
+      const stepInActiveCallback =
+        this.ajala.getOriginalSteps()[this.ajala.getActiveStepOriginalIndex()]
+          ?.onInActive;
+
+      if (
+        stepInActiveCallback &&
+        index !== this.ajala.getActiveStepFlattenIndex()
+      ) {
+        stepInActiveCallback(this.ajala.getActiveStep()!, this.ajala);
+      }
+
       const distance_option =
         await this.placement!.tooltip.calculateTravelDistance(index);
 
@@ -45,6 +56,13 @@ class Navigation {
 
         this.ui.update(distance_option);
 
+        const stepActiveCallback =
+          this.ajala.getOriginalSteps()[this.ajala.getActiveStepOriginalIndex()]
+            ?.onActive;
+
+        if (stepActiveCallback) {
+          stepActiveCallback(this.ajala.getActiveStep()!, this.ajala);
+        }
         this.ajala.dispatchEvent({
           type: "onTransitionComplete",
           data: {
@@ -71,10 +89,20 @@ class Navigation {
 
     if (this.ajala.getFlattenSteps().length > next_index) {
       this.animations!.is_animating = true;
+
+      const stepInActiveCallback =
+        this.ajala.getOriginalSteps()[this.ajala.getActiveStepOriginalIndex()]
+          ?.onInActive;
+
+      if (stepInActiveCallback) {
+        stepInActiveCallback(this.ajala.getActiveStep()!, this.ajala);
+      }
+
       this.ajala.dispatchEvent({
         type: "onNext",
         data: this.ajala,
       });
+
       this.ui!.resetOverlayCutoutSvgRect();
 
       const distance_option =
@@ -85,6 +113,13 @@ class Navigation {
           this.ajala.getFlattenSteps()[distance_option.active_index];
 
         this.ui!.update(distance_option);
+
+        const stepActiveCallback =
+          this.ajala.getOriginalSteps()[this.ajala.getActiveStepOriginalIndex()]
+            ?.onActive;
+        if (stepActiveCallback) {
+          stepActiveCallback(this.ajala.getActiveStep()!, this.ajala);
+        }
 
         this.ajala.dispatchEvent({
           type: "onTransitionComplete",
@@ -118,6 +153,14 @@ class Navigation {
 
     if (prev_index > -1) {
       this.animations!.is_animating = true;
+
+      const stepInActiveCallback =
+        this.ajala.getOriginalSteps()[this.ajala.getActiveStepOriginalIndex()]
+          ?.onInActive;
+      if (stepInActiveCallback) {
+        stepInActiveCallback(this.ajala.getActiveStep()!, this.ajala);
+      }
+
       this.ajala.dispatchEvent({
         type: "onPrev",
         data: this.ajala,
@@ -133,6 +176,13 @@ class Navigation {
           this.ajala.getFlattenSteps()[distance_option.active_index];
 
         this.ui!.update(distance_option);
+
+        const stepActiveCallback =
+          this.ajala.getOriginalSteps()[this.ajala.getActiveStepOriginalIndex()]
+            ?.onActive;
+        if (stepActiveCallback) {
+          stepActiveCallback(this.ajala.getActiveStep()!, this.ajala);
+        }
 
         this.ajala.dispatchEvent({
           type: "onTransitionComplete",
@@ -191,6 +241,13 @@ class Navigation {
   }
 
   close() {
+    const stepInActiveCallback =
+      this.ajala.getOriginalSteps()[this.ajala.getActiveStepOriginalIndex()]
+        ?.onInActive;
+    if (stepInActiveCallback) {
+      stepInActiveCallback(this.ajala.getActiveStep()!, this.ajala);
+    }
+
     this.ajala.destroy();
     this.ajala.dispatchEvent({
       type: "onClose",
