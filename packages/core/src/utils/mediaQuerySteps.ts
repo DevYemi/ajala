@@ -3,6 +3,7 @@ import {
   TAjalaSteps,
   TResponsiveStepsProperties,
   TSteps,
+  TUnresponsiveStepsProperties,
 } from "../library/types";
 import sortStepsByOrder from "./sortStepsByOrder";
 
@@ -16,7 +17,12 @@ export type TParsedResponsiveStep = {
 
 export function parseResponsiveSteps(steps: Array<TAjalaSteps>) {
   const media_quries: Partial<TMediaQuery<Array<TParsedResponsiveStep>>> = {};
-  const unresponsive_step_keys = ["id", "data"];
+  const unresponsive_step_keys: Array<keyof TUnresponsiveStepsProperties> = [
+    "id",
+    "data",
+    "onActive",
+    "onInActive",
+  ];
 
   for (let i = 0; i < steps.length; i++) {
     const step = steps[i];
