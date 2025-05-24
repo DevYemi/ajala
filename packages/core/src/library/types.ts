@@ -15,8 +15,8 @@ export type TTransitionType = "traveller" | "popout";
 export interface TUnresponsiveStepsProperties {
   id: string;
   data?: unknown;
-  onActive?: (step: TAjalaSteps, self: AjalaJourney) => void;
-  onInActive?: (step: TAjalaSteps, self: AjalaJourney) => void;
+  onActive?: (step: TSteps, self: AjalaJourney) => void;
+  onInActive?: (step: TSteps, self: AjalaJourney) => void;
 }
 
 export type TResponsiveStepsProperties = {
