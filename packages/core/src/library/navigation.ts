@@ -94,7 +94,10 @@ class Navigation {
         this.ajala.getOriginalSteps()[this.ajala.getActiveStepOriginalIndex()]
           ?.onInActive;
 
-      if (stepInActiveCallback) {
+      if (
+        stepInActiveCallback &&
+        next_index !== this.ajala.getActiveStepFlattenIndex()
+      ) {
         stepInActiveCallback(this.ajala.getActiveStep()!, this.ajala);
       }
 
@@ -157,7 +160,10 @@ class Navigation {
       const stepInActiveCallback =
         this.ajala.getOriginalSteps()[this.ajala.getActiveStepOriginalIndex()]
           ?.onInActive;
-      if (stepInActiveCallback) {
+      if (
+        stepInActiveCallback &&
+        prev_index !== this.ajala.getActiveStepFlattenIndex()
+      ) {
         stepInActiveCallback(this.ajala.getActiveStep()!, this.ajala);
       }
 
