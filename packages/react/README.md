@@ -11,7 +11,15 @@
 ## Quick start
 
 ```bash
+## npm
 npm i react-ajala
+
+## yarn
+yarn add react-ajala
+
+##pnpm
+pnpm add react-ajala
+
 ```
 
 ```ts
