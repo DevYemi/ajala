@@ -58,8 +58,6 @@ class UI {
       this.closeOnOverlayClickHandler,
     );
 
-    window.addEventListener("resize", this.refresh);
-
     this.overlay_path.addEventListener(
       "click",
       this.closeOnOverlayClickHandler,
@@ -443,6 +441,7 @@ class UI {
       this.prev_btn?.addEventListener("click", this.navigation.prev);
       this.close_btn?.addEventListener("click", this.navigation.close);
     }
+    window.addEventListener("resize", this.refresh);
   }
 
   closeOnOverlayClickHandler() {
@@ -456,12 +455,15 @@ class UI {
   }
 
   async refresh() {
+    console.log("this.ajala.is_active", this.ajala.is_active, this.ajala);
+    if (!this.ajala.is_active) return;
     const recalaculate = () => {
       const active_id = this.ajala.getActiveStep()?.id;
       if (active_id) {
         this.ajala.goToStep(active_id);
       }
     };
+    console.log("recalaculate Called");
     recalaculate();
 
     /**

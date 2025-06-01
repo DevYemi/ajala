@@ -21,6 +21,13 @@ const ajala = new AjalaJourney(
       },
     },
     {
+      target: ".fixed_element",
+      id: "fixed_element",
+      title: "Step Fixed Element",
+      content: "step for fixed element",
+      tooltip_placement: "left_top",
+    },
+    {
       target: ".step_3",
       skip: false,
       id: "3",
@@ -50,11 +57,7 @@ const ajala = new AjalaJourney(
       title: "Step 5 Title",
       content: "step 5 content lorem ipson",
       tooltip_placement: "left_top",
-      order: {
-        default: 0,
-        // "(min-width: 700px)": 1,
-        "(min-width: 500px)": 1,
-      },
+      order: 0,
     },
     {
       target: ".step_6",
@@ -63,6 +66,7 @@ const ajala = new AjalaJourney(
       title: "Step 6 Title",
       content: "step 6 content lorem ipson",
       tooltip_placement: "left_bottom",
+
       onActive(step) {
         console.log(step.id, "IsActive");
       },
@@ -111,15 +115,19 @@ const ajala = new AjalaJourney(
     },
   ],
   {
+    start_immediately: false,
     spotlight_options: {
       border_radius: 5,
       padding: 5,
+    },
+    overlay_options: {
+      color: "#ffffff",
     },
   },
 );
 ajala.init();
 
-document.querySelector(".step_3")?.addEventListener("click", (e) => {
+document.querySelector(".fixed_element")?.addEventListener("click", (e) => {
   e.preventDefault();
   ajala.start();
 });
