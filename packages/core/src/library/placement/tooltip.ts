@@ -81,13 +81,9 @@ class TooltipPlacement {
      */
 
     if (
-      target_rect.y < 0 ||
-      target_rect.y > window.innerHeight ||
-      target_rect.y + target_rect.height > window.innerHeight ||
       y_delta < 0 ||
       y_delta > window.innerHeight ||
-      y_delta + tooltip_rect.height > window.innerHeight ||
-      y_delta + tooltip_rect.height < 0
+      y_delta + target_rect.height > window.innerHeight
     ) {
       if (this.placement.animations?.transition_type === "popout") {
         this.ui.tooltip_container_element.style.visibility = "hidden";
@@ -218,6 +214,12 @@ class TooltipPlacement {
     };
   }
 
+  /**
+   *
+   * @Desc Calculate tooltip placement after the `tooltip_placement` provided by user as been deem invalid.
+   * Loop through all placment pick the first valid one that's found.
+   *
+   */
   #calculateAuto({
     target,
     axis_gutter,

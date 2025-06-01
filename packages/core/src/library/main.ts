@@ -43,7 +43,7 @@ export class AjalaJourney extends EventEmitter<TAjalaEventTypes> {
     super();
     const validated_steps = checkForStepsIdValidity(steps);
     this.options = { start_immediately, ...options };
-    this.is_active = Boolean(this.options.start_immediately);
+    this.is_active = false;
     this.original_steps = validated_steps;
     this.#step_media_query = {
       instances: [],
@@ -81,7 +81,7 @@ export class AjalaJourney extends EventEmitter<TAjalaEventTypes> {
   init(start_immediately?: boolean) {
     this.initialized = true;
     const validated_steps = checkForStepsIdValidity(this.original_steps);
-    this.is_active = Boolean(this.options.start_immediately);
+    this.is_active = false;
     this.original_steps = validated_steps;
     this.#step_media_query = {
       instances: [],
@@ -95,8 +95,6 @@ export class AjalaJourney extends EventEmitter<TAjalaEventTypes> {
     this.#setUpStepsMediaQueries();
     this.active_step =
       this.getFlattenSteps()[this.#navigation.getValidNavIndex(0, "next")];
-
-    this.is_active = Boolean(this.options.start_immediately);
 
     this.#ui.init();
     this.#navigation.init();
@@ -225,7 +223,9 @@ export class AjalaJourney extends EventEmitter<TAjalaEventTypes> {
   }
 
   /**
-   * @desc starts ajala.
+   * @desc Used to programmatically start ajala, when `start_immediately` value is set to false.
+   *
+   * If you need to restart ajala, please use the `restart` method
    */
   start() {
     this.is_active = true;
