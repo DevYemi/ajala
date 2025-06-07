@@ -8,6 +8,7 @@ class UI {
   ajala: AjalaJourney;
   tooltip_element: HTMLElement;
   wrapper_element: HTMLElement;
+  style_element: HTMLStyleElement;
   tooltip_container_element: HTMLElement;
   arrow_element: HTMLElement;
   overlay_element: SVGElement;
@@ -35,6 +36,7 @@ class UI {
       "path",
     );
     this.arrow_element = document.createElement("div");
+    this.style_element = document.createElement("style");
     this.next_btn = null;
     this.prev_btn = null;
     this.close_btn = null;
@@ -46,6 +48,7 @@ class UI {
   }
 
   init() {
+    this.wrapper_element = document.createElement("div");
     this.tooltip_element =
       this.ajala.options.custom_tooltip || document.createElement("div");
     this.tooltip_container_element = document.createElement("div");
@@ -105,7 +108,9 @@ class UI {
       : "180px";
     this.tooltip_container_element.style.pointerEvents = "auto";
     this.tooltip_container_element.classList.add("ajala_tooltip_container");
+
     this.tooltip_container_element.appendChild(this.tooltip_element);
+
     this.tooltip_container_element.style.transform = `translate(0px, 0px)`;
 
     this.wrapper_element.style.position = "fixed";
@@ -114,26 +119,6 @@ class UI {
     this.wrapper_element.style.zIndex = "9999999";
     this.wrapper_element.classList.add("ajala");
     this.wrapper_element.append(this.tooltip_container_element);
-
-    const styleElement = document.createElement("style");
-    styleElement.innerHTML = `
-    .ajala_isOverlay.ajala_active  * {
-     pointer-events: none;
-     }
-     .ajala_target_interactive, .ajala_target_interactive  * {
-     pointer-events: auto !important;
-     }
-     
-     .ajala_tooltip_container  * {
-     pointer-events: auto !important;
-     }
-
-     .ajala_tooltip_arrow, .ajala_tooltip_arrow  * {
-      pointer-events: none !important;
-     }
-    
-     `;
-    document.head.appendChild(styleElement);
 
     if (
       typeof this.ajala.options.overlay_options?.hide === "undefined" ||
@@ -402,7 +387,6 @@ class UI {
   }
 
   start() {
-    this.wrapper_element.remove();
     document.body.classList.remove("ajala_active");
 
     document.body.style.overflow = "hidden";
@@ -432,6 +416,26 @@ class UI {
     const tooltip_rect = this.tooltip_container_element.getBoundingClientRect();
     this.tooltip_container_element.style.transform = `translate(-${tooltip_rect.width}px, 0px)`;
     this.resetOverlayCutoutSvgRect();
+
+    this.style_element.innerHTML = `
+    .ajala_isOverlay.ajala_active  * {
+     pointer-events: none;
+     }
+     .ajala_target_interactive, .ajala_target_interactive  * {
+     pointer-events: auto !important;
+     }
+     
+     .ajala_tooltip_container  * {
+     pointer-events: auto !important;
+     }
+
+     .ajala_tooltip_arrow, .ajala_tooltip_arrow  * {
+      pointer-events: none !important;
+     }
+    
+     `;
+    document.head.appendChild(this.style_element);
+
     if (this.next_btn) {
       this.next_btn.innerText = "Next";
     }
@@ -455,7 +459,6 @@ class UI {
   }
 
   async refresh() {
-    console.log("this.ajala.is_active", this.ajala.is_active, this.ajala);
     if (!this.ajala.is_active) return;
     const recalaculate = () => {
       const active_id = this.ajala.getActiveStep()?.id;
@@ -463,7 +466,7 @@ class UI {
         this.ajala.goToStep(active_id);
       }
     };
-    console.log("recalaculate Called");
+
     recalaculate();
 
     /**
@@ -487,6 +490,7 @@ class UI {
           self: this.ajala,
         },
       });
+      document.head.removeChild(this.style_element);
       document.body.removeChild(this.wrapper_element);
 
       this.ajala.dispatchEvent({
