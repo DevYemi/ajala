@@ -3,13 +3,16 @@ import "ajala.js/dist/ajala.css";
 import { AjalaJourneyProvider } from "./components/AjalaJourneyProvider";
 import DummyCustomTooltip from "./components/DummyCustomTooltip";
 import DummyCustomArrow from "./components/DummyCustomArrow";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { AjalaJourney } from "ajala.js";
 
 function App() {
   const [ajalaInstance, setAjalaInstance] = useState<AjalaJourney | null>(null);
   const [option] = useState({
     start_immediately: false,
+    tooltip_width: 320,
+    tooltip_height: 224,
+    enable_target_interaction: true,
     tooltip_gutter: 30,
     overlay_options: {
       color: "red",
@@ -87,20 +90,6 @@ function App() {
       tooltip_placement: "left_bottom",
     },
   ]);
-
-  useEffect(() => {
-    setTimeout(() => {
-      setSteps([
-        {
-          target: ".step_9",
-          id: "9",
-          title: "Step 9 Title",
-          content: "step 9 content lorem ipson",
-          tooltip_placement: "left_bottom",
-        },
-      ]);
-    }, 7000);
-  }, []);
 
   return (
     <AjalaJourneyProvider
@@ -339,6 +328,22 @@ function App() {
               </div>
             </div>
           </div>
+        </section>
+        <section
+          className="fixed_element"
+          style={{
+            position: "fixed",
+            bottom: "10px",
+            right: "10px",
+            width: "100px",
+            height: "100px",
+            backgroundColor: "green",
+            color: "white",
+            zIndex: 10,
+          }}
+          onClick={() => ajalaInstance?.restart()}
+        >
+          Fixed Item
         </section>
 
         <footer>

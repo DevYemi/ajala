@@ -161,13 +161,6 @@ function AjalaJourneyProvider({
 
       ajalaInstance.updateOptions(options, false);
       ajalaInstance.updateSteps(steps, false);
-
-      if (ajalaInstance.is_active || options?.start_immediately) {
-        ajalaInstance.restart();
-      } else {
-        ajalaInstance.destroy();
-        ajalaInstance.init(false);
-      }
     }
   }, [options, steps, ajalaInstance]);
 
