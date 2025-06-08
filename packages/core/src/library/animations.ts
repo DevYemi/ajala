@@ -135,7 +135,11 @@ class Animations {
         to: scroll_delta,
         duration: scroll_duration,
         onUpdate(scroll_time) {
-          window.scrollTo(0, scroll_time);
+          window.scrollTo({
+            left: 0,
+            top: scroll_time,
+            behavior: "instant",
+          });
         },
         onComplete() {
           resolve(null);
