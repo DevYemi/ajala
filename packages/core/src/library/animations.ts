@@ -112,39 +112,27 @@ class Animations {
     );
   }
 
-  scrollToLocation(target: HTMLElement, active_index: number) {
+  scrollIntoView(element: HTMLElement, delay = 100) {
     return new Promise((resolve) => {
-      const target_rect = target.getBoundingClientRect();
+      let timeout: NodeJS.Timeout;
 
-      // Makse sure we scroll to the target being at the center of the viewport
-      const scroll_offset = window.innerHeight / 2 - target_rect.height / 2;
-      let scroll_delta = window.scrollY + target_rect.y - scroll_offset;
+      function onScroll() {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+          document.removeEventListener("scroll", onScroll, true);
+          resolve(null); // likely finished scrolling
+        }, delay);
+      }
 
-      // Clamp scroll Value
-      const max_scroll_height =
-        document.documentElement.scrollHeight - window.innerHeight;
-      scroll_delta = Math.min(Math.max(0, scroll_delta), max_scroll_height);
+      document.addEventListener("scroll", onScroll, true);
+      element.scrollIntoView({ behavior: "smooth", block: "center" });
 
-      const scroll_duration =
-        this.ajala.getFlattenSteps()[active_index]?.scroll_duration ??
-        this.ajala.options?.scroll_duration ??
-        1000;
-
-      this.animate({
-        from: window.scrollY,
-        to: scroll_delta,
-        duration: scroll_duration,
-        onUpdate(scroll_time) {
-          window.scrollTo({
-            left: 0,
-            top: scroll_time,
-            behavior: "instant",
-          });
-        },
-        onComplete() {
+      // Handle case where element is slready in view
+      setTimeout(() => {
+        if (!timeout) {
           resolve(null);
-        },
-      });
+        }
+      }, delay + 100);
     });
   }
 
