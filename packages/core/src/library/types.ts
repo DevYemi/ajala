@@ -29,7 +29,6 @@ export type TResponsiveStepsProperties = {
   tooltip_placement?: TTooltipPlacement;
   spotlight_border_radius?: number;
   spotlight_padding?: number;
-  scroll_duration?: number;
   transition_duration?: number;
   enable_target_interaction?: boolean;
   enable_overlay_close?: boolean;
@@ -56,7 +55,6 @@ export interface TAjalaOptions {
   tooltip_placement?: TTooltipPlacement;
   tooltip_width?: number;
   tooltip_height?: number;
-  scroll_duration?: number;
   transition_duration?: number;
   transition_type?: TTransitionType;
   enable_target_interaction?: boolean;
