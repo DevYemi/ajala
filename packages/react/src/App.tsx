@@ -3,11 +3,12 @@ import "ajala.js/dist/ajala.css";
 import { AjalaJourneyProvider } from "./components/AjalaJourneyProvider";
 import DummyCustomTooltip from "./components/DummyCustomTooltip";
 import DummyCustomArrow from "./components/DummyCustomArrow";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { AjalaJourney } from "ajala.js";
 
 function App() {
   const [ajalaInstance, setAjalaInstance] = useState<AjalaJourney | null>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
   const [option] = useState({
     start_immediately: false,
     tooltip_width: 320,
@@ -24,19 +25,7 @@ function App() {
     },
   });
 
-  const [steps, setSteps] = useState(() => [
-    {
-      target: ".step_2",
-      id: "1",
-      title: "Step 2 Title",
-      content: "step 2 content lorem ipson",
-      tooltip_placement: "left_top",
-      skip: {
-        default: false,
-        "(min-width: 767px)": true,
-      },
-      enable_target_interaction: true,
-    },
+  const [steps] = useState(() => [
     {
       target: ".step_3",
       id: "3",
@@ -48,6 +37,19 @@ function App() {
         "(min-width: 500px)": "top_left",
       },
     },
+    {
+      target: ".step_2",
+      id: "1",
+      title: "Step 2 Title",
+      content: "step 2 content lorem ipson",
+      tooltip_placement: "left_top",
+      skip: {
+        default: false,
+        "(min-width: 767px)": false,
+      },
+      enable_target_interaction: true,
+    },
+
     {
       target: ".step_41",
       id: "4",
@@ -97,11 +99,14 @@ function App() {
       steps={steps as any}
       CustomTooltip={DummyCustomTooltip}
       CustomArrow={DummyCustomArrow}
-      options={option}
+      options={{ ...option, transition_type: "popout" }}
     >
       <div className="outter-container">
-        <header className="header">
-          <nav className="logo">
+        <header
+          style={{ height: "200px", overflow: "auto" }}
+          className="header"
+        >
+          <nav style={{ position: "sticky", top: "0" }} className="logo">
             <div className="step_1">Your Logo</div>
             <a href="" className="btn step_2">
               {" "}
@@ -110,7 +115,7 @@ function App() {
           </nav>
 
           <div className="inner-container">
-            <div className="inner-title step_3">
+            <div ref={headerRef} className="inner-title step_3">
               <h1>Unlimited movies, TV shows, and more.</h1>
             </div>
             <div style={{ width: "fit-content" }} className="inner-text step_4">
@@ -341,7 +346,9 @@ function App() {
             color: "white",
             zIndex: 10,
           }}
-          onClick={() => ajalaInstance?.restart()}
+          onClick={() => {
+            ajalaInstance?.restart();
+          }}
         >
           Fixed Item
         </section>

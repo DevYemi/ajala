@@ -29,14 +29,14 @@ class TooltipPlacement {
   async calculateTravelDistance(
     next_index: number,
   ): Promise<TTravelDistanceData> {
-    let scrolled = false;
+    const scrolled = false;
     this.ui.arrow_element.style.visibility = "hidden";
 
     const next_step_target = this.ui.getTargetElement(
       this.ajala.getFlattenSteps()[next_index].target,
     );
     const tooltip_container_el = this.ui.tooltip_container_element;
-    let tooltip_rect = tooltip_container_el.getBoundingClientRect();
+    const tooltip_rect = tooltip_container_el.getBoundingClientRect();
 
     const getDimensionOffset = (value: number) => {
       return value > 0 ? -value : Math.abs(value);
@@ -62,45 +62,23 @@ class TooltipPlacement {
       };
     }
 
-    let target_rect = next_step_target.getBoundingClientRect();
+    if (this.placement.animations?.transition_type === "popout") {
+      this.ui.tooltip_container_element.style.visibility = "hidden";
+    }
+    await this.placement.animations?.scrollIntoView(next_step_target, 100);
+
+    const target_rect = next_step_target.getBoundingClientRect();
 
     const gutter =
       this.ajala.getFlattenSteps()[next_index].tooltip_gutter ??
       this.ajala.options.tooltip_gutter ??
       0;
 
-    let y_offset = getDimensionOffset(tooltip_rect.y);
-    let x_offset = getDimensionOffset(tooltip_rect.x);
+    const y_offset = getDimensionOffset(tooltip_rect.y);
+    const x_offset = getDimensionOffset(tooltip_rect.x);
 
     let y_delta = target_rect.y + gutter;
     let x_delta = target_rect.x + gutter;
-
-    /**
-     * Prevent card_element from moving outside screen viewport height.
-     * Scroll page to target if target is outside screen viewport height.
-     */
-
-    if (
-      y_delta < 0 ||
-      y_delta > window.innerHeight ||
-      y_delta + target_rect.height > window.innerHeight
-    ) {
-      if (this.placement.animations?.transition_type === "popout") {
-        this.ui.tooltip_container_element.style.visibility = "hidden";
-      }
-
-      await this.placement.animations?.scrollToLocation(
-        next_step_target,
-        next_index,
-      );
-      scrolled = true;
-
-      target_rect = next_step_target.getBoundingClientRect();
-      tooltip_rect = tooltip_container_el.getBoundingClientRect();
-
-      y_offset = getDimensionOffset(tooltip_rect.y);
-      x_offset = getDimensionOffset(tooltip_rect.x);
-    }
 
     /**
      * Calculate the tooltip placement

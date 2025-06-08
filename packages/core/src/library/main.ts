@@ -79,6 +79,7 @@ export class AjalaJourney extends EventEmitter<TAjalaEventTypes> {
    * @desc This method initializes the ajala by setting up media queries and UI elements.
    */
   init(start_immediately?: boolean) {
+    console.log("Initializing Againnn");
     this.initialized = true;
     const validated_steps = checkForStepsIdValidity(this.original_steps);
     this.is_active = false;
@@ -164,7 +165,8 @@ export class AjalaJourney extends EventEmitter<TAjalaEventTypes> {
       validated_steps,
       this.#step_media_query.queries,
     );
-    this.active_step = this.getFlattenSteps()[0];
+
+    this.#setUpStepsMediaQueries();
 
     if (restart) {
       this.restart();
@@ -313,6 +315,10 @@ export class AjalaJourney extends EventEmitter<TAjalaEventTypes> {
     for (const [query_key, query_value] of Object.entries(
       this.#step_media_query.queries,
     )) {
+      this.#step_media_query.instances.forEach((mq) => {
+        mq.onchange = null;
+      });
+
       const match_media = window.matchMedia(query_key);
 
       if (match_media.matches) {

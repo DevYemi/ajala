@@ -30,6 +30,7 @@ const ajala = new AjalaJourney(
     {
       target: ".step_3",
       skip: false,
+      order: 0,
       id: "3",
       title: "Step 3 Title",
       content: "step 3 content lorem ipson",

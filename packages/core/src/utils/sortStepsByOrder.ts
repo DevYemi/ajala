@@ -3,6 +3,7 @@ import { TSteps } from "../library/types";
 export default function sortStepsByOrder(steps: Array<TSteps>) {
   // Create a map of ordered items for quick lookup
   const ordered_items = new Map();
+  const duplicate_ordered_items = new Map();
   const unordered_items = [];
   const out_of_range_items = [];
 
@@ -13,7 +14,11 @@ export default function sortStepsByOrder(steps: Array<TSteps>) {
     } else if (item?.order > steps.length || item?.order < 0) {
       out_of_range_items.push(item);
     } else {
-      ordered_items.set(item.order, item);
+      if (ordered_items.has(item.order)) {
+        duplicate_ordered_items.set(item.order, item);
+      } else {
+        ordered_items.set(item.order, item);
+      }
     }
   }
 
@@ -27,6 +32,11 @@ export default function sortStepsByOrder(steps: Array<TSteps>) {
   for (let i = 0; i < steps.length; i++) {
     if (ordered_items.has(i)) {
       result[i] = ordered_items.get(i);
+      if (duplicate_ordered_items.has(i)) {
+        const next_index = i + 1;
+        result[next_index] = duplicate_ordered_items.get(i);
+        i = next_index;
+      }
     } else if (unorderedIndex < unordered_items.length) {
       result[i] = unordered_items[unorderedIndex++];
     } else {

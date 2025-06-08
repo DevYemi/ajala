@@ -10,6 +10,9 @@ body {
   color: #fff;
   font-weight: 500;
   font-family: Arial, sans-serif;
+  scroll-behavior: smooth;
+  overscroll-behavior: none;
+  overflow: hidden;
 }
 
 ul {
