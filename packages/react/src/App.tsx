@@ -12,7 +12,6 @@ function App() {
   const [option] = useState({
     start_immediately: false,
     tooltip_width: 320,
-
     tooltip_height: 224,
     enable_target_interaction: true,
     tooltip_gutter: 30,
