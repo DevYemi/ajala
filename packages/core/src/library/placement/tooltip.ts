@@ -387,7 +387,7 @@ class TooltipPlacement {
       const tooltip_half = tooltip_rect.height / 2;
       const center_alignment = target_rect.y + target_half - tooltip_half;
       if (
-        center_alignment + target_rect.height <= window.innerHeight &&
+        center_alignment + tooltip_rect.height <= window.innerHeight &&
         center_alignment >= 0
       ) {
         vertical.is_valid = true;
