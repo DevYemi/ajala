@@ -314,10 +314,6 @@ export class AjalaJourney extends EventEmitter<TAjalaEventTypes> {
     for (const [query_key, query_value] of Object.entries(
       this.#step_media_query.queries,
     )) {
-      this.#step_media_query.instances.forEach((mq) => {
-        mq.onchange = null;
-      });
-
       const match_media = window.matchMedia(query_key);
 
       if (match_media.matches) {
@@ -330,6 +326,7 @@ export class AjalaJourney extends EventEmitter<TAjalaEventTypes> {
 
       match_media.onchange = (event) => {
         const step_query = this.#step_media_query.queries[event.media];
+
         if (event.matches && step_query) {
           this.flatten_steps = mapResponsiveValueToSteps(
             this.flatten_steps,
@@ -365,6 +362,7 @@ export class AjalaJourney extends EventEmitter<TAjalaEventTypes> {
             .id,
         );
       };
+
       this.#step_media_query.instances.push(match_media);
     }
   }
