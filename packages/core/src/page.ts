@@ -116,7 +116,7 @@ const ajala = new AjalaJourney(
     },
   ],
   {
-    start_immediately: false,
+    start_immediately: true,
     spotlight_options: {
       border_radius: 5,
       padding: 5,
