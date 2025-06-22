@@ -38,6 +38,15 @@ export function parseResponsiveSteps(steps: Array<TAjalaSteps>) {
           Object.keys(step_value as any).forEach((query_key: any) => {
             if (query_key === "default") return;
 
+            if (!Object.hasOwn(step_value, "default")) {
+              const error_message = `Ajala step with id:"${step.id}" is missing a media query default value for the key "${step_key}". Please add a default value to avoid unexpected behavior.`;
+              if (process.env.NODE_ENV === "development") {
+                throw new Error(error_message);
+              } else {
+                console.error(error_message);
+              }
+            }
+
             const media_query_obj: TParsedResponsiveStep = {
               id: step.id,
               key: step_key,
