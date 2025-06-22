@@ -8,7 +8,7 @@
 <br />
 
 - **Simple**: Easy to use with no external dependencies.
-- **Light-weight**: A small footprint of just 7KB when gzipped.
+- **Light-weight**: A small footprint of just 8KB when gzipped.
 - **Highly customizable**: Fully customizable tooltips with the ability to change the tooltip element, arrow design, and step state behavior at different screen sizes—all controlled via a powerful API.
 - **TypeScript**: Built with TypeScript for improved type safety and developer experience.
 - **Consistent behavior**: Works seamlessly across all major browsers.
