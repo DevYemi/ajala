@@ -10,10 +10,14 @@ const ajala = new AjalaJourney(
       content: "step 2 content lorem ipson",
       skip: {
         default: false,
-        "(min-width: 500px)": false,
+        "(min-width: 1200px)": true,
       },
       data: {
         god_abeg: "amen",
+      },
+      order: {
+        default: 3,
+        "(min-width: 600px)": 0,
       },
       tooltip_placement: "left_top",
       onInActive(step) {
@@ -25,6 +29,7 @@ const ajala = new AjalaJourney(
       id: "fixed_element",
       title: "Step Fixed Element",
       content: "step for fixed element",
+      order: 0,
       tooltip_placement: "left_top",
     },
     {
@@ -64,6 +69,7 @@ const ajala = new AjalaJourney(
       target: ".step_6",
       skip: false,
       id: "6",
+      order: 1,
       title: "Step 6 Title",
       content: "step 6 content lorem ipson",
       tooltip_placement: "left_bottom",
@@ -78,6 +84,7 @@ const ajala = new AjalaJourney(
     {
       target: ".step_7",
       skip: true,
+      order: 1,
       id: "7",
       title: "Step 7 Title",
       content: "step 7 content lorem ipson",
@@ -127,6 +134,10 @@ const ajala = new AjalaJourney(
   },
 );
 ajala.init();
+
+ajala.addEventListener("onTransitionComplete", (e) => {
+  console.log("e", e);
+});
 
 document.querySelector(".fixed_element")?.addEventListener("click", (e) => {
   e.preventDefault();

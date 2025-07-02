@@ -1,51 +1,42 @@
 import { TSteps } from "../library/types";
 
-export default function sortStepsByOrder(steps: Array<TSteps>) {
-  // Create a map of ordered items for quick lookup
-  const ordered_items = new Map();
-  const duplicate_ordered_items = new Map();
-  const unordered_items = [];
-  const out_of_range_items = [];
+export default function sortStepsByOrder(steps: TSteps[]) {
+  const ordered_map = new Map<number, TSteps[]>();
+  const unordered_items: TSteps[] = [];
+  const out_of_range_items: TSteps[] = [];
 
-  // Separate ordered, unordered and outofRange items
-  for (const item of steps) {
-    if (item?.order === undefined) {
-      unordered_items.push(item);
-    } else if (item?.order > steps.length || item?.order < 0) {
-      out_of_range_items.push(item);
+  // Phase 1: Categorize steps
+  for (const step of steps) {
+    const order = step?.order;
+
+    if (order === undefined) {
+      unordered_items.push(step);
+    } else if (order < 0 || order >= steps.length) {
+      out_of_range_items.push(step);
     } else {
-      if (ordered_items.has(item.order)) {
-        duplicate_ordered_items.set(item.order, item);
-      } else {
-        ordered_items.set(item.order, item);
+      if (!ordered_map.has(order)) {
+        ordered_map.set(order, []);
       }
+      ordered_map.get(order)!.push(step);
     }
   }
 
-  // Find the maximum order to determine array size
-  const result = new Array(steps.length);
-
-  let unorderedIndex = 0;
+  // Phase 2: Build the sorted result
+  const result: TSteps[] = [];
+  let unordered_index = 0;
   let out_of_range_index = 0;
 
-  // Build the result array
-  for (let i = 0; i < steps.length; i++) {
-    if (ordered_items.has(i)) {
-      result[i] = ordered_items.get(i);
-      if (duplicate_ordered_items.has(i)) {
-        const next_index = i + 1;
-        result[next_index] = duplicate_ordered_items.get(i);
-        i = next_index;
-      }
-    } else if (unorderedIndex < unordered_items.length) {
-      result[i] = unordered_items[unorderedIndex++];
-    } else {
-      result[i] = out_of_range_items[out_of_range_index++];
+  for (let i = 0; result.length < steps.length; i++) {
+    const ordered_at_i = ordered_map.get(i);
+
+    if (ordered_at_i) {
+      result.push(...ordered_at_i);
+    } else if (unordered_index < unordered_items.length) {
+      result.push(unordered_items[unordered_index++]);
+    } else if (out_of_range_index < out_of_range_items.length) {
+      result.push(out_of_range_items[out_of_range_index++]);
     }
   }
 
-  // Trim the array if we over-allocated (only happens if maxOrder > original length)
-  return result.length === steps.length
-    ? result
-    : result.slice(0, steps.length);
+  return result;
 }

@@ -17,6 +17,7 @@ import EventEmitter from "./EventEmitter";
 import { checkForStepsIdValidity } from "../utils/chunks";
 import Placement from "./placement";
 import Animations from "./animations";
+import sortStepsByOrder from "../utils/sortStepsByOrder";
 
 export class AjalaJourney extends EventEmitter<TAjalaEventTypes> {
   options: TAjalaOptions;
@@ -317,10 +318,8 @@ export class AjalaJourney extends EventEmitter<TAjalaEventTypes> {
       const match_media = window.matchMedia(query_key);
 
       if (match_media.matches) {
-        this.flatten_steps = mapResponsiveValueToSteps(
-          this.flatten_steps,
-          query_value!,
-          "value",
+        this.flatten_steps = sortStepsByOrder(
+          mapResponsiveValueToSteps(this.flatten_steps, query_value!, "value"),
         );
       }
 
@@ -328,27 +327,29 @@ export class AjalaJourney extends EventEmitter<TAjalaEventTypes> {
         const step_query = this.#step_media_query.queries[event.media];
 
         if (event.matches && step_query) {
-          this.flatten_steps = mapResponsiveValueToSteps(
-            this.flatten_steps,
-            step_query,
-            "value",
+          this.flatten_steps = sortStepsByOrder(
+            mapResponsiveValueToSteps(this.flatten_steps, step_query, "value"),
           );
         } else {
           if (step_query) {
-            this.flatten_steps = mapResponsiveValueToSteps(
-              this.flatten_steps,
-              step_query,
-              "default",
+            this.flatten_steps = sortStepsByOrder(
+              mapResponsiveValueToSteps(
+                this.flatten_steps,
+                step_query,
+                "default",
+              ),
             );
           }
 
           this.#step_media_query.instances.forEach((mq) => {
             const query_step = this.#step_media_query.queries[mq.media];
             if (mq.matches && query_step) {
-              this.flatten_steps = mapResponsiveValueToSteps(
-                this.flatten_steps,
-                query_step,
-                "value",
+              this.flatten_steps = sortStepsByOrder(
+                mapResponsiveValueToSteps(
+                  this.flatten_steps,
+                  query_step,
+                  "value",
+                ),
               );
             }
           });
