@@ -88,7 +88,7 @@ export function mapResponsiveValueToSteps<T>(
     }
   });
 
-  return sortStepsByOrder(deep_cloned_steps);
+  return deep_cloned_steps;
 }
 
 /**
@@ -113,5 +113,5 @@ export function flattenStepsToMediaQueryDefaults(
     }
   });
 
-  return deep_cloned_steps as Array<TSteps>;
+  return sortStepsByOrder(deep_cloned_steps as Array<TSteps>);
 }
