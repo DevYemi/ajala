@@ -131,6 +131,12 @@ const ajala = new AjalaJourney(
     overlay_options: {
       color: "#ffffff",
     },
+    keyboardNavigation: {
+      enabled: true,
+      nextKeys: ["ArrowRight", "Enter", " ", "Spacebar"],
+      prevKeys: ["ArrowLeft", "ArrowUp"],
+      closeKeys: ["Escape", "ArrowDown"],
+    },
   },
 );
 ajala.init();

@@ -18,6 +18,7 @@ import { checkForStepsIdValidity } from "../utils/chunks";
 import Placement from "./placement";
 import Animations from "./animations";
 import sortStepsByOrder from "../utils/sortStepsByOrder";
+import { KeyboardNavigation } from "./keyboardNavigation";
 
 export class AjalaJourney extends EventEmitter<TAjalaEventTypes> {
   options: TAjalaOptions;
@@ -34,16 +35,21 @@ export class AjalaJourney extends EventEmitter<TAjalaEventTypes> {
   #navigation: Navigation;
   #placement: Placement;
   #animations: Animations;
+  #keyboardNavigation: KeyboardNavigation;
 
   constructor(
     steps: Array<TAjalaSteps>,
-    { start_immediately = true, ...options }: TAjalaOptions = {
+    {
+      start_immediately = true,
+      keyboardNavigation,
+      ...options
+    }: TAjalaOptions = {
       start_immediately: true,
     },
   ) {
     super();
     const validated_steps = checkForStepsIdValidity(steps);
-    this.options = { start_immediately, ...options };
+    this.options = { start_immediately, keyboardNavigation, ...options };
     this.is_active = false;
     this.original_steps = validated_steps;
     this.#step_media_query = {
@@ -72,6 +78,8 @@ export class AjalaJourney extends EventEmitter<TAjalaEventTypes> {
 
     this.active_step =
       this.getFlattenSteps()[this.#navigation.getValidNavIndex(0, "next")];
+
+    this.#keyboardNavigation = new KeyboardNavigation(this, keyboardNavigation);
 
     this.destroy = this.destroy.bind(this);
   }
@@ -235,6 +243,7 @@ export class AjalaJourney extends EventEmitter<TAjalaEventTypes> {
       this.getFlattenSteps()[this.#navigation.getValidNavIndex(0, "next")];
     this.#ui.start();
     this.#navigation.start();
+    this.#keyboardNavigation.start();
 
     this.dispatchEvent({
       type: "onStart",
@@ -271,6 +280,7 @@ export class AjalaJourney extends EventEmitter<TAjalaEventTypes> {
    * @desc Close ajala journey.
    */
   close() {
+    if (!this.is_active) return;
     this.#navigation.close();
   }
 
@@ -300,6 +310,7 @@ export class AjalaJourney extends EventEmitter<TAjalaEventTypes> {
   destroy() {
     this.#cleanup();
     this.#ui.destroy();
+    this.#keyboardNavigation.destroy();
     this.is_active = false;
   }
 
