@@ -141,6 +141,7 @@ An object with the following property
 | default_arrow_options     | object [Type shape here](https://github.com/DevYemi/ajala?tab=readme-ov-file#object-type-shape)                                                                                      | Helps customize the default arrow                                                                                                                                                                                                                                                                                                                    |
 | overlay_options           | object [Type shape here](https://github.com/DevYemi/ajala?tab=readme-ov-file#object-type-shape)                                                                                      | Helps customize the default overlay                                                                                                                                                                                                                                                                                                                  |
 | spotlight_options         | object [Type shape here](https://github.com/DevYemi/ajala?tab=readme-ov-file#object-type-shape)                                                                                      | Helps customize the spotlight                                                                                                                                                                                                                                                                                                                        |
+| keyboardNavigation        | object [Type shape here](https://github.com/DevYemi/ajala?tab=readme-ov-file#object-type-shape)                                                                                      | Configure keyboard navigation (enable/disable, key bindings, etc.)                                                                                                                                                                                                                                                                                   |
 
 #### Object Type Shape
 
@@ -167,6 +168,12 @@ overlay_options: Partial<{
 spotlight_options: Partial<{
   border_radius: number;
   padding: number;
+}>;
+keyboardNavigation: Partial<{
+  enabled?: boolean;
+  nextKeys?: string[];
+  prevKeys?: string[];
+  closeKeys?: string[];
 }>;
 ```
 
@@ -199,6 +206,75 @@ const ajala_journey = new AjalaJourney(
   }
 );
 ```
+
+## Keyboard Navigation
+
+Àjàlá.js supports keyboard navigation, allowing users to move through tour steps using their keyboard. This feature improves accessibility and user experience, making it easy to navigate product tours without a mouse.
+
+### How It Works
+
+When keyboard navigation is enabled, users can:
+
+- Press `ArrowRight`, `Enter`, or `Space` to go to the next step.
+- Press `ArrowLeft` to go to the previous step.
+- Press `Escape` to close the tour.
+
+You can customize which keys trigger these actions.
+
+### Enabling Keyboard Navigation
+
+Keyboard navigation is enabled by default. You can configure or disable it via the `keyboardNavigation` option when creating an `AjalaJourney` instance:
+
+```ts
+import { AjalaJourney } from "ajala.js";
+
+const ajala = new AjalaJourney(steps, {
+  keyboardNavigation: {
+    enabled: true, // Set to false to disable
+    nextKeys: ["ArrowRight", "Enter", " "], // Keys for next step
+    prevKeys: ["ArrowLeft"], // Keys for previous step
+    closeKeys: ["Escape"], // Keys to close the tour
+  },
+});
+```
+
+#### Example: Disabling Keyboard Navigation
+
+```ts
+const ajala = new AjalaJourney(steps, {
+  keyboardNavigation: {
+    enabled: false,
+  },
+});
+```
+
+#### Example: Custom Key Bindings
+
+```ts
+const ajala = new AjalaJourney(steps, {
+  keyboardNavigation: {
+    nextKeys: ["n"], // Use 'n' for next
+    prevKeys: ["p"], // Use 'p' for previous
+    closeKeys: ["q"], // Use 'q' to close
+  },
+});
+```
+
+### Accessibility
+
+- Keyboard navigation is automatically disabled when the user is focused on an input, textarea, or contenteditable element, to avoid interfering with typing.
+- You can fully customize or disable keyboard navigation as needed.
+
+### API Reference
+
+#### `keyboardNavigation` Option
+
+| Property  | Type     | Default                                    | Description                           |
+| --------- | -------- | ------------------------------------------ | ------------------------------------- |
+| enabled   | boolean  | `true`                                     | Enable or disable keyboard navigation |
+| nextKeys  | string[] | `['ArrowRight', 'Enter', ' ', 'Spacebar']` | Keys to go to the next step           |
+| prevKeys  | string[] | `['ArrowLeft']`                            | Keys to go to the previous step       |
+| closeKeys | string[] | `['Escape']`                               | Keys to close the tour                |
 
 ## Ajala Methods
 

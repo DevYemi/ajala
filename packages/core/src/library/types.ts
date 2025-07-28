@@ -82,6 +82,14 @@ export interface TAjalaOptions {
     border_radius: number;
     padding: number;
   }>;
+  keyboardNavigation?: TKeyboardNavigationOptions;
+}
+
+export interface TKeyboardNavigationOptions {
+  enabled?: boolean;
+  nextKeys?: string[];
+  prevKeys?: string[];
+  closeKeys?: string[];
 }
 
 export interface TTravelDistanceData {
